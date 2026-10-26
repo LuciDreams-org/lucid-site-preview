@@ -109,12 +109,12 @@ document.documentElement.classList.add('js');
     {
       id: 'taxes', label: 'Taxes',
       best: 'For practices seeking year-round tax planning plus on-time federal, state, and personal filings.',
-      staff: ['Dedicated Accountant (CPA)', 'Dedicated Account Manager'],
+      staff: ['Dedicated Tax Accountant', 'Dedicated Account Manager'],
       platforms: ['Tax Filing Platform'],
-      other: ['Federal, state &amp; personal filings', 'Year-round tax planning', '24/7 Slack Support'],
-      sliderLabel: 'Annual practice revenue', min: 50000, max: 3000000, step: 50000, value: 500000,
+      other: ['Federal, state &amp; personal filings', 'Additional state filings', 'Year-round tax planning', '24/7 Slack Support'],
+      sliderLabel: 'Annual practice revenue', min: 100000, max: 3000000, step: 50000, value: 500000,
       saveFactor: 6,
-      price: function (v) { return v <= 250000 ? 200 : v <= 500000 ? 350 : v <= 1000000 ? 600 : v <= 2000000 ? 900 : 1200; }
+      price: function (v) { return v <= 250000 ? 150 : v <= 500000 ? 250 : v <= 1000000 ? 400 : v <= 2000000 ? 600 : 800; }
     },
     {
       id: 'cfo', label: 'CFO Services',
