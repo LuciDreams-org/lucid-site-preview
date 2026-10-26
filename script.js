@@ -152,8 +152,8 @@ document.documentElement.classList.add('js');
       }).join('') + '</ul>' : '') +
       '<div class="toggle-row">' +
         '<div class="seg" data-cycle>' +
-          '<button class="active" data-cycle-val="monthly">Monthly</button>' +
-          '<button data-cycle-val="yearly">Yearly</button>' +
+          '<button data-cycle-val="monthly">Monthly</button>' +
+          '<button class="active" data-cycle-val="yearly">Yearly</button>' +
         '</div>' +
         '<span class="save-pill">💡 2 months free on yearly</span>' +
       '</div>' +
@@ -180,7 +180,7 @@ document.documentElement.classList.add('js');
     var wasEl = panel.querySelector('[data-was]');
     var savingEl = panel.querySelector('[data-saving]');
     var cycleBtns = panel.querySelectorAll('[data-cycle] button');
-    var cycle = 'monthly';
+    var cycle = 'yearly';
 
     function update() {
       var v = +slider.value;
@@ -256,7 +256,7 @@ document.documentElement.classList.add('js');
 (function () {
   var el = document.getElementById('rotWord');
   if (!el) return;
-  var words = ['Business', 'Medical Practice', 'Medical Group'];
+  var words = ['Business', 'Private Practice', 'Medical Group'];
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return;
   var i = 0;
