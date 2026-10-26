@@ -208,6 +208,7 @@ document.documentElement.classList.add('js');
 
     function update(animate) {
       var v = +slider.value;
+      slider.style.setProperty('--fill', Math.round((v - t.min) / (t.max - t.min) * 100) + '%');
       amount.textContent = fmt(v) + (v >= t.max ? '+' : '');
       if (outEl) { outEl.classList.remove('flash'); void outEl.offsetWidth; outEl.classList.add('flash'); }
       // At the top of the range (>$200k etc.), show a custom quote instead of a price
