@@ -238,7 +238,7 @@ document.documentElement.classList.add('js');
       });
     });
     panel._update = update;
-    update(true);
+    update(false); // instant on first render; count-up fires on tab/cycle/slider changes
   });
 
   calc.appendChild(tabsEl);
