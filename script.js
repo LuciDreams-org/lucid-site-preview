@@ -312,3 +312,31 @@ document.documentElement.classList.add('js');
     }, 300);
   }, 2200);
 })();
+
+/* ---------- CTA tracking: route all CTAs to the contact endpoint with a
+   section+action identifier (mirrors www.lucid.now, e.g. ?cta=GetStartedFirstSection) ---------- */
+(function () {
+  var BASE = 'https://contact.lucid.now/zc/382?cta=';
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+  function action(txt) {
+    var t = txt.trim().toLowerCase();
+    if (t.indexOf('get a quote') > -1) return 'GetQuote';
+    if (t.indexOf('get started') > -1) return 'GetStarted';
+    if (t.indexOf('talk to an expert') > -1) return 'TalkToExpert';
+    if (t === 'log in' || t.indexOf('log in') > -1) return 'Login';
+    return null;
+  }
+  var page = ((location.pathname.split('/').pop() || 'index').replace('.html', '')) || 'index';
+  document.querySelectorAll('a.btn, .nav-links a').forEach(function (a) {
+    var act = action(a.textContent); if (!act) return;
+    var sec;
+    if (a.closest('header.nav')) sec = 'Header';
+    else if (a.closest('.calc')) { var p = a.closest('.calc-panel'); sec = 'PricingTab' + cap(p && p.dataset.panel); }
+    else if (a.closest('.hero')) sec = 'FirstSection';
+    else if (a.closest('.cta-band')) sec = 'Bottom';
+    else if (a.closest('#how')) sec = 'HowItWorks';
+    else { var s = a.closest('section'); sec = cap((s && s.id) || 'Page'); }
+    a.setAttribute('href', BASE + cap(page) + sec + act);
+    a.setAttribute('rel', 'noopener');
+  });
+})();
