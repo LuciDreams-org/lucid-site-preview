@@ -99,7 +99,7 @@ document.documentElement.classList.add('js');
     {
       id: 'bookkeeping', label: 'Bookkeeping',
       best: 'For practices that want accurate monthly books, closed and reviewed by a dedicated expert.',
-      staff: ['American Accountant (CPA)', 'Dedicated Account Manager'],
+      staff: ['Accountant (CPA)', 'Dedicated Account Manager'],
       platforms: ['Bookkeeping Platform', 'Reconciliation Platform'],
       other: ['24/7 Slack Support', 'Monthly financial reporting package', 'Month-to-month - no annual lock-in'],
       sliderLabel: 'Monthly spending', min: 0, max: 200000, step: 1000, value: 20000,
@@ -109,7 +109,7 @@ document.documentElement.classList.add('js');
     {
       id: 'taxes', label: 'Taxes',
       best: 'For practices seeking year-round tax planning plus on-time federal, state, and personal filings.',
-      staff: ['American Accountant (CPA)', 'Dedicated Account Manager'],
+      staff: ['Accountant (CPA)', 'Dedicated Account Manager'],
       platforms: ['Tax Filing Platform'],
       other: ['Federal, state &amp; personal filings', 'Year-round tax planning', '24/7 Slack Support'],
       sliderLabel: 'Annual practice revenue', min: 50000, max: 3000000, step: 50000, value: 500000,
