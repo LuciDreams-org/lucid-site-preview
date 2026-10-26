@@ -99,15 +99,19 @@ document.documentElement.classList.add('js');
     {
       id: 'bookkeeping', label: 'Bookkeeping',
       best: 'For practices that want accurate monthly books, closed and reviewed by a dedicated expert.',
-      included: ['Bookkeeping Platform', 'Reconciliation Platform', 'American Accountant (CPA)', 'Dedicated Account Manager', '24/7 Slack Support', 'Monthly financial reporting package', 'Month-to-month - no annual lock-in'],
+      staff: ['American Accountant (CPA)', 'Dedicated Account Manager'],
+      platforms: ['Bookkeeping Platform', 'Reconciliation Platform'],
+      other: ['24/7 Slack Support', 'Monthly financial reporting package', 'Month-to-month - no annual lock-in'],
       sliderLabel: 'Monthly spending', min: 0, max: 200000, step: 1000, value: 20000,
       saveFactor: 8,
-      price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 300 : v <= 100000 ? 500 : v <= 200000 ? 800 : 1000; }
+      price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 250 : v <= 100000 ? 350 : v <= 150000 ? 450 : 550; }
     },
     {
       id: 'taxes', label: 'Taxes',
       best: 'For practices seeking year-round tax planning plus on-time federal, state, and personal filings.',
-      included: ['Federal, state &amp; personal filings', 'Year-round tax planning', 'American Accountant (CPA)', 'Dedicated Account Manager', '24/7 Slack Support'],
+      staff: ['American Accountant (CPA)', 'Dedicated Account Manager'],
+      platforms: ['Tax Filing Platform'],
+      other: ['Federal, state &amp; personal filings', 'Year-round tax planning', '24/7 Slack Support'],
       sliderLabel: 'Annual practice revenue', min: 50000, max: 3000000, step: 50000, value: 500000,
       saveFactor: 6,
       price: function (v) { return v <= 250000 ? 200 : v <= 500000 ? 350 : v <= 1000000 ? 600 : v <= 2000000 ? 900 : 1200; }
@@ -115,10 +119,12 @@ document.documentElement.classList.add('js');
     {
       id: 'cfo', label: 'CFO Services',
       best: 'For practices seeking to analyze performance, forecast, and discover key insights.',
-      included: ['Full Access to the Lucid Cashflow Reporting &amp; Forecasting Platform', 'Real-time insights &amp; scenario planning', 'Budget vs. actuals &amp; forecasting', 'Board- &amp; investor-ready updates', 'Dedicated Account Manager', '24/7 Slack Support'],
-      sliderLabel: 'Your monthly expenses', min: 0, max: 300000, step: 5000, value: 50000,
+      staff: ['Dedicated CFO', 'Dedicated Account Manager'],
+      platforms: ['Cashflow Reporting &amp; Forecasting Platform'],
+      other: ['Real-time insights &amp; scenario planning', 'Budget vs. actuals &amp; forecasting', 'Board- &amp; investor-ready updates', '24/7 Slack Support'],
+      sliderLabel: 'Your monthly expenses', min: 0, max: 300000, step: 10000, value: 50000,
       saveFactor: 12,
-      price: function (v) { return v <= 50000 ? 150 : v <= 100000 ? 300 : v <= 250000 ? 600 : 900; }
+      price: function (v) { return v <= 50000 ? 150 : v <= 100000 ? 300 : v <= 150000 ? 450 : v <= 200000 ? 600 : v <= 250000 ? 750 : 900; }
     },
     { id: 'credits', label: 'Tax Credits', credits: true }
   ];
@@ -148,7 +154,7 @@ document.documentElement.classList.add('js');
     if (t.credits) {
       panel.innerHTML =
         '<div class="credits">' +
-          '<div class="found"><small>Total credits found for practices</small><span data-found>$50,711</span></div>' +
+          '<div class="found"><small>Total credits found for practices</small><span class="found-row"><span class="found-check" aria-hidden="true">✓</span><span data-found>$50,711</span></span></div>' +
           '<p class="pledge">We only get paid if you do.</p>' +
           '<p>Our experts surface every credit your practice qualifies for and handle all the paperwork. ' +
           'If no credits can be claimed, you pay <strong>$0</strong>.</p>' +
@@ -160,9 +166,11 @@ document.documentElement.classList.add('js');
 
     panel.innerHTML =
       '<p class="calc-best">' + t.best + '</p>' +
-      (t.included ? '<ul class="calc-incl">' + t.included.map(function (f) {
-        return '<li><span class="ck" aria-hidden="true">✓</span>' + f + '</li>';
-      }).join('') + '</ul>' : '') +
+      '<ul class="calc-incl">' +
+        (t.staff || []).map(function (f) { return '<li class="incl-staff"><span class="ck" aria-hidden="true">✓</span>' + f + '</li>'; }).join('') +
+        (t.platforms || []).map(function (f) { return '<li class="incl-platform"><span class="ck" aria-hidden="true">✓</span>' + f + '</li>'; }).join('') +
+        (t.other || []).map(function (f) { return '<li class="incl-other"><span class="ck" aria-hidden="true">✓</span>' + f + '</li>'; }).join('') +
+      '</ul>' +
       '<div class="toggle-row">' +
         '<div class="seg" data-cycle>' +
           '<button data-cycle-val="monthly">Monthly</button>' +
