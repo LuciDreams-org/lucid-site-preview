@@ -86,7 +86,7 @@ document.documentElement.classList.add('js');
     {
       id: 'bookkeeping', label: 'Bookkeeping',
       best: 'For practices that want accurate monthly books, closed and reviewed by a dedicated expert.',
-      included: ['Bookkeeping Platform', 'Reconciliation Platform', 'American Accountant (CPA)'],
+      included: ['Bookkeeping Platform', 'Reconciliation Platform', 'American Accountant (CPA)', 'Dedicated Account Manager', '24/7 Slack Support', 'Monthly financial reporting package', 'Month-to-month - no annual lock-in'],
       sliderLabel: 'Monthly spending', min: 0, max: 200000, step: 1000, value: 20000,
       saveFactor: 8,
       price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 300 : v <= 100000 ? 500 : v <= 200000 ? 800 : 1000; }
@@ -94,6 +94,7 @@ document.documentElement.classList.add('js');
     {
       id: 'taxes', label: 'Taxes',
       best: 'For practices seeking year-round tax planning plus on-time federal, state, and personal filings.',
+      included: ['Federal, state &amp; personal filings', 'Year-round tax planning', 'American Accountant (CPA)', 'Dedicated Account Manager', '24/7 Slack Support'],
       sliderLabel: 'Annual practice revenue', min: 50000, max: 3000000, step: 50000, value: 500000,
       saveFactor: 6,
       price: function (v) { return v <= 250000 ? 200 : v <= 500000 ? 350 : v <= 1000000 ? 600 : v <= 2000000 ? 900 : 1200; }
@@ -101,7 +102,7 @@ document.documentElement.classList.add('js');
     {
       id: 'cfo', label: 'CFO Services',
       best: 'For practices seeking to analyze performance, forecast, and discover key insights.',
-      included: ['Full Access to the Lucid Cashflow Reporting & Forecasting Platform'],
+      included: ['Full Access to the Lucid Cashflow Reporting &amp; Forecasting Platform', 'Real-time insights &amp; scenario planning', 'Budget vs. actuals &amp; forecasting', 'Board- &amp; investor-ready updates', 'Dedicated Account Manager', '24/7 Slack Support'],
       sliderLabel: 'Your monthly expenses', min: 0, max: 300000, step: 5000, value: 50000,
       saveFactor: 12,
       price: function (v) { return v <= 50000 ? 150 : v <= 100000 ? 300 : v <= 250000 ? 600 : 900; }
@@ -184,16 +185,19 @@ document.documentElement.classList.add('js');
     function update() {
       var v = +slider.value;
       amount.textContent = fmt(v) + (v >= t.max ? '+' : '');
+      // Prices mirror www.lucid.now exactly (e.g. $20k: Monthly $300->$150 save $1,800; Yearly $250->$130 save $1,440)
       var base = t.price(v);
       if (cycle === 'yearly') {
-        var eff = Math.round(base * 10 / 12 / 5) * 5; // 2 months free, rounded to $5
-        priceEl.textContent = fmt(eff);
-        wasEl.textContent = fmt(base) + '/mo';
-        savingEl.textContent = 'You save ' + fmt(base * 2 + base * t.saveFactor) + '/yr';
+        var yWas = Math.round(base * (5 / 3) / 5) * 5;   // 250 at base 150
+        var yNow = Math.round(base * (13 / 15) / 5) * 5; // 130 at base 150
+        priceEl.textContent = fmt(yNow);
+        wasEl.textContent = fmt(yWas) + '/mo';
+        savingEl.textContent = 'You are saving ' + fmt((yWas - yNow) * 12) + '/yr';
       } else {
+        var mWas = base * 2;                              // 300 at base 150
         priceEl.textContent = fmt(base);
-        wasEl.textContent = '';
-        savingEl.textContent = 'You save ' + fmt(base * t.saveFactor) + '/yr vs. a traditional CPA';
+        wasEl.textContent = fmt(mWas) + '/mo';
+        savingEl.textContent = 'You are saving ' + fmt((mWas - base) * 12) + '/yr';
       }
     }
     slider.addEventListener('input', update);
