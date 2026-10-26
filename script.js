@@ -179,12 +179,27 @@ document.documentElement.classList.add('js');
     var priceEl = panel.querySelector('[data-price]');
     var wasEl = panel.querySelector('[data-was]');
     var savingEl = panel.querySelector('[data-saving]');
+    var smallEl = panel.querySelector('.price small');
+    var ctaEl = panel.querySelector('.calc-out .btn');
+    var outEl = panel.querySelector('.calc-out');
     var cycleBtns = panel.querySelectorAll('[data-cycle] button');
     var cycle = 'yearly';
 
     function update() {
       var v = +slider.value;
       amount.textContent = fmt(v) + (v >= t.max ? '+' : '');
+      if (outEl) { outEl.classList.remove('flash'); void outEl.offsetWidth; outEl.classList.add('flash'); }
+      // At the top of the range (>$200k etc.), show a custom quote instead of a price
+      if (v >= t.max) {
+        priceEl.textContent = 'Custom';
+        if (smallEl) smallEl.textContent = ' quote';
+        wasEl.textContent = '';
+        savingEl.textContent = 'Tailored to your practice - let’s talk';
+        if (ctaEl) ctaEl.textContent = 'Get a quote';
+        return;
+      }
+      if (smallEl) smallEl.textContent = '/mo';
+      if (ctaEl) ctaEl.textContent = 'Get Started';
       // Prices mirror www.lucid.now exactly (e.g. $20k: Monthly $300->$150 save $1,800; Yearly $250->$130 save $1,440)
       var base = t.price(v);
       if (cycle === 'yearly') {

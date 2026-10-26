@@ -516,3 +516,31 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
 /* Stable 3-row hero title (One Solution for All / Your [word] / Finances) */
 .hero-title{line-height:1.1;}
 .hero-title #rotWord{display:inline-block;}
+/* #2 (real fix): face+edges crops shown cover with headroom at top */
+.feature-media img{height:430px !important;object-fit:cover !important;object-position:center top !important;aspect-ratio:auto !important;border-radius:var(--radius-lg);}
+.stage img{height:230px !important;object-fit:cover !important;object-position:center top !important;}
+
+/* ===== Mobile fixes (override the desktop hero ratio + nav) ===== */
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr !important; gap:36px;}
+  .hero-media{order:0 !important;}          /* headline first on mobile */
+  .duo-photo{height:340px;}
+}
+@media (max-width:620px){
+  .nav-cta .btn-ghost{display:none;}        /* keep only Get Started + hamburger */
+  .nav-cta .btn-primary{padding:11px 18px;font-size:.95rem;}
+  .nav-inner{height:64px;}
+  .nav-links.open{top:64px;}
+  .duo-photo{height:300px;}
+  .hero{padding:44px 0 36px;}
+  .hero h1{font-size:clamp(1.95rem,8vw,2.5rem);}
+  .trust-badges .badge{font-size:.82rem;padding:8px 11px;}
+  .plat-media,.cli-demo,.video-wrap{margin-left:-2px;margin-right:-2px;}
+  .wrap{padding:0 18px;}
+}
+@media (max-width:420px){ .hero-duo{gap:10px;} .duo-photo{height:260px;} }
+
+/* Pricing price transition (animate value changes, like lucid.now) */
+.calc-out .price span,.calc-out .was,.calc-out .saving{transition:opacity .25s ease;}
+.calc-out.flash .price{animation:pricePop .35s ease;}
+@keyframes pricePop{0%{transform:scale(.94);opacity:.5}100%{transform:scale(1);opacity:1}}
