@@ -2,13 +2,36 @@
    Lucid — interactions: pricing calculator, testimonials, nav
    ============================================================ */
 
+/* ---------- Progressive-enhancement flag ---------- */
+document.documentElement.classList.add('js');
+
 /* ---------- Mobile nav ---------- */
 (function () {
   var toggle = document.getElementById('navToggle');
   var links = document.getElementById('navLinks');
   if (toggle && links) {
-    toggle.addEventListener('click', function () { links.classList.toggle('open'); });
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
   }
+})();
+
+/* ---------- Reveal on scroll (respects reduced-motion) ---------- */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
 })();
 
 /* ---------- Testimonial carousel (centered feature) ---------- */
@@ -16,10 +39,10 @@
   var dots = document.getElementById('testiDots');
   if (!dots) return;
   var data = [
-    { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "https://i.pravatar.cc/120?img=12" },
-    { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "https://i.pravatar.cc/120?img=45" },
-    { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "https://i.pravatar.cc/120?img=32" },
-    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Giorgio Riccio", role: "Founder, Lumino Technologies", img: "https://i.pravatar.cc/120?img=15" }
+    { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "assets/img/avatar-12.webp" },
+    { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "assets/img/avatar-45.webp" },
+    { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "assets/img/avatar-32.webp" },
+    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Giorgio Riccio", role: "Founder, Lumino Technologies", img: "assets/img/avatar-15.webp" }
   ];
   var q = document.getElementById('tqQuote');
   var name = document.getElementById('tqName');
@@ -42,6 +65,8 @@
 
   data.forEach(function (_, idx) {
     var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Show testimonial ' + (idx + 1));
     b.addEventListener('click', function () { render(idx); reset(); });
     dots.appendChild(b);
   });
@@ -61,6 +86,7 @@
     {
       id: 'bookkeeping', label: 'Bookkeeping',
       best: 'For practices that want accurate monthly books, closed and reviewed by a dedicated expert.',
+      included: ['Bookkeeping Platform', 'Reconciliation Platform', 'American Accountant (CPA)'],
       sliderLabel: 'Monthly spending', min: 0, max: 200000, step: 1000, value: 20000,
       saveFactor: 8,
       price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 300 : v <= 100000 ? 500 : v <= 200000 ? 800 : 1000; }
@@ -75,6 +101,7 @@
     {
       id: 'cfo', label: 'CFO Services',
       best: 'For practices seeking to analyze performance, forecast, and discover key insights.',
+      included: ['Full Access to the Lucid Cashflow Reporting & Forecasting Platform'],
       sliderLabel: 'Your monthly expenses', min: 0, max: 300000, step: 5000, value: 50000,
       saveFactor: 12,
       price: function (v) { return v <= 50000 ? 150 : v <= 100000 ? 300 : v <= 250000 ? 600 : 900; }
@@ -119,6 +146,9 @@
 
     panel.innerHTML =
       '<p class="calc-best">' + t.best + '</p>' +
+      (t.included ? '<ul class="calc-incl">' + t.included.map(function (f) {
+        return '<li><span class="ck" aria-hidden="true">✓</span>' + f + '</li>';
+      }).join('') + '</ul>' : '') +
       '<div class="toggle-row">' +
         '<div class="seg" data-cycle>' +
           '<button class="active" data-cycle-val="monthly">Monthly</button>' +
@@ -129,7 +159,7 @@
       '<div class="calc-split">' +
         '<div>' +
           '<div class="slider-label"><span>' + t.sliderLabel + '</span><b data-amount></b></div>' +
-          '<input type="range" min="' + t.min + '" max="' + t.max + '" step="' + t.step + '" value="' + t.value + '" data-slider />' +
+          '<input type="range" min="' + t.min + '" max="' + t.max + '" step="' + t.step + '" value="' + t.value + '" data-slider aria-label="' + t.sliderLabel + '" />' +
           '<div class="range-ends"><span>' + fmt(t.min) + '</span><span>' + fmt(t.max) + '+</span></div>' +
         '</div>' +
         '<div class="calc-out">' +
@@ -192,4 +222,46 @@
       p.classList.toggle('active', p.dataset.panel === btn.dataset.tab);
     });
   });
+})();
+
+/* ---------- Lite YouTube facade (no iframe until clicked) ---------- */
+(function () {
+  var nodes = document.querySelectorAll('.yt-lite');
+  Array.prototype.forEach.call(nodes, function (el) {
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    function load() {
+      var id = el.getAttribute('data-id');
+      var ifr = document.createElement('iframe');
+      ifr.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      ifr.setAttribute('allowfullscreen', '');
+      ifr.setAttribute('title', 'Lucid platform video');
+      ifr.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      el.innerHTML = '';
+      el.appendChild(ifr);
+      el.classList.add('loaded');
+    }
+    el.addEventListener('click', load);
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); load(); }
+    });
+  });
+})();
+
+/* ---------- Rotating hero word (Business / Medical Practice / Medical Group) ---------- */
+(function () {
+  var el = document.getElementById('rotWord');
+  if (!el) return;
+  var words = ['Business', 'Medical Practice', 'Medical Group'];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  var i = 0;
+  setInterval(function () {
+    el.classList.add('swap');
+    setTimeout(function () {
+      i = (i + 1) % words.length;
+      el.textContent = words[i];
+      el.classList.remove('swap');
+    }, 300);
+  }, 2200);
 })();
