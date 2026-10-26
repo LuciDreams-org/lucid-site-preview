@@ -42,7 +42,7 @@ document.documentElement.classList.add('js');
     { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "assets/img/avatar-12.webp" },
     { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "assets/img/avatar-45.webp" },
     { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "assets/img/avatar-32.webp" },
-    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Giorgio Riccio", role: "Founder, Lumino Technologies", img: "assets/img/avatar-15.webp" }
+    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Aviv Farhi", role: "CEO, Showcase", img: "assets/img/real-farhi.webp" }
   ];
   var q = document.getElementById('tqQuote');
   var name = document.getElementById('tqName');
@@ -80,6 +80,19 @@ document.documentElement.classList.add('js');
   if (!mount) return;
 
   var fmt = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+
+  // Animate a number from 0 up to target (used on the price + tax-credits figures)
+  function countUp(el, target, prefix, suffix) {
+    prefix = prefix || ''; suffix = suffix || '';
+    var dur = 650, t0 = null, from = 0;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + Math.round(from + (target - from) * e).toLocaleString('en-US') + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
 
   // Per-tab configuration. price() returns base monthly price.
   var TABS = [
@@ -135,7 +148,7 @@ document.documentElement.classList.add('js');
     if (t.credits) {
       panel.innerHTML =
         '<div class="credits">' +
-          '<div class="found"><small>Total credits found for practices</small>$50,711</div>' +
+          '<div class="found"><small>Total credits found for practices</small><span data-found>$50,711</span></div>' +
           '<p class="pledge">We only get paid if you do.</p>' +
           '<p>Our experts surface every credit your practice qualifies for and handle all the paperwork. ' +
           'If no credits can be claimed, you pay <strong>$0</strong>.</p>' +
@@ -185,7 +198,7 @@ document.documentElement.classList.add('js');
     var cycleBtns = panel.querySelectorAll('[data-cycle] button');
     var cycle = 'yearly';
 
-    function update() {
+    function update(animate) {
       var v = +slider.value;
       amount.textContent = fmt(v) + (v >= t.max ? '+' : '');
       if (outEl) { outEl.classList.remove('flash'); void outEl.offsetWidth; outEl.classList.add('flash'); }
@@ -205,26 +218,27 @@ document.documentElement.classList.add('js');
       if (cycle === 'yearly') {
         var yWas = Math.round(base * (5 / 3) / 5) * 5;   // 250 at base 150
         var yNow = Math.round(base * (13 / 15) / 5) * 5; // 130 at base 150
-        priceEl.textContent = fmt(yNow);
+        if (animate) countUp(priceEl, yNow, '$'); else priceEl.textContent = fmt(yNow);
         wasEl.textContent = fmt(yWas) + '/mo';
         savingEl.textContent = 'You are saving ' + fmt((yWas - yNow) * 12) + '/yr';
       } else {
         var mWas = base * 2;                              // 300 at base 150
-        priceEl.textContent = fmt(base);
+        if (animate) countUp(priceEl, base, '$'); else priceEl.textContent = fmt(base);
         wasEl.textContent = fmt(mWas) + '/mo';
         savingEl.textContent = 'You are saving ' + fmt((mWas - base) * 12) + '/yr';
       }
     }
-    slider.addEventListener('input', update);
+    slider.addEventListener('input', function () { update(false); });
     cycleBtns.forEach(function (b) {
       b.addEventListener('click', function () {
         cycleBtns.forEach(function (x) { x.classList.remove('active'); });
         b.classList.add('active');
         cycle = b.dataset.cycleVal;
-        update();
+        update(true);
       });
     });
-    update();
+    panel._update = update;
+    update(true);
   });
 
   calc.appendChild(tabsEl);
@@ -238,7 +252,13 @@ document.documentElement.classList.add('js');
     tabsEl.querySelectorAll('.calc-tab').forEach(function (b) { b.classList.remove('active'); });
     btn.classList.add('active');
     body.querySelectorAll('.calc-panel').forEach(function (p) {
-      p.classList.toggle('active', p.dataset.panel === btn.dataset.tab);
+      var on = p.dataset.panel === btn.dataset.tab;
+      p.classList.toggle('active', on);
+      if (on) {
+        if (p._update) p._update(true);
+        var f = p.querySelector('[data-found]');
+        if (f) countUp(f, 50711, '$');
+      }
     });
   });
 })();
