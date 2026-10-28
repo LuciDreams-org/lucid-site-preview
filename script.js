@@ -39,10 +39,10 @@ document.documentElement.classList.add('js');
   var dots = document.getElementById('testiDots');
   if (!dots) return;
   var data = [
-    { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "assets/img/avatar-12.webp" },
-    { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "assets/img/avatar-45.webp" },
-    { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "assets/img/avatar-32.webp" },
-    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Aviv Farhi", role: "CEO, Showcase", img: "assets/img/real-farhi.webp" }
+    { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "assets/img/avatar-12.webp?v=2" },
+    { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=2" },
+    { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "assets/img/avatar-32.webp?v=2" },
+    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Aviv Farhi", role: "CEO, Showcase", img: "assets/img/real-farhi.webp?v=2" }
   ];
   var q = document.getElementById('tqQuote');
   var name = document.getElementById('tqName');
