@@ -111,11 +111,11 @@ document.documentElement.classList.add('js');
       id: 'cfo', label: 'CFO Services',
       best: 'For practices seeking to analyze performance, forecast, and discover key insights.',
       staff: ['Dedicated CFO', 'Dedicated Account Manager'],
-      platforms: ['Cashflow Reporting &amp; Forecasting Platform'],
-      other: ['Real-time insights &amp; scenario planning', 'Budget vs. actuals &amp; forecasting', 'Board- &amp; investor-ready updates', '24/7 Slack Support'],
-      sliderLabel: 'Your monthly expenses', min: 0, max: 300000, step: 10000, value: 50000,
-      saveFactor: 12,
-      price: function (v) { return v <= 50000 ? 150 : v <= 100000 ? 300 : v <= 150000 ? 450 : v <= 200000 ? 600 : v <= 250000 ? 750 : 900; }
+      platforms: ['Full Access to the Lucid Cashflow Reporting &amp; Forecasting Platform'],
+      other: ['24/7 Slack Support', 'Custom financial model with strategic insights', 'Budget vs. actuals variance analysis', 'Scenario planning model', 'Industry-specific KPI dashboard'],
+      sliderLabel: 'Your Monthly Expenses', min: 0, max: 200000, step: 1000, value: 20000,
+      saveFactor: 8,
+      price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 250 : v <= 100000 ? 350 : v <= 150000 ? 450 : 550; }
     },
     { id: 'credits', label: 'Tax Credits', credits: true }
   ];
