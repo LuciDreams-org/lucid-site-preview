@@ -597,7 +597,7 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
 .seg button.active{background:var(--brand);color:#fff;}
 /* Tabs: active teal underline + hover */
 .calc-tab{transition:color .2s,border-color .2s;}
-.calc-tab.active{color:var(--brand-ink);border-bottom:3px solid var(--brand);}
+.calc-tab.active{color:var(--brand-ink);}
 .calc-tab:hover{color:var(--brand-ink);}
 /* Green price glow + bigger */
 .calc-out .price [data-price]{text-shadow:0 2px 16px rgba(22,163,74,.35);}
@@ -762,4 +762,43 @@ footer .brand-logo{filter:brightness(0) invert(1);}
   .hero-badge.one{left:4px;bottom:12px;top:auto;}   /* 4.9/5 -> bottom-left */
   .hero-badge.two{right:4px;top:12px;bottom:auto;}  /* $50,711 -> top-right (staggered, no overlap) */
   .sticky-cta{bottom:calc(16px + env(safe-area-inset-bottom));}
+}
+
+/* ===== Unify pricing included list — one premium language (removes amber boxes) ===== */
+.calc-incl{gap:13px;}
+.calc-incl li{display:flex;align-items:center;gap:11px;background:none !important;border:0 !important;
+  padding:0 !important;border-radius:0 !important;color:var(--ink) !important;font-weight:600 !important;font-size:.98rem;line-height:1.35;}
+.calc-incl li .ck{flex:none;width:22px;height:22px;border-radius:50%;background:#e4f5ea !important;
+  color:#16a34a !important;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;margin-top:0;}
+.calc-incl li.incl-staff,.calc-incl li.incl-platform{font-weight:700 !important;}
+
+/* Toggle row: save-pill keeps one line / own row on mobile (no circular blob) */
+.toggle-row{flex-wrap:wrap;}
+.save-pill{white-space:nowrap;}
+
+/* CTA band: stack buttons full-width on mobile so they never overlap */
+@media (max-width:620px){
+  .cta-inner .btn{display:flex;width:100%;max-width:300px;margin:0 auto;justify-content:center;}
+  .cta-inner .btn + .btn{margin-top:12px;}
+  .cta-inner .cta-note{margin-top:18px;}
+}
+
+/* Mobile button safety: stack hero CTAs full-width (no overlap, no cut-off) */
+@media (max-width:620px){
+  .hero-actions{flex-direction:column;align-items:stretch;gap:12px;}
+  .hero-actions .btn{width:100%;justify-content:center;}
+}
+
+/* Hero badges on mobile: flow as a 2-up row BELOW the photos (never over faces, no overlap) */
+@media (max-width:620px){
+  .hero-badge{position:static;padding:10px 12px;gap:10px;box-shadow:var(--shadow-sm);border:1px solid var(--line);}
+  .hero-badge .big{font-size:1.15rem;}
+  .hero-badge small{font-size:.72rem;}
+  .hero-badge .ring{width:36px;height:36px;font-size:1rem;}
+  .hero-duo{row-gap:10px;}
+}
+
+/* Sticky CTA: extra bottom clearance so it's never clipped at the screen edge */
+@media (max-width:620px){
+  .sticky-cta{bottom:calc(22px + env(safe-area-inset-bottom));}
 }

@@ -199,7 +199,7 @@ document.documentElement.classList.add('js');
           '<button data-cycle-val="monthly">Monthly</button>' +
           '<button class="active" data-cycle-val="yearly">Yearly</button>' +
         '</div>' +
-        '<span class="save-pill">💡 2 months free on yearly</span>' +
+        '<span class="save-pill">💡 2 months free</span>' +
       '</div>' +
       '<div class="calc-split">' +
         '<div>' +
