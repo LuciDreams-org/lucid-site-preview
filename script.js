@@ -1,5 +1,5 @@
 /* ============================================================
-   Lucid — interactions: pricing calculator, testimonials, nav
+   Lucid - interactions: pricing calculator, testimonials, nav
    ============================================================ */
 
 /* ---------- Progressive-enhancement flag ---------- */
@@ -39,10 +39,16 @@ document.documentElement.classList.add('js');
   var dots = document.getElementById('testiDots');
   if (!dots) return;
   var data = [
-    { q: "A sports-medicine surgeon running a portfolio of healthcare businesses — he leans on Lucid for real-time books, taxes, and CFO insight across every entity.", name: "Dr. Frank McCormick, M.D.", role: "Founder, Sigma", img: "assets/img/avatar-12.webp?v=3" },
-    { q: "Founder of Modern Thyroid Clinic in Austin — a nationally recognized thyroid specialist, TEDx speaker, and author scaling patient-first endocrine care.", name: "McCall McPherson, PA-C", role: "Founder, Modern Thyroid Clinic", img: "assets/img/mccall.webp?v=3" },
-    { q: "Founder of Skin MD, a fast-growing dermatology and medical-aesthetics practice — with Lucid keeping the finances clean as she scales.", name: "Dr. Tracie Swayden", role: "Founder, Skin MD", img: "assets/img/tracie.webp?v=3" },
-    { q: "Leads operations for Ascend Behavioral Health, a multi-location behavioral-health group — with real-time financial clarity across every clinic.", name: "Samantha Hewett", role: "Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=3" }
+    { q: "A sports-medicine surgeon running a portfolio of healthcare businesses - he leans on Lucid for real-time books, taxes, and CFO insight across every entity.", name: "Dr. Frank McCormick, M.D.", role: "Founder, Sigma", img: "assets/img/avatar-12.webp?v=4" },
+    { q: "Runs Nanoom Medical Group, a multi-entity medical organization spanning primary care, cosmetic surgery, and an IPA across California and Maryland - consolidated with Lucid.", name: "Edwin Choi", role: "Nanoom Medical Group", img: "assets/img/nanoom.svg" },
+    { q: "Leads operations for Ascend Behavioral Health, a multi-location behavioral-health group - with real-time financial clarity across every clinic.", name: "Samantha Hewett", role: "Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=4" },
+    { q: "Founder of Modern Thyroid Clinic in Austin, a nationally recognized thyroid specialist, TEDx speaker, and author scaling patient-first endocrine care.", name: "McCall McPherson, PA-C", role: "Founder, Modern Thyroid Clinic", img: "assets/img/mccall.webp?v=4" },
+    { q: "Founder of Skin MD, a fast-growing dermatology and medical-aesthetics practice - with Lucid keeping the finances clean as she scales.", name: "Dr. Tracie Swayden", role: "Founder, Skin MD", img: "assets/img/tracie.webp?v=4" },
+    { q: "Wow, you guys are lightning fast. The responsiveness is unreal - honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Business Owner, Terraway", img: "assets/img/fitzgerald.webp?v=4" },
+    { q: "Founder of Restorative Resilience Counseling, a trauma-focused private counseling practice built on steady, people-first care.", name: "Victoria Hudson", role: "Founder, Restorative Resilience Counseling", img: "assets/img/victoria.webp?v=4" },
+    { q: "Founder of AmarilloMD, a direct-care medical practice, and a published physician focused on accessible, transparent care.", name: "Dr. Deb Moore, M.D.", role: "Founder, AmarilloMD", img: "assets/img/amarillo.webp?v=4" },
+    { q: "Founder of T1D Screening Queen, an early type-1 diabetes screening practice and advocacy effort expanding access across South Florida.", name: "Lauri Deane", role: "Founder, T1D Screening Queen", img: "assets/img/t1d.webp?v=4" },
+    { q: "Founder of AR Health Solutions, an independent health practice getting clean, real-time books from day one with Lucid.", name: "Alex Alcantar", role: "Founder, AR Health Solutions", img: "assets/img/arhealth.svg" }
   ];
   var q = document.getElementById('tqQuote');
   var name = document.getElementById('tqName');
@@ -363,4 +369,44 @@ document.documentElement.classList.add('js');
     a.setAttribute('href', BASE + cap(page) + sec + act);
     a.setAttribute('rel', 'noopener');
   });
+})();
+
+/* ---------- Industries nav dropdown toggle ---------- */
+(function(){
+  var btns=document.querySelectorAll('.nav-dd-btn');
+  if(!btns.length) return;
+  btns.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var dd=btn.parentNode, open=dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open?'true':'false');
+    });
+  });
+  document.addEventListener('click',function(e){
+    document.querySelectorAll('.nav-dd.open').forEach(function(dd){
+      if(!dd.contains(e.target)){ dd.classList.remove('open'); var b=dd.querySelector('.nav-dd-btn'); if(b) b.setAttribute('aria-expanded','false'); }
+    });
+  });
+})();
+
+/* ---------- Specialties we serve (tabbed landing section) ---------- */
+(function(){
+  var tabsEl=document.getElementById('specTabs'), panelEl=document.getElementById('specPanel');
+  if(!tabsEl||!panelEl) return;
+  var SPEC=[{"short": "Primary Care", "name": "Primary Care / Family Medicine", "icon": "🩺", "desc": "From capitation to fee-for-service, we keep your books clean across every payer - so you can focus on panels, not paperwork.", "href": "specialty-primary-care.html"}, {"short": "Orthopedics", "name": "Orthopedics / Sports Medicine", "icon": "🦴", "desc": "Surgical revenue, ASC splits, and implant costs - tracked precisely, with real-time margins across every procedure.", "href": "specialty-orthopedics.html"}, {"short": "Dermatology", "name": "Dermatology", "icon": "🧴", "desc": "Cosmetic vs. medical mix, product inventory, and injectables - categorized automatically, with clear profit by service line.", "href": "specialty-dermatology.html"}, {"short": "Medical Group", "name": "Medical Group / Several Locations", "icon": "🏥", "desc": "Multi-location, multi-entity, PC-MSO structures - consolidated dashboards and intercompany reconciliation in one place.", "href": "specialty-medical-group.html"}, {"short": "Ophthalmology", "name": "Ophthalmology / Eye Care", "icon": "👁️", "desc": "Optical retail, surgical, and exam revenue - separated cleanly, so you see the margin on every side of the practice.", "href": "specialty-ophthalmology.html"}, {"short": "Medical Spa", "name": "Medical Spa / Aesthetics", "icon": "💆", "desc": "Memberships, packages, retail, and injectables - deferred revenue and product costs handled right, automatically.", "href": "specialty-medical-spa.html"}, {"short": "Behavioral Health", "name": "Mental / Behavioral Health", "icon": "🧠", "desc": "Multi-clinician groups and insurance + private-pay mix - clean books and real-time clarity across every provider.", "href": "specialty-behavioral-health.html"}, {"short": "Physical Therapy", "name": "Physical Therapy", "icon": "🏃", "desc": "Visit-based revenue, authorizations, and multi-site PT - tracked in real time with clear per-location performance.", "href": "specialty-physical-therapy.html"}, {"short": "Nutrition", "name": "Nutrition / Dietitian", "icon": "🥗", "desc": "Private-pay packages, superbills, and telehealth - simple, accurate books built for a lean practice.", "href": "specialty-nutrition-dietitian.html"}, {"short": "Speech Therapy", "name": "Speech / Language Therapy", "icon": "🗣️", "desc": "Session-based billing, school contracts, and teletherapy - organized books so you can focus on clients.", "href": "specialty-speech-therapy.html"}];
+  SPEC.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.type='button'; b.textContent=s.short; b.setAttribute('role','tab');
+    if(i===0) b.className='active';
+    b.addEventListener('click',function(){ show(i); });
+    tabsEl.appendChild(b);
+  });
+  function show(i){
+    for(var j=0;j<tabsEl.children.length;j++){ tabsEl.children[j].classList.toggle('active', j===i); }
+    var s=SPEC[i];
+    panelEl.innerHTML='<h3><span class="spi" aria-hidden="true">'+s.icon+'</span>'+s.name+'</h3>'+
+      '<p>'+s.desc+'</p>'+
+      '<a class="btn btn-primary" href="pricing.html">Talk to an Expert</a>'+
+      '<a class="spec-more" href="'+s.href+'">See how we help '+s.short+' &rarr;</a>';
+  }
+  show(0);
 })();
