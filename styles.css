@@ -642,7 +642,8 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
    ============================================================ */
 
 /* Risk-reversal microcopy under CTAs (research: beats page-level badges) */
-.cta-note{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;color:var(--muted);font-weight:600;font-size:.9rem;margin:16px 0 0;}
+.cta-note{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;color:var(--muted);font-weight:600;font-size:.9rem;margin:16px 0 0;}
+.cta-note .ri{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .cta-note .tick{color:#16a34a;font-weight:800;}
 .center .cta-note,.cta-inner .cta-note{justify-content:center;}
 .cta-inner .cta-note{color:#c4d0e8;margin-top:18px;}
@@ -750,4 +751,15 @@ footer .brand-logo{filter:brightness(0) invert(1);}
   }
   /* keep the bar from covering the footer legal line */
   footer{padding-bottom:88px;}
+}
+
+/* ===== Mobile fixes: hero badges (no overlap) + sticky CTA safe-area ===== */
+@media (max-width:620px){
+  .hero-badge{padding:9px 12px;gap:9px;}
+  .hero-badge .big{font-size:1.1rem;}
+  .hero-badge small{font-size:.7rem;}
+  .hero-badge .ring{width:34px;height:34px;font-size:1rem;}
+  .hero-badge.one{left:4px;bottom:12px;top:auto;}   /* 4.9/5 -> bottom-left */
+  .hero-badge.two{right:4px;top:12px;bottom:auto;}  /* $50,711 -> top-right (staggered, no overlap) */
+  .sticky-cta{bottom:calc(16px + env(safe-area-inset-bottom));}
 }
