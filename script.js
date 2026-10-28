@@ -106,16 +106,7 @@ document.documentElement.classList.add('js');
       saveFactor: 8,
       price: function (v) { return v <= 20000 ? 150 : v <= 50000 ? 250 : v <= 100000 ? 350 : v <= 150000 ? 450 : 550; }
     },
-    {
-      id: 'taxes', label: 'Taxes',
-      best: 'For practices seeking year-round tax planning plus on-time federal, state, and personal filings.',
-      staff: ['Dedicated Tax Accountant', 'Dedicated Account Manager'],
-      platforms: ['Tax Filing Platform'],
-      other: ['Federal, state &amp; personal filings', 'Additional state filings', 'Year-round tax planning', '24/7 Slack Support'],
-      sliderLabel: 'Annual practice revenue', min: 100000, max: 3000000, step: 50000, value: 500000,
-      saveFactor: 6,
-      price: function (v) { return v <= 250000 ? 150 : v <= 500000 ? 250 : v <= 1000000 ? 400 : v <= 2000000 ? 600 : 800; }
-    },
+    { id: 'taxes', label: 'Taxes', taxCards: true },
     {
       id: 'cfo', label: 'CFO Services',
       best: 'For practices seeking to analyze performance, forecast, and discover key insights.',
@@ -160,6 +151,38 @@ document.documentElement.classList.add('js');
           'If no credits can be claimed, you pay <strong>$0</strong>.</p>' +
           '<a href="pricing.html" class="btn btn-primary btn-lg" style="margin-top:8px;">Get started</a>' +
         '</div>';
+      body.appendChild(panel);
+      return;
+    }
+
+    // Taxes: two-card layout (Tax Essentials + Additional Services) - mirrors www.lucid.now
+    if (t.taxCards) {
+      panel.innerHTML =
+        '<div class="plans tax-plans">' +
+          '<div class="plan">' +
+            '<h3>Tax Essentials</h3>' +
+            '<p class="desc">For all types of entities, from LLCs to C-Corporations.</p>' +
+            '<ul class="tax-essentials">' +
+              '<li>Dedicated Tax Accountant</li>' +
+              '<li>Dedicated Account Manager</li>' +
+            '</ul>' +
+            '<div class="price"><span class="plan-was">$200/mo</span> $150<small>/mo</small></div>' +
+            '<a href="https://contact.lucid.now/zc/382?cta=PricingTaxEssentials" rel="noopener" class="btn btn-primary">Talk to Experts</a>' +
+          '</div>' +
+          '<div class="plan featured">' +
+            '<span class="pop">Most popular</span>' +
+            '<h3>Additional Services</h3>' +
+            '<p class="desc">Add-on filings that are otherwise not available in the Essentials package.</p>' +
+            '<ul class="addon-list">' +
+              '<li><span class="addon-name">Foreign Bank Account - FBAR</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $42/bank</b></li>' +
+              '<li><span class="addon-name">Foreign Shareholders - 5472</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $42/shareholder</b></li>' +
+              '<li><span class="addon-name">Additional State Filings</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $25/state</b></li>' +
+              '<li><span class="addon-name">Foreign Subsidiaries - 5471</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $125/subsidiary</b></li>' +
+            '</ul>' +
+            '<a href="https://contact.lucid.now/zc/382?cta=PricingTaxAddons" rel="noopener" class="btn btn-primary">Get Started</a>' +
+          '</div>' +
+        '</div>' +
+        '<p class="tax-foot">*Displayed figures are the yearly cost apportioned over 12 months.</p>';
       body.appendChild(panel);
       return;
     }
