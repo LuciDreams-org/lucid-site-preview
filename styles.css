@@ -662,6 +662,54 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
 .calc-out .was{color:#64708a;}
 .calc-out .saving{color:#157f3b;}
 
+/* ===== Bento: consolidated "what we do" (services + why + trust) ===== */
+.bento{display:grid;gap:16px;grid-template-columns:repeat(4,1fr);
+  grid-template-areas:
+    "hero hero credits credits"
+    "hero hero book taxes"
+    "spec spec cfo cpa";}
+.b-hero{grid-area:hero;} .b-credits{grid-area:credits;}
+.b-book{grid-area:book;} .b-taxes{grid-area:taxes;}
+.b-spec{grid-area:spec;} .b-cfo{grid-area:cfo;} .b-cpa{grid-area:cpa;}
+.btile{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:6px;
+  transition:transform .2s,box-shadow .2s;}
+.btile:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.btile .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem;
+  background:linear-gradient(135deg,rgba(13,148,136,.12),rgba(18,179,166,.12));}
+.btile h3{margin:6px 0 0;font-size:1.12rem;}
+.btile p{margin:0;color:var(--muted);font-size:.95rem;}
+/* Hero tile — premium dark, carries the core message */
+.b-hero{background:linear-gradient(160deg,#0B2545,#13315f);color:#fff;border:0;}
+.b-hero .ic{background:rgba(255,255,255,.12);}
+.b-hero h3{color:#fff;font-size:1.5rem;}
+.b-hero p{color:#cdd8ec;font-size:1.05rem;}
+.b-hero .b-stat{margin-top:auto;padding-top:14px;font-weight:700;color:#2fe3d2;font-size:.9rem;}
+/* Tax Credits tile — amber highlight (the hook) */
+.b-credits{background:linear-gradient(160deg,rgba(245,158,11,.16),#fff);border-color:rgba(245,158,11,.45);}
+.b-credits h3{color:var(--ink);}
+.b-flag{position:absolute;top:16px;right:16px;background:#F59E0B;color:#3a2800;font-weight:800;
+  font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
+/* Trust chips strip */
+.bento-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;list-style:none;padding:0;margin:22px 0 0;}
+.bento-trust li{display:inline-flex;align-items:center;gap:8px;background:var(--bg-soft);border:1px solid var(--line);
+  border-radius:999px;padding:9px 16px;font-weight:700;color:var(--ink);font-size:.9rem;}
+@media (max-width:960px){
+  .bento{grid-template-columns:repeat(2,1fr);
+    grid-template-areas:
+      "hero hero"
+      "credits credits"
+      "book taxes"
+      "spec spec"
+      "cfo cpa";}
+  .b-hero h3{font-size:1.35rem;}
+}
+@media (max-width:560px){
+  .bento{gap:12px;}
+  .btile{padding:18px;}
+  .btile .ic{width:42px;height:42px;font-size:1.3rem;}
+}
+
 /* Taxes tab: two-card layout (Tax Essentials + Additional Services) - mirrors www.lucid.now */
 .tax-plans{margin-top:4px;}
 .tax-plans .plan{display:flex;flex-direction:column;}
