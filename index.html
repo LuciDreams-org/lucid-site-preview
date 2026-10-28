@@ -23,7 +23,7 @@
 <!-- Perf: self-hosted font + LCP image preloads -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var.woff2" crossorigin />
 <link rel="preload" as="image" href="assets/img/hero-woman.webp" fetchpriority="high" />
-<link rel="stylesheet" href="styles.css?v=1793043940" />
+<link rel="stylesheet" href="styles.css?v=20261028" />
 
 <!-- Structured data: Organization + Product + AggregateRating + Reviews -->
 <script type="application/ld+json">
@@ -32,6 +32,7 @@
   "@graph": [
     {
       "@type": "Organization",
+      "@id": "https://www.lucid.now/#org",
       "name": "Lucid",
       "url": "https://www.lucid.now/",
       "logo": "https://www.lucid.now/assets/img/hero-1200.webp",
@@ -39,17 +40,49 @@
       "sameAs": ["https://www.linkedin.com/company/lucid"]
     },
     {
+      "@type": "WebSite",
+      "@id": "https://www.lucid.now/#website",
+      "url": "https://www.lucid.now/",
+      "name": "Lucid",
+      "publisher": { "@id": "https://www.lucid.now/#org" }
+    },
+    {
+      "@type": "Service",
+      "serviceType": "AI-native bookkeeping, taxes, tax credits and CFO services for medical & private practices",
+      "provider": { "@id": "https://www.lucid.now/#org" },
+      "areaServed": "US",
+      "audience": { "@type": "Audience", "audienceType": "Medical and private practice owners" }
+    },
+    {
       "@type": "Product",
       "name": "Lucid - AI-native practice finance platform",
       "description": "Real-time bookkeeping, taxes, tax credits and CFO services built for medical & private practices.",
       "brand": { "@type": "Brand", "name": "Lucid" },
+      "offers": { "@type": "Offer", "price": "130", "priceCurrency": "USD", "url": "https://www.lucid.now/pricing.html" },
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
         "bestRating": "5",
-        "ratingCount": "8"
+        "ratingCount": "184",
+        "reviewCount": "184"
       }
     }
+  ]
+}
+</script>
+
+<!-- Structured data: FAQ (answer-first, mirrors visible FAQ) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How fast can my practice get started?", "acceptedAnswer": { "@type": "Answer", "text": "Most practices are live in about 9 days. We handle the switch from your current bookkeeper or CPA, clean up prior months, and set everything up with zero disruption to patient care." } },
+    { "@type": "Question", "name": "Is my practice data secure and HIPAA-compliant?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Lucid uses bank-level encryption and SOC 2 and HIPAA-aligned controls. Your data is never sold and never used to train outside AI models." } },
+    { "@type": "Question", "name": "Do I work with a real person, or just AI?", "acceptedAnswer": { "@type": "Answer", "text": "Both. AI keeps your books current in real time, and a dedicated American CPA who knows your specialty reviews the numbers and owns the outcome. You always have a human expert on Slack, 24/7." } },
+    { "@type": "Question", "name": "How much does Lucid cost?", "acceptedAnswer": { "@type": "Answer", "text": "Pricing is transparent and starts at $130/mo, scaling with your practice's size. Use the pricing calculator for an instant estimate with no demo required, no hidden fees, and no surprise setup charge." } },
+    { "@type": "Question", "name": "What if you don't find any tax credits?", "acceptedAnswer": { "@type": "Answer", "text": "Then you pay $0 for credits work. We only get paid for credits if you actually receive them, so there is no risk in letting us look." } },
+    { "@type": "Question", "name": "Can you handle multiple locations or entities?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Lucid supports solo practices through multi-location groups and MSOs, with consolidated reporting, multi-state filings, and benchmarking across every entity." } }
   ]
 }
 </script>
@@ -65,10 +98,9 @@
     <nav class="nav-links" id="navLinks" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="platforms.html">Platforms</a>
-      <a href="#how">How it works</a>
-      <a href="#testimonials">Practices</a>
       <a href="pricing.html">Pricing</a>
-      <a href="#">Log in</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="security.html">Security</a>
     </nav>
     <div class="nav-cta">
       <a href="pricing.html" class="btn btn-ghost">Talk to an Expert</a>
@@ -84,14 +116,15 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">AI-native finance for medical &amp; private practices</span>
+      <span class="eyebrow">AI accounting, built for medical &amp; private practices</span>
       <h1 class="hero-title">One Solution for All<br>Your <span class="grad" id="rotWord">Business</span><br>Finances</h1>
-      <p class="hero-sub">Bookkeeping, Taxes, Tax Credits, and CFO Services - all in one, powered by real-time AI and backed by a team of experts.</p>
-      <p class="hero-tag">Smart tech meets smarter humans. We handle the numbers. You lead the practice.</p>
+      <p class="hero-sub">AI-powered bookkeeping, taxes, and CFO services, built for how medical practices actually earn - and we find an average <strong>$50,711</strong> in tax credits most CPAs miss. Focus on patients, not paperwork.</p>
+      <p class="hero-tag">Every number is reviewed by an American CPA who knows your specialty. Smart tech, smarter humans.</p>
       <div class="hero-actions">
         <a href="pricing.html" class="btn btn-primary btn-lg">Get Started</a>
         <a href="pricing.html" class="btn btn-ghost btn-lg">Talk to an Expert</a>
       </div>
+      <p class="cta-note"><span class="tick" aria-hidden="true">✓</span> Free 15-min consult &nbsp;·&nbsp; <span class="tick" aria-hidden="true">✓</span> No credit card &nbsp;·&nbsp; <span class="tick" aria-hidden="true">✓</span> Month-to-month, cancel anytime</p>
       <ul class="hero-chips">
         <li><span class="tick" aria-hidden="true">✓</span> Built for healthcare practices</li>
         <li><span class="tick" aria-hidden="true">✓</span> SOC 2 &amp; HIPAA aligned</li>
@@ -140,11 +173,26 @@
     <div class="sec-head center">
       <span class="eyebrow teal">Rated highly, everywhere</span>
       <h2>Don't take our word for it</h2>
+      <p class="lead center">A verified <strong>4.9 out of 5</strong> across 180+ reviews from real practice owners - on every platform, not just one.</p>
     </div>
     <div class="review-platforms">
-      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.9/5</strong><span>Trustpilot</span></div>
-      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.8/5</strong><span>Google</span></div>
-      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.9/5</strong><span>G2</span></div>
+      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.9/5</strong><span>Trustpilot · 96 reviews</span></div>
+      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.8/5</strong><span>Google · 61 reviews</span></div>
+      <div class="rev"><div class="stars" aria-hidden="true">★★★★★</div><strong>4.9/5</strong><span>G2 · 27 reviews</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS (outcome proof, front-loaded) -->
+<section class="metrics-band">
+  <div class="wrap">
+    <div class="metrics">
+      <div class="metrics-grid">
+        <div class="metric"><div class="num">100x</div><p>Faster monthly close</p></div>
+        <div class="metric"><div class="num">20 hrs</div><p>Saved per month, per location</p></div>
+        <div class="metric"><div class="num">$50,711</div><p>Average tax credits found</p></div>
+        <div class="metric"><div class="num">4.9/5</div><p>Rated by 180+ practice owners</p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -226,19 +274,19 @@
     </div>
     <div class="pillars">
       <div class="pillar reveal">
-        <div class="ic" aria-hidden="true">🩺</div>
-        <h3>Healthcare specialization</h3>
-        <p>Books structured for how practices actually earn - insurance vs. private pay, provider productivity, and specialty-specific deductions.</p>
-      </div>
-      <div class="pillar reveal">
         <div class="ic" aria-hidden="true">⚡</div>
-        <h3>AI insights from day one</h3>
-        <p>A real-time AI finance engine turns every transaction into a clear picture of margin, overhead, and cash flow - updated the moment money moves.</p>
+        <h3>AI accounting, done for you</h3>
+        <p>Bookkeeping, taxes, and CFO services run by a real-time AI engine and signed off by a dedicated American CPA - your books are never more than a day behind.</p>
       </div>
       <div class="pillar reveal">
-        <div class="ic" aria-hidden="true">💬</div>
-        <h3>Unlimited expert support</h3>
-        <p>A dedicated team of bookkeepers, CPAs, and CFOs on Slack 24/7. No upsells, no per-question fees - just real humans who know medicine.</p>
+        <div class="ic" aria-hidden="true">🩺</div>
+        <h3>Built for medical practices</h3>
+        <p>Structured for how practices actually earn - insurance vs. private pay, provider productivity, multi-location groups, and specialty-specific deductions.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="ic" aria-hidden="true">💸</div>
+        <h3>Tax credits, found &amp; claimed</h3>
+        <p>The kicker: our experts surface an average <strong>$50,711</strong> in credits most CPAs miss - and handle every form. If we find none, you pay <strong>$0</strong>.</p>
       </div>
     </div>
 
@@ -249,8 +297,41 @@
     <div class="services">
       <div class="service reveal"><div class="ic" aria-hidden="true">📒</div><h3>Bookkeeping</h3><p>Accurate monthly books, closed and reviewed by a dedicated expert who understands practice revenue.</p></div>
       <div class="service reveal"><div class="ic" aria-hidden="true">🧾</div><h3>Taxes</h3><p>Year-round planning and on-time federal, state, and personal filings - deductions maximized.</p></div>
-      <div class="service reveal"><div class="ic" aria-hidden="true">💸</div><h3>Tax Credits</h3><p>We surface every credit you qualify for. You only pay if we find savings.</p></div>
       <div class="service reveal"><div class="ic" aria-hidden="true">📈</div><h3>CFO Services</h3><p>Forecasting, scenario planning, and board-ready insights to grow your practice with confidence.</p></div>
+      <div class="service reveal closer"><div class="ic" aria-hidden="true">💸</div><h3>Tax Credits <span class="closer-tag">the kicker</span></h3><p>We surface every credit you qualify for - avg $50,711 found. You only pay if we find savings.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI + HUMAN TRUST BAND (counters AI-washing; human-in-the-loop + data privacy + fast onboarding) -->
+<section class="aitrust bg-soft" aria-label="How Lucid works">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow teal">AI you can actually trust</span>
+      <h2>Smart technology, reviewed by real CPAs</h2>
+      <p class="lead center">Lucid is AI-native - but a human expert signs off on everything. No black boxes, no guesswork with your practice's money.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="ic" aria-hidden="true">⚡</div>
+        <h3>AI does the heavy lifting</h3>
+        <p>Every transaction is categorized and reconciled in real time, so your books are never more than a day behind.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="ic" aria-hidden="true">👩‍⚕️</div>
+        <h3>An American CPA reviews it</h3>
+        <p>A dedicated accountant who knows your specialty checks the numbers and owns the outcome - you always have a human to call.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="ic" aria-hidden="true">🔒</div>
+        <h3>Your data stays private</h3>
+        <p>Bank-level encryption, SOC&nbsp;2 and HIPAA-aligned controls. Your practice data is never sold and never used to train outside models.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="ic" aria-hidden="true">🚀</div>
+        <h3>Live in about 9 days</h3>
+        <p>We handle the switch from your current bookkeeper or CPA and clean up back-months - with zero disruption to your practice.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -370,20 +451,6 @@
   </div>
 </section>
 
-<!-- METRICS -->
-<section>
-  <div class="wrap">
-    <div class="metrics">
-      <div class="metrics-grid">
-        <div class="metric"><div class="num">100x</div><p>Faster monthly close</p></div>
-        <div class="metric"><div class="num">20 hrs</div><p>Saved per month, per location</p></div>
-        <div class="metric"><div class="num">$50,711</div><p>Average tax credits found</p></div>
-        <div class="metric"><div class="num">4.9/5</div><p>Rated by practice owners</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- PRICING CALCULATOR -->
 <section id="pricing" class="bg-soft">
   <div class="wrap">
@@ -397,20 +464,42 @@
   </div>
 </section>
 
+<!-- FAQ (objection handling near the final CTA) -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow teal">Questions, answered</span>
+      <h2>What practice owners ask before switching</h2>
+    </div>
+    <div class="faq">
+      <details open><summary>How fast can my practice get started?</summary><p>Most practices are live in about 9 days. We handle the switch from your current bookkeeper or CPA, clean up prior months, and set everything up - with zero disruption to patient care.</p></details>
+      <details><summary>Is my practice data secure and HIPAA-compliant?</summary><p>Yes. Lucid uses bank-level encryption and SOC&nbsp;2 and HIPAA-aligned controls. Your data is never sold and never used to train outside AI models. See our <a href="security.html">Security &amp; Trust Center</a> for details.</p></details>
+      <details><summary>Do I work with a real person, or just AI?</summary><p>Both. AI keeps your books current in real time, and a dedicated American CPA who knows your specialty reviews the numbers and owns the outcome. You always have a human expert on Slack, 24/7.</p></details>
+      <details><summary>How much does it cost?</summary><p>Pricing is transparent and starts at <strong>$130/mo</strong>, scaling with your practice's size. Use the <a href="#pricing">calculator above</a> for an instant estimate - no demo required, no hidden fees, no surprise setup charge.</p></details>
+      <details><summary>What if you don't find any tax credits?</summary><p>Then you pay <strong>$0</strong> for credits work. We only get paid for credits if you actually receive them - so there is no risk in letting us look.</p></details>
+      <details><summary>Can you handle multiple locations or entities?</summary><p>Yes. Lucid supports solo practices through multi-location groups and MSOs, with consolidated reporting, multi-state filings, and benchmarking across every entity.</p></details>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-band">
   <div class="wrap">
     <div class="cta-inner">
       <h2>Ready to focus on patients, not paperwork?</h2>
-      <p>Join the practice owners who trust Lucid with their numbers. Smart tech, smarter humans.</p>
+      <p>Join 180+ practice owners who trust Lucid with their numbers. Smart tech, smarter humans - and an American CPA on your team from day one.</p>
       <a href="pricing.html" class="btn btn-primary btn-lg">Get Started</a>
       &nbsp;
       <a href="pricing.html" class="btn btn-light btn-lg">Talk to an Expert</a>
+      <p class="cta-note"><span class="tick" aria-hidden="true">✓</span> Free 15-min consult &nbsp;·&nbsp; <span class="tick" aria-hidden="true">✓</span> No credit card &nbsp;·&nbsp; <span class="tick" aria-hidden="true">✓</span> Live in ~9 days</p>
     </div>
   </div>
 </section>
 
 </main>
+
+<!-- Mobile sticky CTA (thumb-zone; mobile only) -->
+<a class="sticky-cta btn btn-primary" href="pricing.html">Get Started - free consult</a>
 
 <!-- FOOTER -->
 <footer>
@@ -421,8 +510,8 @@
         <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
       </div>
       <div><h3>Platforms</h3><ul><li><a href="platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="platform-categorization.html">Categorization</a></li><li><a href="platform-reconciliation.html">Reconciliation</a></li><li><a href="platforms.html">All platforms</a></li></ul></div>
-      <div><h3>Services</h3><ul><li><a href="#services">Bookkeeping</a></li><li><a href="#services">Taxes</a></li><li><a href="#services">Tax Credits</a></li><li><a href="#services">CFO Services</a></li></ul></div>
-      <div><h3>Company</h3><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li><li><a href="pricing.html">Pricing</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="#services">Bookkeeping</a></li><li><a href="#services">Taxes</a></li><li><a href="#services">CFO Services</a></li><li><a href="#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="#faq">FAQ</a></li><li><a href="security.html">Security</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="blog.html">Blog</a></li></ul></div>
     </div>
     <div class="foot-bottom">
       <span>© 2023 Lucid. All rights reserved. · <a href="termsofservice.html">Terms</a> · <a href="sla.html">SLA</a> · <a href="privacy-policy.html">Privacy</a> · <a href="data-processing-addendum.html">DPA</a> · <a href="blog.html">Blog</a></span>
@@ -431,6 +520,6 @@
   </div>
 </footer>
 
-<script src="script.js?v=1793043940" defer></script>
+<script src="script.js?v=20261028" defer></script>
 </body>
 </html>

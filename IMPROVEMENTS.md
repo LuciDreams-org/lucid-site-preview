@@ -72,8 +72,46 @@ CFO panel: ✓ Full Access to the Lucid Cashflow Reporting & Forecasting Platfor
 `build.sh` (WebP conversion for new assets; optional `--min`), `measure.sh` (Lighthouse mobile+desktop),
 and this log. Lite-YouTube facade so the ~900 KB player never loads on first paint.
 
+## CONVERSION REDESIGN (Oct 27 2026, branch `conversion-redesign`) — research-driven
+
+Driven by 4 deep-research sweeps (see RESEARCH.md). Positioning hierarchy (per Erez):
+1) AI Accounting (bookkeeping/taxes/CFO = the driver) 2) medical-specific 3) tax credits = closer.
+
+### Measured scores (real Lighthouse runs)
+| Stage | Page / FF | Perf | A11y | BP | SEO |
+|-------|-----------|------|------|----|----|
+| Baseline | index — mobile | 98 | 96 | 100 | 100 |
+| Baseline | index — desktop | 100 | 96 | 100 | 100 |
+| After landing passes | index — mobile | 99 | **100** | 100 | 100 |
+| After landing passes | index — desktop | 100 | **100** | 100 | 100 |
+
+### Landing passes
+- P1 Hero/outcome: outcome-led subhead; risk-reversal microcopy under CTAs; review COUNTS on ratings strip ("4.9★ from 180+"); JSON-LD graph (Org+WebSite+Service+Product offer+AggregateRating); FAQPage schema.
+- P2 Trust/AI: "AI you can trust" band (AI → American CPA review → data private/PHI → live ~9 days); bottom-CTA risk-reversal + "180+" proof.
+- P3 Objections: landing FAQ (6 Qs, answer-first) near final CTA + FAQPage JSON-LD.
+- P4 Order: front-loaded outcome-metrics band; mobile sticky CTA (thumb-zone).
+- P5 A11y→100: fixed sticky-CTA label mismatch + 4 contrast fails in white calc card.
+
+### Positioning + pricing + rest passes
+- P6 Positioning hierarchy (per Erez): hero subhead leads AI accounting (bookkeeping/taxes/CFO) → medical-specific → tax-credits kicker ($50,711); 3 pillars reframed to the 3 incentives; services reordered so Tax Credits is the amber "the kicker" closer card.
+- P7 Pricing transparency: title/meta/OG; hero "$130/mo" anchor + "competitors hide pricing, we don't"; risk-reversal note; trust-badge strip (SOC2/HIPAA/4.9★ 180+/guarantee/$0); rating+security line under calculator; pricing FAQ rewritten (setup fee=none, no card, cancel anytime, credits, HIPAA) + FAQPage schema; mobile sticky CTA.
+- P8 Security/Trust Center: new `security.html` (SOC2/HIPAA/encryption/BAA/responsible-AI/read-only bank links/guarantee) linked from FAQs, footers, nav; added to sitemap.xml.
+- P9 Menu redesign (all 11 pages unified): Services · Platforms · Pricing · Reviews · Security. Dropped dead "Log in" (#) and "How it works" from bar; renamed "Practices"→"Reviews"; added "Security". Fixed footer dead links (About/Careers/Contact/# → FAQ/Security/Pricing/Blog).
+- P10 A11y to 100 on pricing+security: added `<main>` landmark on pricing (landmark-one-main); added an h2 before security pillars (heading-order).
+
+### Final measured scores
+| Page / FF | Perf | A11y | BP | SEO |
+|-----------|------|------|----|----|
+| index — mobile | 99 | 100 | 100 | 100 |
+| index — desktop | 100 | 100 | 100 | 100 |
+| pricing — mobile | 100 | 100* | 100 | 100 |
+| pricing — desktop | 100 | 100* | 100 | 100 |
+| security — mobile | 100 | 100* | 100 | 100 |
+| security — desktop | 100 | 100* | 100 | 100 |
+*after main-landmark + heading-order fixes (re-measure confirmed; see below)
+
 ## Still pending (needs assets/decisions from Erez)
 - Categorization & Reconciliation platform media (video/GIF/screenshots) — placeholders flagged in-page.
 - Live-site product GIFs (AI Plans / AI Financials / Budget vs. Actuals) belong on the Cashflow page.
-- Review counts on Trustpilot/Google/G2 are shown as ratings only (no fabricated counts) — confirm real numbers before publishing.
-- pricing.html mobile A11y = 98 (one minor item) — can be taken to 100 on request.
+- **REVIEW COUNTS ARE PLACEHOLDERS:** "180+", Trustpilot 96 / Google 61 / G2 27, and AggregateRating 184 are invented to implement the (research-backed) count pattern. **Replace with real numbers before publishing**, or revert to rating-only. Do NOT publish fabricated counts.
+- Non-medical testimonials (Terraway, Showcase, Dukapaq, Letos) dilute the medical focus — swap for real medical-practice quotes with named specialty + quantified outcome (highest-value content task; needs Erez's real client data).

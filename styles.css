@@ -635,3 +635,46 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
 .slider-label{margin-bottom:16px;font-size:1.05rem;}
 .slider-label b{color:var(--ink);}
 .range-ends{margin-top:10px;}
+
+/* ============================================================
+   CONVERSION REDESIGN — research-driven passes (Oct 2026)
+   Hold Lighthouse >=90 mobile+desktop; see RESEARCH.md / IMPROVEMENTS.md
+   ============================================================ */
+
+/* Risk-reversal microcopy under CTAs (research: beats page-level badges) */
+.cta-note{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;color:var(--muted);font-weight:600;font-size:.9rem;margin:16px 0 0;}
+.cta-note .tick{color:#16a34a;font-weight:800;}
+.center .cta-note,.cta-inner .cta-note{justify-content:center;}
+.cta-inner .cta-note{color:#c4d0e8;margin-top:18px;}
+.cta-inner .cta-note .tick{color:#5ff0d8;}
+
+/* AI + human trust band — 4-up on desktop */
+.aitrust .pillars{grid-template-columns:repeat(4,1fr);}
+@media (max-width:960px){.aitrust .pillars{grid-template-columns:1fr 1fr;}}
+@media (max-width:620px){.aitrust .pillars{grid-template-columns:1fr;}}
+
+/* Front-loaded metrics band spacing */
+.metrics-band{padding:40px 0;}
+
+/* A11y contrast fixes (WCAG AA) for the white calculator card + toggle */
+.seg button.active{background:var(--brand-ink);color:#fff;}
+.save-pill{color:#0b5c54;}
+.calc-out .was{color:#64708a;}
+.calc-out .saving{color:#157f3b;}
+
+/* Tax-credits "closer" service card — the kicker stands out (amber) */
+.service.closer{border-color:rgba(245,158,11,.5);background:linear-gradient(180deg,rgba(245,158,11,.08),#fff);}
+.service.closer h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.closer-tag{font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8a5a00;background:rgba(245,158,11,.2);padding:3px 8px;border-radius:999px;}
+
+/* Mobile sticky CTA — hidden on desktop, thumb-zone on phones */
+.sticky-cta{display:none;}
+@media (max-width:620px){
+  .sticky-cta{
+    display:flex;justify-content:center;position:fixed;left:12px;right:12px;
+    bottom:calc(10px + env(safe-area-inset-bottom));z-index:80;
+    box-shadow:0 10px 30px rgba(11,27,54,.28);font-size:1.02rem;padding:15px 20px;
+  }
+  /* keep the bar from covering the footer legal line */
+  footer{padding-bottom:88px;}
+}
