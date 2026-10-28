@@ -39,10 +39,10 @@ document.documentElement.classList.add('js');
   var dots = document.getElementById('testiDots');
   if (!dots) return;
   var data = [
-    { q: "Lucid has been phenomenal across my portfolio of nine healthcare businesses. Smart technology, a team that actually understands medicine, and books I finally trust.", name: "Dr. Frank McCormick, M.D.", role: "Sigma Orthopedics", img: "assets/img/avatar-12.webp?v=2" },
-    { q: "Running a nationwide behavioral health network, I needed finance that scales. Lucid gives me real-time clarity across every single location.", name: "Samantha Hewett", role: "CEO, Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=2" },
-    { q: "Wow, you guys are lightning fast. The responsiveness is unreal — honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Terraway", img: "assets/img/avatar-32.webp?v=2" },
-    { q: "It feels like having a full finance team on demand. My accountant's jaw about dropped when he saw October was already up to date.", name: "Aviv Farhi", role: "CEO, Showcase", img: "assets/img/real-farhi.webp?v=2" }
+    { q: "A sports-medicine surgeon running a portfolio of healthcare businesses — he leans on Lucid for real-time books, taxes, and CFO insight across every entity.", name: "Dr. Frank McCormick, M.D.", role: "Founder, Sigma", img: "assets/img/avatar-12.webp?v=3" },
+    { q: "Founder of Modern Thyroid Clinic in Austin — a nationally recognized thyroid specialist, TEDx speaker, and author scaling patient-first endocrine care.", name: "McCall McPherson, PA-C", role: "Founder, Modern Thyroid Clinic", img: "assets/img/mccall.webp?v=3" },
+    { q: "Founder of Skin MD, a fast-growing dermatology and medical-aesthetics practice — with Lucid keeping the finances clean as she scales.", name: "Dr. Tracie Swayden", role: "Founder, Skin MD", img: "assets/img/tracie.webp?v=3" },
+    { q: "Leads operations for Ascend Behavioral Health, a multi-location behavioral-health group — with real-time financial clarity across every clinic.", name: "Samantha Hewett", role: "Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=3" }
   ];
   var q = document.getElementById('tqQuote');
   var name = document.getElementById('tqName');
