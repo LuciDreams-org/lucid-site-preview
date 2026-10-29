@@ -7,6 +7,33 @@ cd "$(dirname "$0")"
 # partials/head-tracking.html + partials/body-tracking.html into every page.
 # Edit the partials, not the per-page TRACKING markers directly.
 python3 inject_tracking.py
+
+# Guard: fail loudly if any page hardcodes a *different* lucid.now domain
+# than the one this site actually deploys to (CNAME is the single source
+# of truth). Catches the exact bug found 2026-10-29: 80 hardcoded
+# new-main.lucid.now references (canonical/og/schema) left behind after
+# the domain changed, silently serving the wrong URL in every <meta>/
+# JSON-LD tag while the site itself worked fine. Re-run this after any
+# domain change, not just once.
+LIVE_DOMAIN=$(cat CNAME | tr -d '[:space:]')
+# Subdomains that are *always* legitimately different from the site's own
+# domain (third-party service endpoints, not canonical/content URLs).
+ALLOWED_OTHER_DOMAINS="ingest.lucid.now"
+mapfile -t BAD_DOMAIN_FILES < <(grep -rlE "[a-z0-9-]+\.lucid\.now" --include="*.html" . \
+  | xargs grep -lE "[a-z0-9-]+\.lucid\.now" \
+  | while read -r f; do
+      grep -oE "[a-z0-9-]+\.lucid\.now" "$f" | grep -v "^${LIVE_DOMAIN}$" | grep -vFxf <(echo "$ALLOWED_OTHER_DOMAINS") > /dev/null && echo "$f"
+    done)
+if [ "${#BAD_DOMAIN_FILES[@]}" -gt 0 ]; then
+  echo "BUILD FAILED: found hardcoded domain(s) other than '${LIVE_DOMAIN}' (from CNAME) in:"
+  for f in "${BAD_DOMAIN_FILES[@]}"; do
+    echo "  $f:"
+    grep -onE "[a-z0-9-]+\.lucid\.now" "$f" | grep -v ":${LIVE_DOMAIN}$" | grep -vFxf <(echo "$ALLOWED_OTHER_DOMAINS" | sed 's/^/:/') | sed 's/^/    /'
+  done
+  echo "Fix these (sed -i \"s/<old-domain>/${LIVE_DOMAIN}/g\" <file>) before deploying."
+  exit 1
+fi
+echo "domain check OK: all pages consistently reference ${LIVE_DOMAIN}"
 # Keep styles.css/script.js cache-busting version strings identical across
 # every page, so navigating homepage -> inner page never re-downloads them
 # under a different ?v= (was causing a double-download, fixed 2026-10-29).
