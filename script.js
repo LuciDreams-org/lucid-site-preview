@@ -78,6 +78,7 @@ document.documentElement.classList.add('js');
     dots.appendChild(b);
   });
   function reset() { clearInterval(timer); timer = setInterval(next, 6000); }
+  data.forEach(function(d){var im=new Image();im.decoding="async";im.src=d.img;});
   render(0); reset();
 })();
 
