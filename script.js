@@ -550,6 +550,23 @@ function lucidTrackEvent(name, data) {
       vid.load(); vid.play().catch(function () {});
     });
   });
+  /* Once the first (lazy-loaded) video is actually playing, warm the browser
+     cache for the other 5 in the background (idle, low priority) so a tab
+     click later swaps from cache instead of a cold network fetch. */
+  var prefetched = false;
+  function prefetchRest() {
+    if (prefetched) return; prefetched = true;
+    var idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 1500); };
+    idle(function () {
+      DATA.forEach(function (d) {
+        var link = document.createElement('link');
+        link.rel = 'prefetch'; link.as = 'video'; link.href = B + d.src;
+        document.head.appendChild(link);
+      });
+    });
+  }
+  vid.addEventListener('playing', prefetchRest, { once: true });
+  vid.addEventListener('loadeddata', prefetchRest, { once: true });
 })();
 
 /* ---------- Lazy-load autoplay videos on scroll-into-view ---------- */
