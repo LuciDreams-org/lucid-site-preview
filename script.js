@@ -443,10 +443,9 @@ function lucidTrackEvent(name, data) {
   function show(i){
     for(var j=0;j<tabsEl.children.length;j++){ tabsEl.children[j].classList.toggle('active', j===i); }
     var s=SPEC[i];
-    panelEl.innerHTML='<h3><span class="spi" aria-hidden="true">'+s.icon+'</span><span class="grad">'+s.name+'</span></h3>'+
+    panelEl.innerHTML='<h3><span class="spi" aria-hidden="true">'+s.icon+'</span>'+s.name+'</h3>'+
       '<p>'+s.desc+'</p>'+
-      '<a class="btn btn-primary" href="pricing.html">Talk to an Expert</a>'+
-      '<a class="spec-more" href="'+s.href+'">'+(s.cta?s.cta:'See how we help '+s.short)+' &rarr;</a>';
+      '<a class="btn btn-primary" href="pricing.html">Talk to an Expert</a>';
   }
   show(0);
 })();
