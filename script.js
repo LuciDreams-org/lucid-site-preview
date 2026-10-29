@@ -13,6 +13,8 @@ document.documentElement.classList.add('js');
     toggle.addEventListener('click', function () {
       var open = links.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      toggle.textContent = open ? '✕' : '☰';
     });
   }
 })();
