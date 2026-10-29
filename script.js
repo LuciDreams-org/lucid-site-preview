@@ -436,29 +436,6 @@ function lucidTrackEvent(name, data) {
       cta_id: data.cta,
       cta_destination: data.href
     });
-
-    // Meta Pixel: fire directly here (not via a GTM click trigger - GTM's
-    // "Wait for Tags" delay feature only works on linkClick/form triggers,
-    // which only match <a> clicks, so it silently misses <button> CTAs like
-    // the Specialties/hamburger toggles). The real problem this solves: the
-    // click's default action navigates to contact.lucid.now immediately,
-    // tearing down the page before fbq's async network call can complete -
-    // confirmed via direct trace (fbq() fires, zero facebook.com/tr requests
-    // ever reach the wire). Skip the delay for modifier-clicks/middle-click/
-    // target=_blank - those open a new tab and don't unload this page.
-    if (window.fbq) {
-      window.fbq('trackCustom', 'ButtonLinkClick', {
-        cta_text: data.text,
-        cta_classes: a.className,
-        cta_url: data.href,
-        page_path: location.pathname
-      });
-      var opensNewTab = e.button === 1 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank';
-      if (!opensNewTab && e.button === 0) {
-        e.preventDefault();
-        setTimeout(function () { location.href = data.href; }, 200);
-      }
-    }
   }, true);
 })();
 
