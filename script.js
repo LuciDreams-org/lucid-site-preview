@@ -343,8 +343,19 @@ document.documentElement.classList.add('js');
   }, 2200);
 })();
 
+/* ---------- Shared event logger: pushes to GTM dataLayer (GA4 picks it up
+   via a Custom Event trigger) and to PostHog, so every tracked action is
+   logged identically to both. ---------- */
+function lucidTrackEvent(name, data) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(Object.assign({ event: name }, data));
+  if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+}
+
 /* ---------- CTA tracking: route all CTAs to the contact endpoint with a
-   section+action identifier (mirrors www.lucid.now, e.g. ?cta=GetStartedFirstSection) ---------- */
+   section+action identifier (mirrors www.lucid.now, e.g. ?cta=GetStartedFirstSection),
+   preserves the visitor's original query params (utm_*, hsa_*, etc.) through
+   the redirect, and logs a cta_click event to GTM/PostHog on every click. ---------- */
 (function () {
   var BASE = 'https://contact.lucid.now/zc/382?cta=';
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
@@ -366,8 +377,36 @@ document.documentElement.classList.add('js');
     else if (a.closest('.cta-band')) sec = 'Bottom';
     else if (a.closest('#how')) sec = 'HowItWorks';
     else { var s = a.closest('section'); sec = cap((s && s.id) || 'Page'); }
-    a.setAttribute('href', BASE + cap(page) + sec + act);
+    var cta = cap(page) + sec + act;
+    var qs = location.search ? location.search.replace(/^\?/, '&') : '';
+    var href = BASE + cta + qs;
+    a.setAttribute('href', href);
     a.setAttribute('rel', 'noopener');
+    a.addEventListener('click', function () {
+      lucidTrackEvent('cta_click', {
+        cta_text: a.textContent.trim(),
+        cta_section: sec,
+        cta_action: act,
+        cta_id: cta,
+        cta_destination: href
+      });
+    });
+  });
+})();
+
+/* ---------- Section-scroll tracking: tag the URL with ?section=<id> and log
+   a section_scroll event whenever an in-page anchor link jumps to a section,
+   so attribution/replay can see which on-page CTA path a visitor took. ---------- */
+(function () {
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    if (!id) return;
+    a.addEventListener('click', function () {
+      if (history && history.replaceState) {
+        history.replaceState(null, '', location.pathname + '?section=' + id + '#' + id);
+      }
+      lucidTrackEvent('section_scroll', { section: id });
+    });
   });
 })();
 

@@ -3,6 +3,10 @@
 # Drop new source images in assets/img/src/*.{jpg,png} -> auto-converted to WebP.
 set -e
 cd "$(dirname "$0")"
+# Re-inject tracking snippets (GTM/PostHog/Hotjar/Reddit/Crisp) from
+# partials/head-tracking.html + partials/body-tracking.html into every page.
+# Edit the partials, not the per-page TRACKING markers directly.
+python3 inject_tracking.py
 if compgen -G "assets/img/src/*" > /dev/null; then
   for f in assets/img/src/*.{jpg,jpeg,png}; do
     [ -e "$f" ] || continue
