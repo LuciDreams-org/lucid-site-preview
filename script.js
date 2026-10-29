@@ -449,3 +449,14 @@ function lucidTrackEvent(name, data) {
   }
   show(0);
 })();
+
+/* ---------- Mobile sticky CTA: reveal only after the hero buttons scroll away ---------- */
+(function(){
+  var cta = document.querySelector('.sticky-cta');
+  var anchor = document.querySelector('.hero-actions');
+  if(!cta || !anchor || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function(entries){
+    cta.classList.toggle('show', !entries[0].isIntersecting);
+  }, {threshold:0});
+  io.observe(anchor);
+})();
