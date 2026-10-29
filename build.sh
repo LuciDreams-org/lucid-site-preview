@@ -11,10 +11,11 @@ python3 inject_tracking.py
 # every page, so navigating homepage -> inner page never re-downloads them
 # under a different ?v= (was causing a double-download, fixed 2026-10-29).
 ASSET_VER=$(date +%Y%m%d%H%M)
-for f in *.html; do
+mapfile -t ALL_HTML < <(find . -name "*.html" -not -path "./.git/*" -not -path "./partials/*")
+for f in "${ALL_HTML[@]}"; do
   sed -i -E "s/(styles\.css\?v=)[0-9]+/\1${ASSET_VER}/g; s/(script\.js\?v=)[0-9]+/\1${ASSET_VER}/g" "$f"
 done
-echo "styles.css/script.js version synced to ${ASSET_VER} across $(ls *.html | wc -l) pages"
+echo "styles.css/script.js version synced to ${ASSET_VER} across ${#ALL_HTML[@]} pages"
 if compgen -G "assets/img/src/*" > /dev/null; then
   for f in assets/img/src/*.{jpg,jpeg,png}; do
     [ -e "$f" ] || continue

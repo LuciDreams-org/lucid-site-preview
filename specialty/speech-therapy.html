@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
 <!-- TRACKING:HEAD:START -->
-<!-- Google Tag Manager: script tag deferred to window 'load' (biggest main-thread-blocking
-     lever measured in the Oct 29 2026 perf audit - homepage TBT 1680ms->321ms). Tradeoff
-     accepted: GA4/Ads pageview loses visitors who bounce before load fires. dataLayer is
-     initialized and gtm.start is pushed immediately so early dataLayer.push() calls from
-     elsewhere on the page still queue correctly and get processed once GTM loads. -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
 <script>
 window.dataLayer = window.dataLayer || [];
 window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
 window.addEventListener('load', function () {
-  (function(w,d,s,l,i){
-    var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-    j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-    f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
 });
 </script>
 <!-- End Google Tag Manager -->
@@ -25,15 +33,17 @@ window.addEventListener('load', function () {
 <script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
 <script>
   window.addEventListener('load', function () {
-    posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
-      api_host: 'https://ingest.lucid.now/ingest',
-      autocapture: true,
-      capture_pageview: true,
-      capture_pageleave: false,
-      disable_session_recording: true,
-      disable_surveys: true,
-      custom_campaign_params: ['a_aid', 'chan', 'data1'],
-    });
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
   });
 </script>
 
@@ -41,18 +51,24 @@ window.addEventListener('load', function () {
      Click-level events (fired from script.js's CTA handler) reuse this same
      fbq instance - keeping both on one init call, in one place, removes the
      GTM custom-HTML-tag timing/sandboxing variable entirely from the
-     click-tracking investigation. -->
+     click-tracking investigation. script.js guards every fbq() call with
+     `if (window.fbq)`, so an early click before this fires just skips the
+     event instead of throwing. -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1012371517060574');
-fbq('track', 'PageView');
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
@@ -74,7 +90,7 @@ fbq('track', 'PageView');
 <meta property="og:image" content="https://new-main.lucid.now/assets/img/hero-woman.webp" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
-<link rel="stylesheet" href="/styles.css?v=202610291940" />
+<link rel="stylesheet" href="/styles.css?v=202610292007" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Service","serviceType":"Accounting for Speech / Language Therapy","provider":{"@type":"Organization","name":"Lucid","url":"https://new-main.lucid.now/"},"areaServed":"US","description":"Session-based billing, school contracts, and teletherapy - organized books so you can focus on clients."}
 </script>
@@ -229,6 +245,6 @@ window.addEventListener('load', function () {
   </div>
 </footer>
 
-<script src="/script.js?v=202610291940" defer></script>
+<script src="/script.js?v=202610292007" defer></script>
 </body>
 </html>

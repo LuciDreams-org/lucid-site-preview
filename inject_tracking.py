@@ -21,7 +21,7 @@ head_region_re = re.compile(re.escape(HEAD_START) + r".*?" + re.escape(HEAD_END)
 body_region_re = re.compile(re.escape(BODY_START) + r".*?" + re.escape(BODY_END), re.DOTALL)
 
 changed = []
-for path in sorted(glob.glob("*.html")):
+for path in sorted(p for p in glob.glob("**/*.html", recursive=True) if not p.startswith("partials/")):
     with open(path) as f:
         html = f.read()
     original = html
