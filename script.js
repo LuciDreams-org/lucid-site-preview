@@ -524,27 +524,30 @@ function lucidTrackEvent(name, data) {
   io.observe(anchor);
 })();
 
-/* ---------- The Lucid Experience tabs (gif per tab) ---------- */
+/* ---------- The Lucid Experience tabs (video per tab, was gif per tab) ---------- */
 (function () {
   var tabs = document.querySelectorAll('.lx-tab');
-  var img = document.getElementById('lxImg');
+  var vid = document.getElementById('lxImg');
+  var src = document.getElementById('lxSrc');
   var cap = document.getElementById('lxCap');
-  if (!tabs.length || !img) return;
-  var B = 'https://lucidreams.b-cdn.net/thelucidexperiancesection/';
+  if (!tabs.length || !vid || !src) return;
+  var B = 'assets/img/';
   var DATA = [
-    { src: 'aiplans.gif', alt: 'AI-generated financial plan', cap: 'Generate a full financial plan in seconds.' },
-    { src: 'AIFinancials.gif', alt: 'AI financials dashboard', cap: 'Live dashboards for every number that matters.' },
-    { src: 'Budget%20Vs%20Actuals.gif', alt: 'Budget vs actuals comparison', cap: 'See plan vs reality, month over month.' },
-    { src: 'What-If%20Scenarios.gif', alt: 'What-if scenario planning', cap: 'Model new hires, expansion, and new locations.' },
-    { src: 'Complete%20Template%20Library.gif', alt: 'Template library', cap: 'Board decks and investor updates, ready to go.' },
-    { src: 'AI%20Conversation%20.gif', alt: 'AI conversation copilot', cap: 'Ask your finances anything - get an instant answer.' }
+    { src: 'lx-aiplans.mp4', alt: 'AI-generated financial plan', cap: 'Generate a full financial plan in seconds.' },
+    { src: 'lx-aifinancials.mp4', alt: 'AI financials dashboard', cap: 'Live dashboards for every number that matters.' },
+    { src: 'lx-budget-vs-actuals.mp4', alt: 'Budget vs actuals comparison', cap: 'See plan vs reality, month over month.' },
+    { src: 'lx-whatif-scenarios.mp4', alt: 'What-if scenario planning', cap: 'Model new hires, expansion, and new locations.' },
+    { src: 'lx-template-library.mp4', alt: 'Template library', cap: 'Board decks and investor updates, ready to go.' },
+    { src: 'lx-ai-conversation.mp4', alt: 'AI conversation copilot', cap: 'Ask your finances anything - get an instant answer.' }
   ];
   tabs.forEach(function (t) {
     t.addEventListener('click', function () {
       var d = DATA[+t.dataset.lx]; if (!d) return;
       tabs.forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
       t.classList.add('active'); t.setAttribute('aria-selected', 'true');
-      img.src = B + d.src; img.alt = d.alt; if (cap) cap.textContent = d.cap;
+      delete src.dataset.src;
+      src.src = B + d.src; vid.setAttribute('aria-label', d.alt); if (cap) cap.textContent = d.cap;
+      vid.load(); vid.play().catch(function () {});
     });
   });
 })();
