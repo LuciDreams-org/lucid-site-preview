@@ -39,12 +39,13 @@ document.documentElement.classList.add('js');
   var dots = document.getElementById('testiDots');
   if (!dots) return;
   var data = [
-    { q: "A sports-medicine surgeon running a portfolio of healthcare businesses - he leans on Lucid for real-time books, taxes, and CFO insight across every entity.", name: "Dr. Frank McCormick, M.D.", role: "Founder, Sigma", img: "assets/img/avatar-12.webp?v=4" },
+    { q: "Sigma Orthopedics is Dr. McCormick's orthopedic practice within a broader portfolio of nine healthcare businesses. With elite training from Harvard University and the University of Pennsylvania, service as a U.S. Navy flight surgeon, and experience treating teams like the Chicago Bulls and New England Patriots, Sigma reflects the same standard of excellence that defines his wider operations.", name: "Dr. Frank McCormick, M.D.", role: "Founder, Sigma", img: "assets/img/avatar-12.webp?v=4" },
     { q: "Runs Nanoom Medical Group, a multi-entity medical organization spanning primary care, cosmetic surgery, and an IPA across California and Maryland - consolidated with Lucid.", name: "Edwin Choi", role: "Nanoom Medical Group", img: "assets/img/nanoom.svg" },
-    { q: "Leads operations for Ascend Behavioral Health, a multi-location behavioral-health group - with real-time financial clarity across every clinic.", name: "Samantha Hewett", role: "Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=4" },
+    { q: "The owner of Ascend Behavioral Health Network, a nationwide network of behavioral health facilities focused on delivering accessible, affordable, and high-quality mental health and substance use care across multiple locations. She is also the owner of Archangel Centers, where she leads primary mental health and substance use treatment for adolescents and adults.", name: "Samantha Hewett", role: "Ascend Behavioral Health", img: "assets/img/avatar-45.webp?v=4" },
     { q: "Founder of Modern Thyroid Clinic in Austin, a nationally recognized thyroid specialist, TEDx speaker, and author scaling patient-first endocrine care.", name: "McCall McPherson, PA-C", role: "Founder, Modern Thyroid Clinic", img: "assets/img/mccall.webp?v=4" },
     { q: "Founder of Skin MD, a fast-growing dermatology and medical-aesthetics practice - with Lucid keeping the finances clean as she scales.", name: "Dr. Tracie Swayden", role: "Founder, Skin MD", img: "assets/img/tracie.webp?v=4" },
-    { q: "Wow, you guys are lightning fast. The responsiveness is unreal - honestly, CFOs for life for me.", name: "Erin Fitzgerald", role: "Business Owner, Terraway", img: "assets/img/fitzgerald.webp?v=4" },
+    { q: "Terraway is an innovative health and food tech startup led by Erin Fitzgerald. It received a White House Champion of Change Award and was named to Crain's Chicago 40 Under 40. \"Wow, you guys are lightning fast. Sometime you will have to show me behind the scenes what you do and how you do it! CFOs for life for me.\"", name: "Erin Fitzgerald", role: "Business Owner, Terraway", img: "assets/img/fitzgerald.webp?v=4" },
+    { q: "Lumino is a next-gen fintech platform that transforms how businesses get paid, build wealth, and give back. Managing over $200M in payments. \"Just want to say props to the whole Lucid team. We pulled up the Lucid platform in a meeting with a VC and they were extremely impressed. His jaw just about dropped when he saw October was even up to date. Thank you!\"", name: "Giorgio Riccio", role: "Founder, Lumino Technologies", img: "assets/img/giorgio.jpg?v=1" },
     { q: "Founder of Restorative Resilience Counseling, a trauma-focused private counseling practice built on steady, people-first care.", name: "Victoria Hudson", role: "Founder, Restorative Resilience Counseling", img: "assets/img/victoria.webp?v=4" },
     { q: "Founder of AmarilloMD, a direct-care medical practice, and a published physician focused on accessible, transparent care.", name: "Dr. Deb Moore, M.D.", role: "Founder, AmarilloMD", img: "assets/img/amarillo.webp?v=4" },
     { q: "Founder of T1D Screening Queen, an early type-1 diabetes screening practice and advocacy effort expanding access across South Florida.", name: "Lauri Deane", role: "Founder, T1D Screening Queen", img: "assets/img/t1d.webp?v=4" },
@@ -459,4 +460,29 @@ function lucidTrackEvent(name, data) {
     cta.classList.toggle('show', !entries[0].isIntersecting);
   }, {threshold:0});
   io.observe(anchor);
+})();
+
+/* ---------- The Lucid Experience tabs (gif per tab) ---------- */
+(function () {
+  var tabs = document.querySelectorAll('.lx-tab');
+  var img = document.getElementById('lxImg');
+  var cap = document.getElementById('lxCap');
+  if (!tabs.length || !img) return;
+  var B = 'https://lucidreams.b-cdn.net/thelucidexperiancesection/';
+  var DATA = [
+    { src: 'aiplans.gif', alt: 'AI-generated financial plan', cap: 'Generate a full financial plan in seconds.' },
+    { src: 'AIFinancials.gif', alt: 'AI financials dashboard', cap: 'Live dashboards for every number that matters.' },
+    { src: 'Budget%20Vs%20Actuals.gif', alt: 'Budget vs actuals comparison', cap: 'See plan vs reality, month over month.' },
+    { src: 'What-If%20Scenarios.gif', alt: 'What-if scenario planning', cap: 'Model new hires, expansion, and new locations.' },
+    { src: 'Complete%20Template%20Library.gif', alt: 'Template library', cap: 'Board decks and investor updates, ready to go.' },
+    { src: 'AI%20Conversation%20.gif', alt: 'AI conversation copilot', cap: 'Ask your finances anything - get an instant answer.' }
+  ];
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var d = DATA[+t.dataset.lx]; if (!d) return;
+      tabs.forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+      t.classList.add('active'); t.setAttribute('aria-selected', 'true');
+      img.src = B + d.src; img.alt = d.alt; if (cap) cap.textContent = d.cap;
+    });
+  });
 })();
