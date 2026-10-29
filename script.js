@@ -60,7 +60,7 @@ document.documentElement.classList.add('js');
   function render(n) {
     i = n;
     var d = data[n];
-    q.innerHTML = d.q;
+    q.innerHTML = "<span class=\"tq-text\">" + d.q + "</span>";
     name.textContent = d.name;
     role.textContent = d.role;
     img.src = d.img;
