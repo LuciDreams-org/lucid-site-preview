@@ -366,14 +366,22 @@ function lucidTrackEvent(name, data) {
   function action(txt) {
     var t = txt.trim().toLowerCase();
     if (t.indexOf('get a quote') > -1) return 'GetQuote';
+    if (t.indexOf('get my free estimate') > -1) return 'GetEstimate';
     if (t.indexOf('get started') > -1) return 'GetStarted';
-    if (t.indexOf('talk to an expert') > -1) return 'TalkToExpert';
+    if (t.indexOf('talk to an expert') > -1 || t.indexOf('talk to experts') > -1) return 'TalkToExpert';
     if (t === 'log in' || t.indexOf('log in') > -1) return 'Login';
     return null;
   }
   var page = ((location.pathname.split('/').pop() || 'index').replace('.html', '')) || 'index';
-  document.querySelectorAll('a.btn, .nav-links a').forEach(function (a) {
-    var act = action(a.textContent); if (!act) return;
+
+  // Rewrites href + computes tracking data for one <a>. Called at page load for
+  // everything already in the DOM, and lazily (via delegation below) for anything
+  // added/rebuilt afterward - e.g. the Specialties-tab panel and pricing calculator
+  // tabs rewrite their own innerHTML after this script runs, so a one-time
+  // querySelectorAll alone would permanently miss those buttons.
+  function wire(a) {
+    if (a.__ctaWired) return a.__ctaData;
+    var act = action(a.textContent); if (!act) { a.__ctaWired = true; return null; }
     var sec;
     if (a.closest('header.nav')) sec = 'Header';
     else if (a.closest('.calc')) { var p = a.closest('.calc-panel'); sec = 'PricingTab' + cap(p && p.dataset.panel); }
@@ -381,21 +389,42 @@ function lucidTrackEvent(name, data) {
     else if (a.closest('.cta-band')) sec = 'Bottom';
     else if (a.closest('#how')) sec = 'HowItWorks';
     else { var s = a.closest('section'); sec = cap((s && s.id) || 'Page'); }
-    var cta = cap(page) + sec + act;
+    var generatedCta = cap(page) + sec + act;
     var qs = location.search ? location.search.replace(/^\?/, '&') : '';
-    var href = BASE + cta + qs;
-    a.setAttribute('href', href);
-    a.setAttribute('rel', 'noopener');
-    a.addEventListener('click', function () {
-      lucidTrackEvent('cta_click', {
-        cta_text: a.textContent.trim(),
-        cta_section: sec,
-        cta_action: act,
-        cta_id: cta,
-        cta_destination: href
-      });
+    var existingHref = a.getAttribute('href') || '';
+    // CTAs that already hardcode a contact.lucid.now destination (their own ?cta= id)
+    // keep that href and label as-is - only auto-generate+rewrite for everything else.
+    var alreadyWired = existingHref.indexOf('https://contact.lucid.now/') === 0;
+    var href = alreadyWired ? existingHref : (BASE + generatedCta + qs);
+    var ctaMatch = alreadyWired && href.match(/[?&]cta=([^&]+)/);
+    var cta = ctaMatch ? decodeURIComponent(ctaMatch[1]) : generatedCta;
+    if (!alreadyWired) {
+      a.setAttribute('href', href);
+      a.setAttribute('rel', 'noopener');
+    }
+    a.__ctaWired = true;
+    a.__ctaData = { text: a.textContent.trim(), sec: sec, act: act, cta: cta, href: href };
+    return a.__ctaData;
+  }
+
+  document.querySelectorAll('a.btn, .nav-links a').forEach(wire);
+
+  // Capturing-phase delegation: fires before the browser's own navigation, so
+  // wiring a never-before-seen button here (first click on dynamically added
+  // content) still rewrites its href in time for the click to follow it.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a.btn, .nav-links a');
+    if (!a) return;
+    var data = wire(a);
+    if (!data) return;
+    lucidTrackEvent('cta_click', {
+      cta_text: data.text,
+      cta_section: data.sec,
+      cta_action: data.act,
+      cta_id: data.cta,
+      cta_destination: data.href
     });
-  });
+  }, true);
 })();
 
 /* ---------- Section-scroll tracking: tag the URL with ?section=<id> and log
