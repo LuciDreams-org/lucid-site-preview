@@ -436,25 +436,6 @@ function lucidTrackEvent(name, data) {
       cta_id: data.cta,
       cta_destination: data.href
     });
-
-    // Meta Pixel: fired directly here, next to the pixel's own init (now in
-    // partials/head-tracking.html, not GTM) - see memory note on why GTM's
-    // click-trigger path never delivered a network beacon for this. Skip the
-    // delay for modifier-clicks/middle-click/target=_blank, which open a new
-    // tab and don't unload this page.
-    if (window.fbq) {
-      window.fbq('trackCustom', 'ButtonLinkClick', {
-        cta_text: data.text,
-        cta_classes: a.className,
-        cta_url: data.href,
-        page_path: location.pathname
-      });
-      var opensNewTab = e.button === 1 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank';
-      if (!opensNewTab && e.button === 0) {
-        e.preventDefault();
-        setTimeout(function () { location.href = data.href; }, 200);
-      }
-    }
   }, true);
 })();
 
