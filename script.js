@@ -529,3 +529,25 @@ function lucidTrackEvent(name, data) {
     });
   });
 })();
+
+/* ---------- Lazy-load autoplay videos on scroll-into-view ---------- */
+(function () {
+  var vids = document.querySelectorAll('video.lazy-video');
+  if (!vids.length) return;
+  function startVideo(v) {
+    var src = v.querySelectorAll('source');
+    src.forEach(function (s) { if (s.dataset.src) { s.src = s.dataset.src; delete s.dataset.src; } });
+    v.load();
+    v.play().catch(function () {});
+  }
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(startVideo);
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { startVideo(e.target); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px 200px 0px', threshold: 0.01 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
