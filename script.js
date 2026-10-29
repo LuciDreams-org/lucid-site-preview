@@ -363,6 +363,8 @@ function lucidTrackEvent(name, data) {
 (function () {
   var BASE = 'https://contact.lucid.now/zc/382?cta=';
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+  // "specialty-ophthalmology" / "Primary Care" -> "SpecialtyOphthalmology" / "PrimaryCare"
+  function pascal(s) { return (s || '').split(/[^A-Za-z0-9]+/).map(cap).join(''); }
   function action(txt) {
     var t = txt.trim().toLowerCase();
     if (t.indexOf('get a quote') > -1) return 'GetQuote';
@@ -382,14 +384,24 @@ function lucidTrackEvent(name, data) {
   function wire(a) {
     if (a.__ctaWired) return a.__ctaData;
     var act = action(a.textContent); if (!act) { a.__ctaWired = true; return null; }
+    // sec must be unique per visible button location on a page, so the same
+    // button text in two places (e.g. header vs hero "Get Started") stays
+    // distinguishable in PostHog/GA4 via cta_section + cta_id.
     var sec;
-    if (a.closest('header.nav')) sec = 'Header';
+    if (a.closest('.nav-dd')) sec = 'HeaderSpecialtiesMenu'; // dropdown footer link (also the only CTA inside the mobile hamburger menu)
+    else if (a.closest('header.nav')) sec = 'Header';
+    else if (a.classList.contains('sticky-cta')) sec = 'StickyMobile';
     else if (a.closest('.calc')) { var p = a.closest('.calc-panel'); sec = 'PricingTab' + cap(p && p.dataset.panel); }
-    else if (a.closest('.hero')) sec = 'FirstSection';
-    else if (a.closest('.cta-band')) sec = 'Bottom';
-    else if (a.closest('#how')) sec = 'HowItWorks';
-    else { var s = a.closest('section'); sec = cap((s && s.id) || 'Page'); }
-    var generatedCta = cap(page) + sec + act;
+    else if (a.closest('#specPanel')) { var t = document.querySelector('#specTabs .active'); sec = 'SpecialtiesTab' + pascal(t ? t.textContent : ''); }
+    else if (a.closest('.hero, .spec-hero')) sec = 'FirstSection';
+    else if (a.closest('.cta-band, .spec-cta')) sec = 'Bottom';
+    else if (a.closest('#how')) {
+      var fc = a.closest('.feature-copy'), all = document.querySelectorAll('#how .feature-copy');
+      var n = fc ? Array.prototype.indexOf.call(all, fc) + 1 : 0;
+      sec = 'HowItWorks' + (n > 0 ? n : '');
+    }
+    else { var s = a.closest('section'); sec = pascal((s && (s.id || s.classList[0])) || 'Page'); }
+    var generatedCta = pascal(page) + sec + act;
     var qs = location.search ? location.search.replace(/^\?/, '&') : '';
     var existingHref = a.getAttribute('href') || '';
     // CTAs that already hardcode a contact.lucid.now destination (their own ?cta= id)
