@@ -530,8 +530,29 @@ function lucidTrackEvent(name, data) {
   var vid = document.getElementById('lxImg');
   var src = document.getElementById('lxSrc');
   var cap = document.getElementById('lxCap');
+  var loadingEl = document.getElementById('lxLoading');
   if (!tabs.length || !vid || !src) return;
   var B = 'assets/img/';
+  /* Only show "Loading..." if the video hasn't painted a frame ~150ms after
+     a source change - avoids a flash when it's already cached (prefetch) or
+     loads fast, shows up when it genuinely hasn't loaded yet. */
+  var loadingTimer = null;
+  function showLoadingSoon() {
+    if (!loadingEl) return;
+    clearTimeout(loadingTimer);
+    loadingTimer = setTimeout(function () { loadingEl.classList.add('show'); }, 150);
+  }
+  function hideLoading() {
+    if (!loadingEl) return;
+    clearTimeout(loadingTimer);
+    loadingEl.classList.remove('show');
+  }
+  if (loadingEl) {
+    showLoadingSoon();
+    vid.addEventListener('loadeddata', hideLoading);
+    vid.addEventListener('canplay', hideLoading);
+    vid.addEventListener('playing', hideLoading);
+  }
   var DATA = [
     { src: 'lx-aiplans.mp4', alt: 'AI-generated financial plan', cap: 'Generate a full financial plan in seconds.' },
     { src: 'lx-aifinancials.mp4', alt: 'AI financials dashboard', cap: 'Live dashboards for every number that matters.' },
@@ -546,6 +567,7 @@ function lucidTrackEvent(name, data) {
       tabs.forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
       t.classList.add('active'); t.setAttribute('aria-selected', 'true');
       delete src.dataset.src;
+      showLoadingSoon();
       src.src = B + d.src; vid.setAttribute('aria-label', d.alt); if (cap) cap.textContent = d.cap;
       vid.load(); vid.play().catch(function () {});
     });
