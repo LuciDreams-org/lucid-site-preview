@@ -19,6 +19,20 @@ document.documentElement.classList.add('js');
   }
 })();
 
+/* ---------- Transparent nav that solidifies on scroll ----------
+   Blends with the hero at the very top, fades to frosted-white once the
+   user scrolls, for a seamless premium look instead of a hard header block. */
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  function onScroll() {
+    if (window.scrollY > 24) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
 /* ---------- Reveal on scroll (respects reduced-motion) ---------- */
 (function () {
   var els = document.querySelectorAll('.reveal');

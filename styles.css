@@ -4,6 +4,7 @@
    ============================================================ */
 
 :root {
+  --nav-h: 72px;          /* header height; hero pulls up under it */
   /* Brand palette - trustworthy fintech-for-healthcare */
   --ink: #0B2545;          /* deep navy headings (trust) */
   --ink-soft: #334155;     /* body text */
@@ -77,8 +78,16 @@ img { max-width: 100%; display: block; }
 /* ---------- Nav ---------- */
 .nav {
   position: sticky; top: 0; z-index: 60;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background .3s ease, backdrop-filter .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+/* Solidify once the user scrolls off the hero, or when the mobile menu is open,
+   so the nav blends seamlessly with the hero at the top but stays readable after. */
+.nav.scrolled, .nav:has(.nav-links.open) {
   background: rgba(255,255,255,.82); backdrop-filter: saturate(180%) blur(14px);
-  border-bottom: 1px solid var(--line);
+  border-bottom-color: var(--line);
+  box-shadow: 0 4px 20px rgba(17,24,39,.05);
 }
 /* Offset anchor-jump targets so the sticky nav (72px desktop / 64px mobile)
    never covers the top of the section when scrolled/jumped into view. */
@@ -99,11 +108,13 @@ img { max-width: 100%; display: block; }
 /* ---------- Hero ---------- */
 .hero {
   position: relative; overflow: hidden;
+  margin-top: calc(-1 * var(--nav-h));   /* color flows up behind the transparent header */
   background:
     radial-gradient(1100px 500px at 80% -10%, rgba(124,58,237,.10), transparent 60%),
     radial-gradient(800px 500px at 0% 20%, rgba(139,92,246,.10), transparent 55%),
+    linear-gradient(180deg, rgba(124,58,237,.07), transparent 360px),
     var(--bg);
-  padding: 80px 0 70px;
+  padding: calc(80px + var(--nav-h)) 0 70px;
 }
 .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
 .hero h1 { color: var(--ink); }
@@ -535,12 +546,13 @@ p,.lead,.hero-sub,.hero-tag,.calc-best,.desc{text-wrap:pretty;}
   .duo-photo{height:340px;}
 }
 @media (max-width:1024px){
+  :root{--nav-h:64px;}
   .nav-cta .btn-ghost{display:none;}        /* keep only Get Started + hamburger */
   .nav-cta .btn-primary{padding:11px 18px;font-size:.95rem;}
   .nav-inner{height:64px;}
   .nav-links.open{top:64px;max-height:calc(100vh - 64px);max-height:calc(100dvh - 64px);}
   .duo-photo{height:300px;}
-  .hero{padding:44px 0 36px;}
+  .hero{padding:calc(44px + var(--nav-h)) 0 36px;}
   .hero h1{font-size:clamp(1.95rem,8vw,2.5rem);}
   .trust-badges .badge{font-size:.82rem;padding:8px 11px;}
   .plat-media,.cli-demo,.video-wrap{margin-left:-2px;margin-right:-2px;}
@@ -854,7 +866,7 @@ footer .brand-logo{filter:brightness(0) invert(1);}
 
 /* ===== Mobile-first hero: centered like the ad creative, tighter to the CTA ===== */
 @media (max-width:1024px){
-  .hero{padding:22px 0 28px;}
+  .hero{padding:calc(22px + var(--nav-h)) 0 28px;}
   .hero-copy{text-align:center;display:flex;flex-direction:column;align-items:center;margin-top:3vh;}
   .hero-copy .hero-sub,.hero-copy .hero-tag{margin-left:auto;margin-right:auto;}
   .hero-rating{align-self:center;flex-wrap:nowrap;justify-content:center;max-width:100%;gap:10px;padding:7px 14px;font-size:.85rem;}
