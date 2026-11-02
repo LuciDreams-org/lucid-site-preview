@@ -57,6 +57,16 @@ REDIRECTS = {
     "/blog/ai-anomaly-detection-use-cases-in-finance/": "/blog/ai-anomaly-detection-use-cases-finance/",
     "/blog/ai-simplifies-funding-compliance/": "/blog/how-ai-simplifies-funding-compliance/",
     "/post/best-tools-real-time-financial-dashboards/": "/blog/best-tools-real-time-financial-dashboards/",
+    # Retired non-blog marketing pages Google still has indexed (GSC 404s) ->
+    # closest relevant current page (content is gone; redirect preserves the signal).
+    "/landing/": "/",
+    "/tax-filings/": "/",
+    "/slack-support/": "/",
+    "/pricing-accounting/": "/pricing",
+    "/rd-credits/": "/",
+    "/real-time-ai-reporting-analysis-forecasting/": "/platform-cashflow.html",
+    "/how-ai-improves-payment-terms-negotiation/": "/blog",
+    "/thank-you/calendar-booking/": "/",
 }
 ASSET_VER = _asset_ver()
 
