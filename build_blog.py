@@ -47,6 +47,9 @@ def _asset_ver():
 ROOT = os.path.dirname(os.path.abspath(__file__))
 BLOG_DIR = os.path.join(ROOT, "blog")
 EXPORT_DIR = os.path.join(ROOT, "_seobot_export")  # gitignored, not deployed
+LEGACY_DIR = os.path.join(ROOT, "legacy_blog")      # archive-recovered articles
+# Old indexed URLs SEObot removed with no recoverable content -> redirect to successor.
+REDIRECTS = {"how-ai-improves-financial-report": "how-ai-improves-financial-report-accuracy"}
 ASSET_VER = _asset_ver()
 
 # ---------------------------------------------------------------- HTTP helpers
@@ -230,6 +233,33 @@ def update_sitemap(articles):
     with open(path, "w", encoding="utf-8") as f:
         f.write(xml)
 
+def load_legacy():
+    """Archive-recovered articles (legacy_blog/*.json) that Google still indexes
+    but SEObot no longer serves. Same shape as a SEObot article."""
+    out = []
+    if os.path.isdir(LEGACY_DIR):
+        for fn in sorted(os.listdir(LEGACY_DIR)):
+            if fn.endswith(".json"):
+                with open(os.path.join(LEGACY_DIR, fn), encoding="utf-8") as f:
+                    out.append(json.load(f))
+    return out
+
+def write_redirects():
+    """Client-side 301-style redirect pages for old URLs with no content to keep
+    (canonical -> successor so Google consolidates the ranking signal)."""
+    for old, new in REDIRECTS.items():
+        d = os.path.join(BLOG_DIR, old)
+        os.makedirs(d, exist_ok=True)
+        target = f"/blog/{new}/"
+        with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
+            f.write(f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>'
+                    f'<title>Redirecting - Lucid</title>'
+                    f'<link rel="canonical" href="{SITE}{target}"/>'
+                    f'<meta http-equiv="refresh" content="0; url={target}"/>'
+                    f'<meta name="robots" content="noindex, follow"/>'
+                    f'<script>location.replace("{target}");</script>'
+                    f'</head><body>Redirecting to <a href="{target}">{esc(new)}</a>&hellip;</body></html>')
+
 def write_export(articles_raw):
     os.makedirs(os.path.join(EXPORT_DIR, "articles"), exist_ok=True)
     manifest = []
@@ -292,6 +322,18 @@ def main():
             skipped += 1
             continue
         articles.append(a)
+
+    # Merge archive-recovered legacy articles (old indexed URLs SEObot dropped).
+    known = {a["slug"] for a in articles}
+    legacy_added = 0
+    for a in load_legacy():
+        if a.get("slug") and a["slug"] not in known and a.get("published") and not a.get("deleted") and a.get("html"):
+            articles.append(a)
+            known.add(a["slug"])
+            legacy_added += 1
+    if legacy_added:
+        print(f"  + {legacy_added} legacy (archive-recovered) articles merged")
+
     if not articles:
         sys.exit("ERROR: 0 publishable articles after filtering. Aborting.")
 
@@ -309,6 +351,7 @@ def main():
 
     print(f"Generating {len(articles)} pages ({skipped} skipped: draft/deleted)...")
     write_pages(articles)
+    write_redirects()
     update_listing(articles)
     update_sitemap(articles)
     if export:
