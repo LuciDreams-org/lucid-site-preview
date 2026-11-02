@@ -48,8 +48,16 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 BLOG_DIR = os.path.join(ROOT, "blog")
 EXPORT_DIR = os.path.join(ROOT, "_seobot_export")  # gitignored, not deployed
 LEGACY_DIR = os.path.join(ROOT, "legacy_blog")      # archive-recovered articles
-# Old indexed URLs SEObot removed with no recoverable content -> redirect to successor.
-REDIRECTS = {"how-ai-improves-financial-report": "how-ai-improves-financial-report-accuracy"}
+# Old indexed URLs (from Google Search Console "Not found 404") that SEObot
+# renamed/re-pathed with no separate content to keep -> 301-style redirect to the
+# current article so Google consolidates the ranking signal. Full paths from root.
+REDIRECTS = {
+    "/blog/how-ai-improves-financial-report/": "/blog/how-ai-improves-financial-report-accuracy/",
+    "/blog/how-ai-tools-for-financial-resilience-in-startups/": "/blog/ai-tools-for-financial-resilience-in-startups/",
+    "/blog/ai-anomaly-detection-use-cases-in-finance/": "/blog/ai-anomaly-detection-use-cases-finance/",
+    "/blog/ai-simplifies-funding-compliance/": "/blog/how-ai-simplifies-funding-compliance/",
+    "/post/best-tools-real-time-financial-dashboards/": "/blog/best-tools-real-time-financial-dashboards/",
+}
 ASSET_VER = _asset_ver()
 
 # ---------------------------------------------------------------- HTTP helpers
@@ -247,10 +255,9 @@ def load_legacy():
 def write_redirects():
     """Client-side 301-style redirect pages for old URLs with no content to keep
     (canonical -> successor so Google consolidates the ranking signal)."""
-    for old, new in REDIRECTS.items():
-        d = os.path.join(BLOG_DIR, old)
+    for old, target in REDIRECTS.items():
+        d = os.path.join(ROOT, old.strip("/"))
         os.makedirs(d, exist_ok=True)
-        target = f"/blog/{new}/"
         with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
             f.write(f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>'
                     f'<title>Redirecting - Lucid</title>'
@@ -258,7 +265,7 @@ def write_redirects():
                     f'<meta http-equiv="refresh" content="0; url={target}"/>'
                     f'<meta name="robots" content="noindex, follow"/>'
                     f'<script>location.replace("{target}");</script>'
-                    f'</head><body>Redirecting to <a href="{target}">{esc(new)}</a>&hellip;</body></html>')
+                    f'</head><body>Redirecting to <a href="{target}">{esc(target)}</a>&hellip;</body></html>')
 
 def write_export(articles_raw):
     os.makedirs(os.path.join(EXPORT_DIR, "articles"), exist_ok=True)
