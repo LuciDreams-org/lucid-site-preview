@@ -67,6 +67,18 @@ REDIRECTS = {
     "/real-time-ai-reporting-analysis-forecasting/": "/platform-cashflow",
     "/how-ai-improves-payment-terms-negotiation/": "/blog",
     "/thank-you/calendar-booking/": "/",
+    # Old site used trailing-slash URLs; GitHub Pages serves these pages
+    # extension-less, so the indexed /page/ forms 404. Redirect to the no-slash canonical.
+    "/pricing/": "/pricing",
+    "/privacy-policy/": "/privacy-policy",
+    "/termsofservice/": "/termsofservice",
+    "/data-processing-addendum/": "/data-processing-addendum",
+    "/careers/": "/careers",
+    "/contact/": "/contact",
+    "/testimonials/": "/testimonials",
+    "/blog/": "/blog",
+    "/accounting/": "/",
+    "/thank-you/confirmation/": "/",
 }
 ASSET_VER = _asset_ver()
 
