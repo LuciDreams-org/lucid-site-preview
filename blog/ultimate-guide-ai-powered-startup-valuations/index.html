@@ -1,0 +1,437 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Ultimate Guide to AI-Powered Startup Valuations - Lucid</title>
+<meta name="description" content="Practical guide to valuing AI startups: key drivers, modern valuation methods, investor metrics, data moats, regulatory risks, and preparing for due diligence."/>
+<link rel="canonical" href="https://www.lucid.now/blog/ultimate-guide-ai-powered-startup-valuations/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Ultimate Guide to AI-Powered Startup Valuations"/>
+<meta property="og:description" content="Practical guide to valuing AI startups: key drivers, modern valuation methods, investor metrics, data moats, regulatory risks, and preparing for due diligence."/>
+<meta property="og:url" content="https://www.lucid.now/blog/ultimate-guide-ai-powered-startup-valuations/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/699656f5efc60cc2af082620-1771475058680.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Ultimate Guide to AI-Powered Startup Valuations"/>
+<meta name="twitter:description" content="Practical guide to valuing AI startups: key drivers, modern valuation methods, investor metrics, data moats, regulatory risks, and preparing for due diligence."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/699656f5efc60cc2af082620-1771475058680.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Ultimate Guide to AI-Powered Startup Valuations", "description": "Practical guide to valuing AI startups: key drivers, modern valuation methods, investor metrics, data moats, regulatory risks, and preparing for due diligence.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/699656f5efc60cc2af082620-1771475058680.jpg", "datePublished": "2026-02-19T04:24:18.680Z", "dateModified": "2026-02-19T04:24:18.680Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/ultimate-guide-ai-powered-startup-valuations/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">Ultimate Guide to AI-Powered Startup Valuations</h1>
+<div class="article-meta"><time datetime="2026-02-19T04:24:18.680Z">February 19, 2026</time> &middot; 17 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/699656f5efc60cc2af082620-1771475058680.jpg" alt="Ultimate Guide to AI-Powered Startup Valuations" loading="eager" />
+<div class="article-body">
+<p>Valuing AI startups in 2026 is fundamentally different from other industries. With the global AI market projected to grow from <strong>$269 billion in 2024</strong> to <strong>$1.7 trillion by 2030</strong>, investors are prioritizing <strong>proprietary technology, exclusive datasets, and technical teams</strong> over traditional metrics like revenue or profitability. AI startups now attract <strong>10x–50x revenue multiples</strong>, far exceeding those of other sectors.</p>
+<p>Here’s what you need to know:</p>
+<ul>
+<li><strong>Key valuation drivers</strong>: Proprietary algorithms, unique datasets, technical talent, and recurring revenue streams dominate.</li>
+<li><strong>Challenges with older models</strong>: Traditional valuation methods like DCF and comparable analysis often undervalue AI startups due to their exponential growth potential and intangible assets.</li>
+<li><strong>Modern approaches</strong>: AI-powered tools benchmark startups globally, while methods like Real Options Valuation (ROV) and scenario-based DCF account for AI's unique growth dynamics.</li>
+<li><strong>Investor focus</strong>: Metrics like ARR, LTV/CAC, and capital efficiency take precedence, while regulatory readiness and IP documentation can significantly impact valuations.</li>
+</ul>
+<p>AI startups are reshaping how companies are valued, emphasizing <strong>future potential</strong> over current earnings. Founders must align their strategies to secure premium valuations in this competitive market.</p>
+<h2 id="breakout-session-fundraising-and-valuation-for-ai-startups" tabindex="-1" class="sb h2-sbb-cls">Breakout Session: Fundraising &amp; Valuation for AI Startups</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/hgjG3AzibCA" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="how-ai-changes-startup-valuation-methods" tabindex="-1" class="sb h2-sbb-cls">How AI Changes Startup Valuation Methods</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/699656f5efc60cc2af082620-1771474065242.jpg" alt="Traditional vs AI-Powered Startup Valuation Methods Comparison 2026" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Traditional vs AI-Powered Startup Valuation Methods Comparison 2026</p>
+</figcaption></figure><h3 id="what-drives-value-in-ai-startups" tabindex="-1">What Drives Value in AI Startups</h3>
+<p>AI startups are evaluated differently than traditional companies, with a focus on intangible assets rather than physical or easily measurable ones. Investors pay close attention to factors like proprietary algorithms, exclusive datasets, the strength of the technical team, and recurring revenue models. These intangible assets often make up <strong>70%-80% of an AI startup's total value</strong>.</p>
+<p>Take proprietary algorithms and model architectures, for example. They provide a competitive edge that's hard to replicate. A strong case is <a href="https://www.databricks.com/" target="_blank" rel="nofollow noopener noreferrer">Databricks</a>: in December 2024, it raised $10 billion at a $62 billion valuation, which skyrocketed to $134 billion by 2025, reflecting a <strong>27.9x ARR multiple</strong>. This leap was largely due to its patented data processing technology and AI/ML platform. Companies with proprietary technology often enjoy a <strong>15%-20% valuation premium</strong>, as it signals protection from market commoditization.</p>
+<p>Datasets also play a massive role. Their exclusivity, volume, and quality act as the &quot;fuel&quot; for training AI models. Startups that document data ownership and quality can see valuation boosts of <strong>15%-35%</strong>. However, risks like regulatory uncertainty or data privacy issues can knock valuations down by <strong>20%-30%</strong>.</p>
+<p>Another key factor is the technical team. Investors place immense value on teams with strong research credentials, often justifying valuation premiums of <strong>200%-500%</strong>. For instance, <a href="https://ssi.inc/" target="_blank" rel="nofollow noopener noreferrer">Safe Superintelligence</a> (SSI) reached a $5 billion valuation in 2025 with only 10 employees, thanks to the team's exceptional reputation in the AI field.</p>
+<p>Finally, recurring revenue models - whether through machine learning licensing, APIs, or AI-as-a-Service - are viewed as high-quality, sustainable income sources. Metrics like Annual Recurring Revenue (ARR) and usage-based pricing help investors gauge product-market fit and scalability. These modern drivers explain why traditional valuation methods often fall short when assessing AI startups.</p>
+<h3 id="why-old-valuation-models-fall-short" tabindex="-1">Why Old Valuation Models Fall Short</h3>
+<p>Traditional valuation frameworks, like Discounted Cash Flow (DCF) and comparable company analysis, struggle to capture the complexities of AI startups. These methods focus on tangible assets and assume steady, linear growth, which doesn't align with the rapid, intangible-driven nature of AI businesses.</p>
+<p>DCF models, for instance, fail to account for the explosive growth potential of AI. <a href="https://www.anthropic.com/" target="_blank" rel="nofollow noopener noreferrer">Anthropic</a>'s September 2025 funding round is a perfect example: the company raised $13 billion at a <strong>$183 billion valuation</strong>, despite a revenue run-rate of just over $5 billion. This represented a <strong>36.6x revenue multiple</strong>. Traditional models would have significantly undervalued Anthropic, ignoring the &quot;winner-take-all&quot; dynamics and future growth opportunities of cutting-edge AI models.</p>
+<p>Similarly, comparable company analysis falls short because it relies on a limited pool of local peers. In contrast, AI-powered valuation platforms use global datasets, benchmarking millions of startups to provide accurate comparisons across regions and stages. These platforms also reduce human bias and speed up funding decisions, sometimes cutting timelines from months to days.</p>
+<blockquote>
+<p>&quot;Valuation in this era becomes as much a psychological and strategic exercise as it is a financial one. It requires not only understanding numbers, but interpreting narratives.&quot;<br>
+– Andersen Egypt Financial Advisory Department</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Traditional Valuation</th>
+<th>AI-Powered Valuation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary Data</strong></td>
+<td>Financial statements, limited comps</td>
+<td>Financials, user growth, customer sentiment, global benchmarks</td>
+</tr>
+<tr>
+<td><strong>Objectivity</strong></td>
+<td>Subjective, prone to cognitive bias</td>
+<td>Objective, consistent algorithmic criteria</td>
+</tr>
+<tr>
+<td><strong>Growth Logic</strong></td>
+<td>Linear projections</td>
+<td>Exponential scalability</td>
+</tr>
+<tr>
+<td><strong>Key Assets</strong></td>
+<td>Tangible assets, historical revenue</td>
+<td>Data moats, proprietary IP, technical talent</td>
+</tr>
+<tr>
+<td><strong>Risk Assessment</strong></td>
+<td>Market and financial risk</td>
+<td>Regulatory, technical obsolescence, data privacy risk</td>
+</tr>
+</tbody>
+</table>
+<p>Traditional accounting methods simply don't measure what matters most in AI. With intangibles dominating the value equation, balance sheets lose relevance. AI companies often trade at <strong>25x to 30x revenue multiples</strong>, far outpacing the roughly <strong>6x multiples typical for traditional SaaS businesses</strong>. The focus has shifted from &quot;current earnings&quot; to &quot;future potential and scalability&quot;.</p>
+<p>This shift highlights the growing importance of modern financial tools. Platforms like <a href="https://www.lucid.now/">Lucid Financials</a> use AI to deliver real-time, investor-ready insights, bridging the gap between outdated accounting methods and the valuation needs of today's AI-driven startups.</p>
+<h2 id="main-valuation-methods-for-ai-startups" tabindex="-1" class="sb h2-sbb-cls">Main Valuation Methods for AI Startups</h2>
+<h3 id="adjusting-traditional-methods-for-ai-companies" tabindex="-1">Adjusting Traditional Methods for AI Companies</h3>
+<p>Valuing AI startups often requires reworking traditional valuation models to account for their unique growth patterns. For instance, the <strong>Discounted Cash Flow (DCF)</strong> method can still be applied but needs to reflect the non-linear growth driven by the &quot;data flywheel&quot; effect. This phenomenon occurs when user growth leads to more data, improving the AI model and accelerating further growth. To better represent these dynamics, probability-weighted scenario analysis becomes essential for modeling various growth paths and addressing competitive risks.</p>
+<p>For more established AI companies with steady cash flows, DCF offers a long-term perspective, but its accuracy heavily depends on the assumptions made. This makes scenario-based modeling crucial for exploring different potential outcomes.</p>
+<p>When it comes to <strong>comparable company analysis</strong>, using global datasets rather than just local peers can yield better benchmarks. Traditional metrics like EV/Revenue or EV/EBITDA multiples still apply, but for AI startups, it's more relevant to compare them to companies with similar revenue models. For example:</p>
+<ul>
+<li>AI SaaS subscriptions often trade at 8x–25x ARR.</li>
+<li>Enterprise licensing models typically range from 12x–35x revenue.</li>
+<li>Usage-based APIs are valued at 8x–25x revenue.</li>
+</ul>
+<p>However, finding truly comparable companies can be tough, as many AI startups operate in niche areas.</p>
+<p><strong>Asset-based valuation</strong> also takes on a new meaning for AI startups. Intangible assets like proprietary algorithms, model architectures, and datasets often make up 70–80% of a company's value. Independent IP audits can help document patents and codebase uniqueness, potentially increasing valuation multiples by 15–20%. Additionally, quantifying elements like data exclusivity, labeling accuracy, and data &quot;freshness&quot; can justify premiums of 15–35%.</p>
+<p>For startups that haven’t yet generated revenue, methods like <strong>Berkus</strong> and <strong>Scorecard</strong> focus on qualitative factors such as team expertise, technical milestones, and the strength of the core idea. These methods are particularly relevant when a highly skilled technical team can command significant premiums. A notable example is SSI, a 10-person startup that achieved a $5 billion valuation in 2025.</p>
+<p>While these adapted traditional methods lay the groundwork for AI startup valuation, newer approaches are emerging to address their unique characteristics.</p>
+<h3 id="new-valuation-approaches-for-ai" tabindex="-1">New Valuation Approaches for AI</h3>
+<p>Emerging frameworks are helping to better capture the unique drivers behind AI startup valuations. One such approach is <strong>Real Options Valuation (ROV)</strong>, which treats AI breakthroughs as call options on potential future outcomes. This method is particularly suitable for R&amp;D-heavy startups, where the value of strategic flexibility outweighs current cash flow. It also accounts for the reality that over 40% of advanced AI projects may be abandoned by 2027 due to poor oversight or unclear benefits.</p>
+<p>Another key driver of valuation is recurring revenue from <strong>model licensing</strong>. Investors are increasingly focused on the stability offered by API-based licensing models. For example, Anthropic achieved a $183 billion valuation in September 2025, supported by a $5 billion revenue run-rate and a 36.6x revenue multiple, largely driven by its API licensing model.</p>
+<p><strong>Data monetization</strong> through Data-as-a-Service (DaaS) frameworks is another growing trend. These models often command revenue multiples of 6x–20x. To avoid potential valuation discounts of 20–30%, founders should ensure detailed documentation of data sources, exclusivity agreements, and compliance with regulations.</p>
+<p>Additionally, <strong>ecosystem leverage</strong> can significantly boost valuations. Startups deeply integrated with platforms like AWS, Azure, or Google Cloud benefit from &quot;integration readiness&quot;, which reduces competitive vulnerabilities. By 2026, investors increasingly prioritize operational efficiency over speculative hype, rewarding strong partnerships with premium multiples.</p>
+<blockquote>
+<p>&quot;AI company valuation in 2026 blends classic methods with new frameworks that capture the value of proprietary models, data assets, and recurring AI-driven revenue streams.&quot;<br>
+– Thomas Smale, CEO, <a href="https://www.feinternational.com/" target="_blank" rel="nofollow noopener noreferrer">FE International</a></p>
+</blockquote>
+<p>Here’s a summary of key valuation methods, their core metrics, and challenges:</p>
+<table>
+<thead>
+<tr>
+<th>Valuation Approach</th>
+<th>Best For</th>
+<th>Core Metric</th>
+<th>Key Challenge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modified DCF</strong></td>
+<td>Mature AI firms</td>
+<td>Free cash flow (scenario-based)</td>
+<td>Forecast reliability in volatile markets</td>
+</tr>
+<tr>
+<td><strong>Real Options (ROV)</strong></td>
+<td>R&amp;D-heavy startups</td>
+<td>Strategic optionality/breakthroughs</td>
+<td>Model complexity</td>
+</tr>
+<tr>
+<td><strong>Scorecard / VC Method</strong></td>
+<td>Pre-revenue AI firms</td>
+<td>Exit value + team/tech score</td>
+<td>Subjectivity</td>
+</tr>
+<tr>
+<td><strong>Market Multiples</strong></td>
+<td>Scale-up phase</td>
+<td>Revenue (15x–35x) or Users</td>
+<td>Scarcity of true comparables</td>
+</tr>
+<tr>
+<td><strong>Monte Carlo</strong></td>
+<td>Uncertain trajectories</td>
+<td>Scenario distribution</td>
+<td>Requires advanced modeling</td>
+</tr>
+</tbody>
+</table>
+<h2 id="metrics-investors-use-to-value-ai-startups" tabindex="-1" class="sb h2-sbb-cls">Metrics Investors Use to Value AI Startups</h2>
+<h3 id="financial-metrics-that-matter" tabindex="-1">Financial Metrics That Matter</h3>
+<p>Investors in AI startups closely analyze financial metrics that highlight both current performance and future potential. For companies using subscription-based models, <strong>Annual Recurring Revenue (ARR)</strong> is a critical indicator of predictable income. Between 2025 and 2026, AI companies were trading at revenue multiples of 25–30×, far outpacing the ~6× average seen in traditional SaaS businesses. This was largely due to high ARR retention rates and strong growth metrics.</p>
+<p>Another key metric is <strong>capital efficiency</strong>, often measured by the EV/Funding ratio. This shows how much enterprise value a company generates for every dollar of funding raised. With a growing preference for disciplined growth over sheer revenue numbers, this metric has gained prominence. Additionally, unit economics like the <strong>Lifetime Value to Customer Acquisition Cost (LTV/CAC)</strong> ratio are important benchmarks. A ratio above 3:1 and customer acquisition payback periods of 12 months or less are considered indicators of efficient growth.</p>
+<p>Top-performing AI SaaS companies consistently achieve <strong>gross margins above 70%</strong> and <strong>ARR retention rates exceeding 100%</strong>, signaling strong expansion revenue from existing customers. Low churn rates - below 6% - further demonstrate product stickiness. For example, one B2B AI SaaS platform achieved a $112 million exit at a 28× ARR multiple, driven by 42% year-over-year ARR growth and a churn rate of just 4%. Notably, top-quartile companies grow at an average rate of 65.4%, compared to a median of 28.3%.</p>
+<p>While these financial metrics are vital, technical performance indicators specific to AI businesses also weigh heavily in valuations.</p>
+<h3 id="ai-specific-performance-indicators" tabindex="-1">AI-Specific Performance Indicators</h3>
+<p>AI startups are often judged on their <strong>data moat</strong>, which includes proprietary datasets and algorithms. These intangible assets can account for 70–80% of an AI company's total value. Investors evaluate factors such as data exclusivity, volume, annotation quality, and the network effects that enhance model performance.</p>
+<p>Another key area is <strong>technical defensibility</strong>. Companies that develop and customize their own models typically achieve higher valuations compared to those heavily reliant on third-party APIs with little differentiation. Metrics like algorithm accuracy, inference speed, and the ability for continuous improvement are closely examined. Scalability is also assessed through measures like compute hours per training cycle and cost per output .</p>
+<p>Independent <strong>IP audits</strong>, which verify patent filings and codebase uniqueness, can increase valuation multiples by 15–20%. These audits help substantiate the company’s proprietary edge.</p>
+<blockquote>
+<p>&quot;An AI business valuation model in 2026 must capture the value of proprietary algorithms, unique datasets, recurring revenue, and scalability factors that increasingly define market leaders and drive premium multiples.&quot; – Thomas Smale, CEO, FE International </p>
+</blockquote>
+<p>While technical factors are crucial, the expertise of the team and readiness for regulatory challenges are also essential components of a strong valuation.</p>
+<h3 id="team-quality-and-regulatory-readiness" tabindex="-1">Team Quality and Regulatory Readiness</h3>
+<p>The strength of the technical team can significantly impact valuations. Teams with exceptional research backgrounds - demonstrated through published papers or experience at leading AI labs - can command valuation premiums of 200–500%. Investors favor founders and engineers who have deep knowledge of software development, machine learning theory, and domain-specific applications.</p>
+<p>In today’s landscape, <strong>regulatory and ethical readiness</strong> is no longer optional. Compliance with data privacy laws like <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation" target="_blank" rel="nofollow noopener noreferrer">GDPR</a> and <a href="https://oag.ca.gov/privacy/ccpa" target="_blank" rel="nofollow noopener noreferrer">CCPA</a>, along with adherence to standards for model explainability and bias mitigation, directly influences investor confidence. Regulatory or privacy issues can reduce valuations by 20–30%. By 2027, nearly 40% of agentic AI projects are expected to be canceled due to unclear value propositions or insufficient oversight.</p>
+<p>To avoid valuation setbacks during due diligence, founders should conduct mock technical and legal audits. Keeping clear records of data sources, ownership rights, and privacy protections is essential. Platforms like <a href="https://www.lucid.now">Lucid Financials</a> can help startups maintain investor-ready documentation, ensuring a smoother due diligence process.</p>
+<h2 id="getting-your-startup-ready-for-valuation" tabindex="-1" class="sb h2-sbb-cls">Getting Your Startup Ready for Valuation</h2>
+<p>Preparing your startup for valuation involves more than just understanding metrics and methods - it’s about presenting a well-documented, compelling case to investors.</p>
+<h3 id="keeping-financial-records-investor-ready" tabindex="-1">Keeping Financial Records Investor-Ready</h3>
+<p>Investors expect a clear financial history. That means providing <strong>3–5 years of profit and loss statements, balance sheets, and cash flow statements</strong>, alongside metrics like <strong>ARR (Annual Recurring Revenue)</strong>, growth rates, churn, and LTV (Lifetime Value).</p>
+<p>For AI startups, it’s especially important to include a detailed <strong>margin analysis</strong> that separates compute costs and distinguishes between recurring and volatile, usage-based revenue.</p>
+<p>Tools like <a href="https://www.lucid.now">Lucid Financials</a> can simplify this process, helping founders prepare investor-ready financials in as little as seven days. They also offer <strong>real-time reporting</strong> and AI-driven forecasting. By the time due diligence begins, every transaction should be reconciled, every data source documented, and all financial assumptions backed by clear evidence.</p>
+<p>Once your financials are in order, the next step is showcasing your technology and data assets.</p>
+<h3 id="presenting-your-technology-and-data-assets" tabindex="-1">Presenting Your Technology and Data Assets</h3>
+<p>Investors want a clear picture of your intellectual property (IP) and data assets. This includes documenting and auditing <strong>patents, proprietary code, custom model architectures, training data sources</strong>, and ownership rights. Compliance with privacy laws like <strong>GDPR</strong> and <strong>CCPA</strong> is also essential. Overlooking these areas can lead to valuation penalties.</p>
+<p>It’s equally important to provide benchmarks for your technology. Metrics such as <strong>accuracy rates, inference speed, cost per prediction</strong>, and evidence of ongoing improvements help demonstrate the strength of your platform.</p>
+<p>A great example is Databricks, which achieved a $134 billion valuation in 2025 with a 27.9× ARR multiple. This premium valuation was largely due to its proprietary AI/ML platform and patented data processing technology.</p>
+<p>With your technology well-documented, you’ll want to steer clear of common pitfalls that could hurt your valuation.</p>
+<h3 id="common-valuation-mistakes-to-avoid" tabindex="-1">Common Valuation Mistakes to Avoid</h3>
+<p>Mispricing your company is a frequent misstep. Overpricing or relying on generic AI multiples can lead to future down rounds and misalignment with market expectations. For instance, <strong>core AI infrastructure companies</strong> typically trade at revenue multiples of 25×–35×, while <strong>Applied AI startups</strong> in vertical SaaS tend to see multiples closer to 9×–12×.</p>
+<p>Regulatory risks are another area to address early. Ignoring AI safety, ethics, or regional policies - like the <a href="https://en.wikipedia.org/wiki/Artificial_Intelligence_Act" target="_blank" rel="nofollow noopener noreferrer">EU AI Act</a> - can reduce your addressable market and drive up compliance costs. For example, in late 2025, a consumer-focused AI firm saw a <strong>25% valuation discount</strong> despite strong revenue growth, due to exposure to new EU data privacy laws and a lack of explainability controls. <a href="https://www.gartner.com/en" target="_blank" rel="nofollow noopener noreferrer">Gartner</a> reports that over 40% of advanced AI projects are abandoned because of unclear value propositions or poor governance.</p>
+<p>To protect your valuation, document your compliance measures and conduct pre-transaction audits covering IP, data rights, and financials.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Risk Factor</strong></th>
+<th><strong>Potential Valuation Impact</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regulatory Risk</td>
+<td>Up to 30% Discount</td>
+</tr>
+<tr>
+<td>Data Privacy/Ownership</td>
+<td>20% or Higher Discount</td>
+</tr>
+<tr>
+<td>Technical Obsolescence</td>
+<td>15% or Greater Multiple Reduction</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: FE International, 2026</em> </p>
+<h2 id="ai-startup-valuation-trends-in-2026" tabindex="-1" class="sb h2-sbb-cls">AI Startup Valuation Trends in 2026</h2>
+<p>The AI valuation landscape in early 2026 looks very different compared to just a year ago. Investors have shifted their focus, favoring companies with proven revenue streams and consistent demand over those offering vague promises of &quot;AI potential.&quot; Growth-first narratives without clear monetization strategies are no longer commanding the same attention.</p>
+<blockquote>
+<p>&quot;Investors stopped underwriting uncertainty the same way... They are pricing the quality of the revenue, not the excitement of the category.&quot;<br>
+– Lior Ronen, Founder, <a href="https://www.finrofca.com/" target="_blank" rel="nofollow noopener noreferrer">Finro Financial Consulting</a> </p>
+</blockquote>
+<p>Unlike previous cycles that emphasized potential, today's valuations hinge on clear evidence of quality and operational efficiency. AI startups secured <strong>$131.5 billion</strong> in venture funding, representing a third of global VC investments. However, this capital is increasingly concentrated in companies with strong customer retention, willingness to pay, and measurable workflow improvements. These shifts have created noticeable variations in valuation multiples across different funding stages.</p>
+<h3 id="2026-valuation-ranges-by-funding-stage" tabindex="-1">2026 Valuation Ranges by Funding Stage</h3>
+<p>Valuation multiples in 2026 show significant variation depending on the funding stage and type of AI application. Seed-stage AI startups enjoy a <strong>42% premium</strong> over non-AI startups, with revenue multiples typically ranging from <strong>10× to 25×</strong> and median post-money valuations between <strong>$10 million and $17.9 million</strong>. At this stage, potential remains the key driver.</p>
+<p>By Series A, revenue multiples increase to <strong>15×–30×</strong>, with median valuations climbing to <strong>$30 million to $51.9 million</strong>. Some datasets even show averages as high as <strong>39×</strong>, as traction begins to show. Series B often marks the high point for growth-stage multiples, ranging from <strong>15×–30×</strong>, with median valuations around <strong>$143 million</strong>. Beyond this stage, growth rates tend to stabilize.</p>
+<p>Late-stage rounds, including Series C and beyond, see revenue multiples narrowing to <strong>20×–50×</strong>, with valuations ranging from <strong>$100 million to $500 million+</strong>. On average, multiples fall to <strong>21×–28×</strong>, as investors prioritize efficiency and predictable growth over momentum. A standout example is <a href="https://www.crusoe.ai/" target="_blank" rel="nofollow noopener noreferrer">Crusoe</a>, which raised <strong>$1.38 billion</strong> in Series E funding at a <strong>$10 billion valuation</strong> to expand its AI data center operations in January 2026.</p>
+<p>The distinction between <strong>Core AI</strong> and <strong>Applied AI</strong> also drives major differences in valuations. Core AI infrastructure companies, such as large language model providers, averaged an impressive <strong>79.7× EV/Revenue</strong> in Q1 2026, while the broader category saw an average of <strong>65.2×</strong>. In contrast, applied AI solutions designed for specific industries often trade in the <strong>9×–12×</strong> range. For example, <a href="https://www.harvey.ai/" target="_blank" rel="nofollow noopener noreferrer">Harvey</a>, a legal AI firm, maintained a premium valuation of around <strong>80× revenue</strong>, while applied AI companies in sectors like HR and PropTech typically hovered closer to <strong>10×–12×</strong>.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Funding Stage</strong></th>
+<th><strong>Typical Revenue Multiple</strong></th>
+<th><strong>Median Post-Money Valuation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Seed</strong></td>
+<td>10× – 25×</td>
+<td>$10M – $17.9M</td>
+</tr>
+<tr>
+<td><strong>Series A</strong></td>
+<td>15× – 30×</td>
+<td>$30M – $51.9M</td>
+</tr>
+<tr>
+<td><strong>Series B</strong></td>
+<td>15× – 30×</td>
+<td>~$143M</td>
+</tr>
+<tr>
+<td><strong>Late-Stage (C+)</strong></td>
+<td>20× – 50×</td>
+<td>$100M – $500M+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: Qubit Capital, Finro Limited, 2026 </em></p>
+<p>These differences underscore the evolving criteria investors use to evaluate AI startups, which we explore further below.</p>
+<h3 id="what-investors-care-about-now" tabindex="-1">What Investors Care About Now</h3>
+<p>Investor priorities have shifted dramatically, with a greater emphasis on efficient scaling and high-quality revenue. The question has moved from &quot;how fast can you grow?&quot; to &quot;how efficiently can you scale?&quot;. <strong>Capital efficiency</strong>, often measured by the EV/Funding ratio, has become a key metric for predicting valuation durability. Startups with disciplined capital usage and scalable growth channels are now favored over those with high burn rates.</p>
+<p>The commercialization of <strong>Agentic AI</strong> is another major trend in 2026. Investors are drawn to AI solutions with clear, repeatable workflows and structured pricing models, rather than ambiguous token-based systems. A standout example is <a href="https://cognition.ai/" target="_blank" rel="nofollow noopener noreferrer">Cognition AI</a>, which reached a <strong>$10.2 billion valuation</strong> on roughly <strong>$73 million in revenue</strong>, achieving a <strong>139.7× multiple</strong> in the autonomous coding niche.</p>
+<p>Regulation has also become a critical factor. As AI adoption accelerates - now used by <strong>88% of surveyed companies</strong> in at least one business function - regulatory challenges around safety, ethics, and explainability are affecting valuations. Companies that fail to address these issues may see their valuations drop by as much as <strong>30%</strong>. Startups in sectors like legal tech and healthcare that meet these regulatory demands are particularly appealing to investors.</p>
+<p>Lastly, <strong>partnership ecosystems</strong> play an increasingly important role. Large technology firms are expected to invest over <strong>$300 billion</strong> in AI-related initiatives, including data centers, hardware, and model development, during this cycle. Startups that can demonstrate strong partnerships with these major players or integrate their solutions into established distribution networks often command higher valuations. <a href="https://openai.com/" target="_blank" rel="nofollow noopener noreferrer">OpenAI</a>, for instance, reached a staggering <strong>$500 billion valuation</strong> by January 2026, driven by its proprietary technology, extensive data assets, and aggressive global expansion.</p>
+<h2 id="conclusion" tabindex="-1" class="sb h2-sbb-cls">Conclusion</h2>
+<p>AI-powered valuation has transformed the way founders approach their company's worth, replacing guesswork and outdated methods with precise, data-driven insights. Instead of relying on intuition or outdated multiples, founders can now benchmark their performance against real-time, global metrics. This shift is especially critical in 2026, as investors increasingly focus on capital efficiency, the quality of recurring revenue, and regulatory compliance over hype-driven growth.</p>
+<p>The takeaway? <strong>Valuation readiness equals fundraising readiness.</strong> Founders who invest in thorough, investor-grade documentation are the ones securing top-tier multiples - often reaching 25× to 30× revenue or more. On the flip side, skipping this preparation can result in valuation penalties of 15% to 30%, often due to regulatory oversights, unclear intellectual property ownership, or unresolved technical debt. This underscores a critical point:</p>
+<blockquote>
+<p>&quot;In a funding environment that's increasingly competitive, an AI-powered valuation isn't just a number – it's a strategic asset.&quot; – Ege Eksi, CMO, SeedScope </p>
+</blockquote>
+<p>To stay ahead, founders should leverage AI-driven platforms to gain an accurate understanding of their company's worth and address potential risks early. Conducting mock due diligence with advisors can help identify and resolve issues in areas like code, intellectual property, and financial records before they escalate into deal-breakers. Tools such as <strong>Lucid Financials</strong> offer AI-powered automation and expert oversight, ensuring that financial records are up-to-date, forecasts are accurate, and reporting is ready for investor scrutiny. This level of preparation not only keeps your financials clean but also gives you the confidence to negotiate from a position of strength.</p>
+<p>As the AI valuation landscape continues to evolve, certain truths remain constant: <strong>data outperforms intuition, speed outpaces delay, and preparation triumphs over improvisation.</strong> By embracing these principles, founders can secure premium valuations and confidently navigate the ever-changing funding environment.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="whats-the-fastest-way-to-estimate-my-ai-startups-valuation-in-2026" tabindex="-1" data-faq-q>What’s the fastest way to estimate my AI startup’s valuation in 2026?</h3>
+<p>The fastest way to gauge your AI startup’s valuation for 2026 is by leveraging <strong>AI-powered valuation tools</strong>. These tools process financial metrics, market trends, and even non-financial factors in real time. The result? You can get detailed, data-backed insights - often within just 1–2 hours. This speed and accuracy give founders a reliable foundation for making smarter business decisions.</p>
+<h3 id="how-do-investors-verify-a-real-data-moat-during-due-diligence" tabindex="-1" data-faq-q>How do investors verify a real “data moat” during due diligence?</h3>
+<p>Investors confirm the presence of a <strong>data moat</strong> during due diligence by analyzing how exclusive and enduring a startup's proprietary data truly is. They look at elements such as unique datasets, data feedback loops, and network effects that make it harder for competitors to catch up. Beyond that, they dig into how the data is collected, safeguarded, and applied, ensuring it delivers a lasting edge while staying adaptable to shifts in the market and regulatory landscape.</p>
+<h3 id="which-metrics-matter-most-for-ai-startups-that-arent-profitable-yet" tabindex="-1" data-faq-q>Which metrics matter most for AI startups that aren’t profitable yet?</h3>
+<p>Key indicators to watch for unprofitable AI startups include <strong>data quality</strong>, <strong>model performance</strong>, <strong>displacement risk</strong>, proprietary data assets, technical defensibility, and market trends. These metrics help gauge long-term potential while considering the fast-paced and high-risk environment of AI ventures.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=699656f5efc60cc2af082620"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What’s the fastest way to estimate my AI startup’s valuation in 2026?","acceptedAnswer":{"@type":"Answer","text":"The fastest way to gauge your AI startup’s valuation for 2026 is by leveraging AI-powered valuation tools. These tools process financial metrics, market trends, and even non-financial factors in real time. The result? You can get detailed, data-backed insights - often within just 1–2 hours. This speed and accuracy give founders a reliable foundation for making smarter business decisions."}},{"@type":"Question","name":"How do investors verify a real “data moat” during due diligence?","acceptedAnswer":{"@type":"Answer","text":"Investors confirm the presence of a data moat during due diligence by analyzing how exclusive and enduring a startup's proprietary data truly is. They look at elements such as unique datasets, data feedback loops, and network effects that make it harder for competitors to catch up. Beyond that, they dig into how the data is collected, safeguarded, and applied, ensuring it delivers a lasting edge while staying adaptable to shifts in the market and regulatory landscape."}},{"@type":"Question","name":"Which metrics matter most for AI startups that aren’t profitable yet?","acceptedAnswer":{"@type":"Answer","text":"Key indicators to watch for unprofitable AI startups include data quality, model performance, displacement risk, proprietary data assets, technical defensibility, and market trends. These metrics help gauge long-term potential while considering the fast-paced and high-risk environment of AI ventures."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

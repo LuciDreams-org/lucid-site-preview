@@ -1,0 +1,476 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Top 5 SaaS Payback Period Calculators - Lucid</title>
+<meta name="description" content="Compare five CAC payback calculators, learn required inputs, benchmarks, and when to use gross vs net payback."/>
+<link rel="canonical" href="https://www.lucid.now/blog/best-saas-payback-period-calculators/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Top 5 SaaS Payback Period Calculators"/>
+<meta property="og:description" content="Compare five CAC payback calculators, learn required inputs, benchmarks, and when to use gross vs net payback."/>
+<meta property="og:url" content="https://www.lucid.now/blog/best-saas-payback-period-calculators/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a2f435986c50afdb5bf004a-1781490810129.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Top 5 SaaS Payback Period Calculators"/>
+<meta name="twitter:description" content="Compare five CAC payback calculators, learn required inputs, benchmarks, and when to use gross vs net payback."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a2f435986c50afdb5bf004a-1781490810129.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Top 5 SaaS Payback Period Calculators", "description": "Compare five CAC payback calculators, learn required inputs, benchmarks, and when to use gross vs net payback.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a2f435986c50afdb5bf004a-1781490810129.jpg", "datePublished": "2026-06-15T02:33:30.129Z", "dateModified": "2026-06-15T02:33:30.129Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/best-saas-payback-period-calculators/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Top 5 SaaS Payback Period Calculators</h1>
+<div class="article-meta"><time datetime="2026-06-15T02:33:30.129Z">June 15, 2026</time> &middot; 10 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a2f435986c50afdb5bf004a-1781490810129.jpg" alt="Top 5 SaaS Payback Period Calculators" loading="eager" />
+<div class="article-body">
+<p><strong>If you want the short answer: use gross profit, not revenue, and expect most B2B SaaS payback periods in 2026 to land around <em>15–16 months</em>.</strong> If you’re under <strong>12 months</strong>, you’re in solid shape. If you’re in the <strong>5–7 month</strong> range, you’re near the top end.</p>
+<p>I’d sum up the article like this:</p>
+<ul>
+<li><strong>All five tools measure CAC payback in months</strong></li>
+<li>The base formula is <strong>CAC ÷ (monthly revenue per customer × gross margin)</strong></li>
+<li><strong><a href="https://brentonway.com/" target="_blank" rel="nofollow noopener noreferrer">Brenton Way</a></strong> adds LTV, churn, and benchmark bands</li>
+<li><strong><a href="https://www.wallstreetprep.com/" target="_blank" rel="nofollow noopener noreferrer">Wall Street Prep</a></strong> uses <strong>sales and marketing spend ÷ new MRR × gross margin</strong></li>
+<li><strong><a href="https://www.thesaascfo.com/" target="_blank" rel="nofollow noopener noreferrer">The SaaS CFO</a></strong> goes beyond gross payback and can estimate <strong>net payback</strong></li>
+<li>The main mistake to avoid is <strong>using revenue instead of gross profit</strong>, which can make payback look <strong>20%–33% shorter</strong></li>
+</ul>
+<p>If I were picking fast:</p>
+<ul>
+<li>For a plain month count: <strong>Ideal Customer Profile</strong> or <strong>ProductLift</strong></li>
+<li>For more context: <strong>Brenton Way</strong></li>
+<li>For finance-led modeling: <strong>Wall Street Prep</strong></li>
+<li>For net payback and expansion-heavy SaaS: <strong>The SaaS CFO</strong></li>
+</ul>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a2f435986c50afdb5bf004a-1781489657923.jpg" alt="Top 5 SaaS CAC Payback Period Calculators Compared" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Top 5 SaaS CAC Payback Period Calculators Compared</p>
+</figcaption></figure><h2 id="cac-payback-period-or-saas-metrics-school-or-the-saas-cfo" tabindex="-1" class="sb h2-sbb-cls">CAC Payback Period | SaaS Metrics School | <a href="https://www.thesaascfo.com/" target="_blank" rel="nofollow noopener noreferrer">The SaaS CFO</a></h2>
+<p><img src="https://assets.seobotai.com/lucid.now/6a2f435986c50afdb5bf004a/958a3c63915a88ba280cfc1cfde21c0e.jpg" alt="The SaaS CFO"></p>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/aqW8QTnvdyI" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="quick-comparison" tabindex="-1" class="sb h2-sbb-cls">Quick Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Calculator</th>
+<th>Best For</th>
+<th>Main Inputs</th>
+<th>Main Output</th>
+<th>Main Tradeoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ideal Customer Profile</strong></td>
+<td>Fast baseline check</td>
+<td>CAC, monthly revenue per customer, gross margin</td>
+<td>Payback in months</td>
+<td>Very little added context</td>
+</tr>
+<tr>
+<td><strong>ProductLift</strong></td>
+<td>Low-friction screening</td>
+<td>CAC, ARPU/MRR, gross margin</td>
+<td>Payback in months</td>
+<td>Limited depth</td>
+</tr>
+<tr>
+<td><strong>Brenton Way</strong></td>
+<td>Unit economics review with benchmarks</td>
+<td>CAC, revenue per customer, gross margin, churn</td>
+<td>Payback, LTV, LTV:CAC, break-even chart</td>
+<td>More inputs</td>
+</tr>
+<tr>
+<td><strong>Wall Street Prep</strong></td>
+<td>FP&amp;A and investor-style modeling</td>
+<td>S&amp;M spend, new MRR, gross margin, new customers</td>
+<td>CAC/customer, avg. new MRR, payback</td>
+<td>Heavier setup</td>
+</tr>
+<tr>
+<td><strong>The SaaS CFO</strong></td>
+<td>Net payback analysis</td>
+<td>Fully loaded CAC, monthly revenue, gross margin, plus churn/expansion if needed</td>
+<td>Gross or net payback</td>
+<td>More data work</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bottom line:</strong> I’d use the simplest calculator that answers the question in front of me. If I only need a fast check, I’d keep it simple. If I’m planning spend, headcount, or board reporting, I’d use a model with gross margin, fully loaded CAC, and, when needed, expansion revenue.</p>
+<h2 id="1-ideal-customer-profile-cac-payback-calculator" tabindex="-1" class="sb h2-sbb-cls">1. Ideal Customer Profile CAC Payback Calculator</h2>
+<h3 id="formula-basis" tabindex="-1">Formula Basis</h3>
+<p>This calculator uses the standard <strong>CAC ÷ (monthly revenue per customer × gross margin)</strong> formula. The result is your payback period in months.</p>
+<h3 id="inputs-required" tabindex="-1">Inputs Required</h3>
+<p>You’ll need three inputs:</p>
+<ul>
+<li>Fully loaded CAC</li>
+<li>Monthly revenue per customer, such as <strong>ARPU</strong> or <strong>MRR per account</strong></li>
+<li>Gross margin</li>
+</ul>
+<p>Finance teams usually pull these numbers from accounting, billing systems, and the P&amp;L.</p>
+<h3 id="outputs-and-benchmarks" tabindex="-1">Outputs and Benchmarks</h3>
+<p>It gives you one output: <strong>payback period in months</strong>. For targets, don’t rely on one company-wide number. It makes more sense to use <strong>segment-specific benchmarks</strong> instead.</p>
+<h3 id="finance-team-fit" tabindex="-1">Finance-Team Fit</h3>
+<p>This calculator fits board reporting and capital-efficiency analysis well. Think of it as the baseline tool in this list, then use the other calculators to compare more specific cases.</p>
+<h2 id="2-productlift-cac-payback-period-calculator" tabindex="-1" class="sb h2-sbb-cls">2. ProductLift CAC Payback Period Calculator</h2>
+<h3 id="formula-basis-1" tabindex="-1">Formula Basis</h3>
+<p>If you want the same core metric in a lighter interface, ProductLift uses the standard payback formula. It factors in gross margin instead of raw revenue, then shows the result in a clean, simple format.</p>
+<h3 id="inputs-required-1" tabindex="-1">Inputs Required</h3>
+<p>Enter:</p>
+<ul>
+<li>CAC</li>
+<li>MRR per customer or ARPU</li>
+<li>Gross margin</li>
+</ul>
+<h3 id="outputs" tabindex="-1">Outputs</h3>
+<p>The calculator returns your payback period in months.</p>
+<h3 id="finance-team-fit-1" tabindex="-1">Finance-Team Fit</h3>
+<p>This tool works well for founders and finance teams that want a quick, low-friction payback check. It’s handy for fast screening before a deeper model review.</p>
+<h2 id="3-brenton-way-cac-payback-calculator" tabindex="-1" class="sb h2-sbb-cls">3. <a href="https://brentonway.com/" target="_blank" rel="nofollow noopener noreferrer">Brenton Way</a> CAC Payback Calculator</h2>
+<p><img src="https://assets.seobotai.com/lucid.now/6a2f435986c50afdb5bf004a/3748f6b772656810c2706bf510d83b85.jpg" alt="Brenton Way"></p>
+<h3 id="formula-basis-2" tabindex="-1">Formula Basis</h3>
+<p>The Brenton Way calculator gives you more than a basic payback number. It puts <strong>payback</strong>, <strong>churn-based LTV</strong>, and <strong>benchmark bands</strong> in the same view, which makes it easier to judge what the number means in practice.</p>
+<p>It uses the standard payback formula, then adds churn-based LTV context.</p>
+<h3 id="inputs-required-2" tabindex="-1">Inputs Required</h3>
+<p>You'll enter your <strong>CAC</strong>, <strong>monthly revenue per customer</strong> (or <strong>MRR per account</strong>), <strong>Gross Margin %</strong>, and <strong>Monthly Churn %</strong>. There’s also a business-model dropdown with benchmark bands for <strong>B2B SaaS</strong>, <strong>DTC eCommerce</strong>, <strong>consumer subscription</strong>, <strong>B2B services</strong>, and <strong>healthcare</strong>.</p>
+<p>One key detail: <strong>churn affects LTV, not payback</strong>. That’s an easy point to miss. And if you want a number you can trust, use fully loaded CAC, including ad spend, salaries, and tools. If you leave those out, payback will look shorter than it is.</p>
+<h3 id="outputs-and-benchmarks-1" tabindex="-1">Outputs and Benchmarks</h3>
+<p>The calculator returns <strong>payback</strong>, <strong>estimated LTV</strong>, <strong>LTV:CAC</strong>, and a <strong>break-even chart</strong>. That break-even chart shows when cumulative gross profit crosses CAC.</p>
+<p>For <strong>B2B SaaS</strong>, under <strong>12 months</strong> is healthy, while over <strong>18 months</strong> falls into the warning band. Here’s how Brenton Way frames the benchmarks across the business models it supports:</p>
+<table>
+<thead>
+<tr>
+<th>Business Model</th>
+<th>Healthy Payback Benchmark</th>
+<th>Warning Band</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B2B SaaS</td>
+<td>&lt; 12 months</td>
+<td>&gt; 18 months</td>
+</tr>
+<tr>
+<td>DTC eCommerce</td>
+<td>&lt; 3 months</td>
+<td>&gt; 6 months</td>
+</tr>
+<tr>
+<td>Consumer Subscription</td>
+<td>&lt; 6 months</td>
+<td>&gt; 9 months</td>
+</tr>
+<tr>
+<td>B2B Services/Agencies</td>
+<td>&lt; 6 months</td>
+<td>&gt; 12 months</td>
+</tr>
+<tr>
+<td>Healthcare Practices</td>
+<td>&lt; 12 months</td>
+<td>&gt; 18 months</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: Brenton Way </em></p>
+<h3 id="finance-team-fit-2" tabindex="-1">Finance-Team Fit</h3>
+<p>This one fits growth-stage teams that want a quick unit-economics check across channels or pricing. It’s free, doesn’t require signup, and works well for fast scenario checks.</p>
+<h2 id="4-wall-street-prep-cac-payback-period-calculator" tabindex="-1" class="sb h2-sbb-cls">4. <a href="https://www.wallstreetprep.com/" target="_blank" rel="nofollow noopener noreferrer">Wall Street Prep</a> CAC Payback Period Calculator</h2>
+<p><img src="https://assets.seobotai.com/lucid.now/6a2f435986c50afdb5bf004a/4bc6bf7150bd4569c4cf08db26812de9.jpg" alt="Wall Street Prep"></p>
+<h3 id="formula-basis-3" tabindex="-1">Formula Basis</h3>
+<p>For teams that want a more model-driven approach, Wall Street Prep looks at <strong>total sales and marketing spend</strong> instead of just CAC on a per-customer basis. Its formula is:</p>
+<blockquote>
+<p>CAC Payback Period = S&amp;M Expense ÷ (New MRR × Gross Margin %) </p>
+</blockquote>
+<p>That matters because the model ties payback to <strong>gross profit</strong>, not top-line revenue. In practice, that makes it a better fit for finance-led work than early-stage founder screening.</p>
+<h3 id="inputs-required-3" tabindex="-1">Inputs Required</h3>
+<p>You’ll need total S&amp;M expense, new MRR from newly acquired customers, gross margin %, and the number of new customers. Wall Street Prep also suggests using <strong>net new MRR</strong> for a tighter read on expansion and churn.</p>
+<p>With those inputs, teams can pressure-test payback across different acquisition cases without much friction.</p>
+<h3 id="outputs-and-benchmarks-2" tabindex="-1">Outputs and Benchmarks</h3>
+<p>The calculator returns:</p>
+<ul>
+<li>CAC per customer</li>
+<li>Average new MRR per customer</li>
+<li>CAC payback period in months </li>
+</ul>
+<p>In Wall Street Prep’s example, the result is a <strong>14-month payback</strong>. Their rule of thumb is simple: most SaaS startups usually stay under <strong>12 months</strong>.</p>
+<h3 id="finance-team-fit-3" tabindex="-1">Finance-Team Fit</h3>
+<p>This one is a better match for FP&amp;A, PE, and banking teams that need audit-ready modeling, not a fast back-of-the-napkin estimate. If speed is the goal, it may feel a bit heavy. If precision matters most, it fits the job.</p>
+<h2 id="5-the-saas-cfo-cac-payback-period-model" tabindex="-1" class="sb h2-sbb-cls">5. The SaaS CFO CAC Payback Period Model</h2>
+<h3 id="formula-basis-4" tabindex="-1">Formula Basis</h3>
+<p>For teams that want the most complete view in this list, this model goes past simple gross payback. The SaaS CFO model uses the <strong>gross profit</strong> version of CAC payback. If you look at revenue alone, recovery speed can look faster than it is by <strong>20% to 30%</strong>.</p>
+<h3 id="inputs-required-4" tabindex="-1">Inputs Required</h3>
+<p>You’ll need:</p>
+<ul>
+<li>fully-loaded CAC</li>
+<li>monthly revenue per customer</li>
+<li>gross margin %</li>
+</ul>
+<p>You can also add churn and expansion revenue if you want to calculate <strong>net payback</strong>.</p>
+<p>The tricky part is fully-loaded CAC. It takes more work to put together because it includes salaries, equity, and tools.</p>
+<h3 id="outputs-and-benchmarks-3" tabindex="-1">Outputs and Benchmarks</h3>
+<p>Those extra inputs make this model a better fit for land-and-expand businesses. It can also estimate <strong>net payback</strong> when you include expansion revenue and post-acquisition costs.</p>
+<p>That matters because net payback can be <strong>30% to 40% shorter</strong> than gross payback for land-and-expand businesses. As a broad SaaS benchmark, use <strong>15 to 16 months</strong>.</p>
+<p>If plain CAC payback doesn’t give you enough to judge capital efficiency, this model gives you a much better read.</p>
+<h3 id="finance-team-fit-4" tabindex="-1">Finance-Team Fit</h3>
+<p>This model is best for finance teams that need <strong>net payback</strong>, not just gross payback. In plain English, it’s a stronger fit for finance than for a fast founder-level screen.</p>
+<h2 id="how-to-read-your-calculator-results" tabindex="-1" class="sb h2-sbb-cls">How to Read Your Calculator Results</h2>
+<p>Use the formula that matches the decision in front of you: <strong>per-customer payback</strong> for unit economics, and <strong>period-based payback</strong> for GTM efficiency.</p>
+<p>Here’s the simple way to think about it. Per-customer formulas tell you how long it takes to earn back the cost of acquiring <strong>one customer</strong>. Period-based models look at sales efficiency at the <strong>team or company level</strong> over a set period.</p>
+<p>That’s why you shouldn’t compare the two unless the attribution window lines up, which is usually <strong>one quarter</strong>.</p>
+<p>Once you know which formula you’re using, the next job is avoiding the errors that make the result look better than it is.</p>
+<p>A common mistake is <strong>using revenue instead of gross profit</strong>. If you use revenue in place of gross profit, payback looks about <strong>20% to 33% shorter</strong> than it should for typical SaaS margins. That’s not a small miss. It can distort hiring plans, budget calls, and how aggressively you spend.</p>
+<p>Another common error is <strong>mixing time units</strong>. Monthly inputs and quarterly outputs don’t belong in the same calculation unless you convert them first. Put everything into the same time unit before you compare results.</p>
+<p>Use the chart below to match the calculator output to the question you’re trying to answer.</p>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Best Calculator Style</th>
+<th>Why It Fits</th>
+<th>Limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Quick point estimate</strong></td>
+<td>Simple unit economics (<code>CAC ÷ [ARPU × GM%]</code>)</td>
+<td>Fast inputs; good for early-stage gut checks</td>
+<td>Ignores churn; assumes customers stay forever</td>
+</tr>
+<tr>
+<td><strong>Unit economics deep-dive</strong></td>
+<td>LTV:CAC + payback hybrid</td>
+<td>Connects recovery speed with total profitability</td>
+<td>High LTV can mask dangerously slow cash recovery</td>
+</tr>
+<tr>
+<td><strong>Multi-segment SaaS</strong></td>
+<td>Segmented / channel-specific</td>
+<td>Prevents SMB efficiency from hiding enterprise losses</td>
+<td>Requires fully-loaded cost allocation per segment</td>
+</tr>
+</tbody>
+</table>
+<p>If you track these inputs every month, manual updates often become the main source of error. For recurring tracking, <a href="https://www.lucid.now">Lucid Financials</a> can keep gross margin, CAC, and board-ready reporting consistent.</p>
+<h2 id="pros-and-cons-of-each-calculator" tabindex="-1" class="sb h2-sbb-cls">Pros and Cons of Each Calculator</h2>
+<p>The table below gives you the short version: when each tool is fastest to use, where it shines, and where it falls short.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Top Advantages</th>
+<th>Main Drawbacks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ideal Customer Profile CAC Payback Calculator</strong></td>
+<td>Fastest option; 3 inputs; clean baseline payback read</td>
+<td>No LTV; no break-even chart; excludes expansion revenue </td>
+</tr>
+<tr>
+<td><strong>ProductLift CAC Payback Period Calculator</strong></td>
+<td>Simple interface; quick payback result; low-friction for fast checks</td>
+<td>Limited depth; not suited for detailed finance-team modeling </td>
+</tr>
+<tr>
+<td><strong>Brenton Way CAC Payback Calculator</strong></td>
+<td>Vertical-specific benchmarks for B2B SaaS, DTC, and Healthcare; includes churn in LTV calculations </td>
+<td>Requires more data points than simpler tools; does not model churn impact on payback timeline </td>
+</tr>
+<tr>
+<td><strong>Wall Street Prep CAC Payback Period Calculator</strong></td>
+<td>Ties payback to gross profit via S&amp;M spend; outputs CAC per customer and average new MRR </td>
+<td>Assumes constant churn; ignores expansion revenue </td>
+</tr>
+<tr>
+<td><strong>The SaaS CFO CAC Payback Period Model</strong></td>
+<td>Supports net payback with expansion revenue; breaks down channel-level efficiency </td>
+<td>Higher data requirements; can be noisy for small cohorts </td>
+</tr>
+</tbody>
+</table>
+<p>If you just want a fast gut check, <strong>Ideal Customer Profile</strong> and <strong>ProductLift</strong> are the easiest places to start. They keep things light and give you a quick answer without much setup.</p>
+<p>If you need more than a surface-level read, the tradeoff changes. <strong>Brenton Way</strong> adds vertical benchmarks and folds churn into LTV calculations. <strong>Wall Street Prep</strong> ties payback to gross profit and gives you CAC per customer plus average new MRR. And <strong>The SaaS CFO</strong> model goes a step further by supporting net payback with expansion revenue and showing channel-level efficiency.</p>
+<p>That said, more detail usually means more inputs. So the best tool often comes down to one simple thing: are you doing a fast check, or are you trying to model how the business <em>actually</em> performs?</p>
+<h2 id="conclusion" tabindex="-1" class="sb h2-sbb-cls">Conclusion</h2>
+<p>The best calculator depends on the decision in front of you. Pick the one that fits the job: a fast screen, a benchmark check, or deeper cohort planning.</p>
+<p>In 2026, median B2B SaaS CAC payback sits at <strong>15–16 months</strong>, while top-quartile companies come in at <strong>under 6 months</strong>. That makes the choice pretty straightforward: use the simplest tool that answers the question you need to answer today. Go simple when you need speed. Go deeper when you need a planning view.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-calculate-fully-loaded-cac" tabindex="-1" data-faq-q>How do I calculate fully loaded CAC?</h3>
+<p>To calculate <strong>fully loaded CAC</strong>, include <strong>all</strong> customer acquisition costs, not just ad spend.</p>
+<p>That means factoring in costs like:</p>
+<ul>
+<li>Salaries</li>
+<li>Tools</li>
+<li>Commissions</li>
+<li>Contractors</li>
+<li>Overhead</li>
+</ul>
+<p>The formula is simple:</p>
+<p><strong>Fully loaded CAC = Total Sales &amp; Marketing Spend / Number of New Customers Acquired</strong></p>
+<p>The key is to include every acquisition-related cost tied to sales and marketing. If you leave out items like payroll or overhead, your CAC can look lower than it actually is.</p>
+<h3 id="when-should-i-use-gross-payback-vs-net-payback" tabindex="-1" data-faq-q>When should I use gross payback vs. net payback?</h3>
+<p>Use <strong>gross payback</strong> for short-term cash flow planning, conservative forecasting, or when you want to measure new customer acquisition efficiency without expansion revenue. It shows how fast CAC is paid back from new customer revenue alone.</p>
+<p>Use <strong>net payback</strong> for long-term unit economics, LTV modeling, and a more realistic view of revenue over time. It includes ongoing and expansion revenue, which can shorten the payback period.</p>
+<h3 id="whats-a-good-saas-payback-period-in-2026" tabindex="-1" data-faq-q>What’s a good SaaS payback period in 2026?</h3>
+<p>In 2026, a good SaaS payback period is generally <strong>under 12 months</strong>.</p>
+<p>The best-performing companies often land in the <strong>6 to 8 month</strong> range, though that can vary based on stage and business model.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a2f435986c50afdb5bf004a"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I calculate fully loaded CAC?","acceptedAnswer":{"@type":"Answer","text":"To calculate fully loaded CAC, include all customer acquisition costs, not just ad spend. That means factoring in costs like: Salaries. Tools. Commissions. Contractors. Overhead. The formula is simple: Fully loaded CAC = Total Sales & Marketing Spend / Number of New Customers Acquired. The key is to include every acquisition-related cost tied to sales and marketing. If you leave out items like payroll or overhead, your CAC can look lower than it actually is."}},{"@type":"Question","name":"When should I use gross payback vs. net payback?","acceptedAnswer":{"@type":"Answer","text":"Use gross payback for short-term cash flow planning, conservative forecasting, or when you want to measure new customer acquisition efficiency without expansion revenue. It shows how fast CAC is paid back from new customer revenue alone. Use net payback for long-term unit economics, LTV modeling, and a more realistic view of revenue over time. It includes ongoing and expansion revenue, which can shorten the payback period."}},{"@type":"Question","name":"What’s a good SaaS payback period in 2026?","acceptedAnswer":{"@type":"Answer","text":"In 2026, a good SaaS payback period is generally under 12 months. The best-performing companies often land in the 6 to 8 month range, though that can vary based on stage and business model."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>RSUs vs Stock Options: What Founders Should Know - Lucid</title>
+<meta name="description" content="Compare stock options vs RSUs for founders: tax timing, dilution, vesting, and when to use each across startup stages."/>
+<link rel="canonical" href="https://www.lucid.now/blog/rsus-vs-stock-options-what-founders-should-know/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="RSUs vs Stock Options: What Founders Should Know"/>
+<meta property="og:description" content="Compare stock options vs RSUs for founders: tax timing, dilution, vesting, and when to use each across startup stages."/>
+<meta property="og:url" content="https://www.lucid.now/blog/rsus-vs-stock-options-what-founders-should-know/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/69ed5746ac8ee36f7ceea494-1777167781671.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="RSUs vs Stock Options: What Founders Should Know"/>
+<meta name="twitter:description" content="Compare stock options vs RSUs for founders: tax timing, dilution, vesting, and when to use each across startup stages."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/69ed5746ac8ee36f7ceea494-1777167781671.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "RSUs vs Stock Options: What Founders Should Know", "description": "Compare stock options vs RSUs for founders: tax timing, dilution, vesting, and when to use each across startup stages.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/69ed5746ac8ee36f7ceea494-1777167781671.jpg", "datePublished": "2026-04-26T01:43:01.671Z", "dateModified": "2026-04-26T01:43:01.671Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/rsus-vs-stock-options-what-founders-should-know/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">RSUs vs Stock Options: What Founders Should Know</h1>
+<div class="article-meta"><time datetime="2026-04-26T01:43:01.671Z">April 26, 2026</time> &middot; 15 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/69ed5746ac8ee36f7ceea494-1777167781671.jpg" alt="RSUs vs Stock Options: What Founders Should Know" loading="eager" />
+<div class="article-body">
+<p>When it comes to compensating employees with equity, founders often face a choice between <strong>Stock Options</strong> and <strong>Restricted Stock Units (RSUs)</strong>. Here’s the key takeaway:</p>
+<ul>
+<li><strong>Stock Options</strong> give employees the right to purchase shares at a fixed price (strike price). They’re popular for early-stage startups due to low valuations and high upside potential but come with risks like expiring worthless if the stock price doesn’t rise.</li>
+<li><strong>RSUs</strong> promise employees shares at no cost once they vest. These are more predictable and commonly used by later-stage companies nearing IPO or with higher valuations.</li>
+</ul>
+<h3 id="quick-overview" tabindex="-1">Quick Overview:</h3>
+<ul>
+<li><strong>Stock Options</strong>: Higher risk, higher reward. Ideal for startups in early growth stages.</li>
+<li><strong>RSUs</strong>: Predictable value, lower risk. Better for mature companies or those preparing for liquidity events.</li>
+</ul>
+<h3 id="quick-comparison" tabindex="-1">Quick Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Stock Options</th>
+<th>RSUs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Employee Cost</strong></td>
+<td>Pay strike price to exercise</td>
+<td>$0 (No purchase required)</td>
+</tr>
+<tr>
+<td><strong>Tax Timing</strong></td>
+<td>At exercise (NSOs) or sale (ISOs)</td>
+<td>At vesting</td>
+</tr>
+<tr>
+<td><strong>Risk</strong></td>
+<td>High (can expire worthless)</td>
+<td>Low (retains value if stock &gt; $0)</td>
+</tr>
+<tr>
+<td><strong>Upside Potential</strong></td>
+<td>Higher</td>
+<td>Limited</td>
+</tr>
+<tr>
+<td><strong>Dilution Impact</strong></td>
+<td>Higher</td>
+<td>Lower</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>Early-stage startups</td>
+<td>Late-stage or IPO-ready companies</td>
+</tr>
+</tbody>
+</table>
+<p>This decision impacts hiring, tax strategies, and equity dilution. Early-stage companies often lean on stock options to attract risk-tolerant talent, while RSUs help later-stage businesses offer stable, competitive compensation.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/69ed5746ac8ee36f7ceea494-1777167057693.jpg" alt="RSUs vs Stock Options Comparison Chart for Startups" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">RSUs vs Stock Options Comparison Chart for Startups</p>
+</figcaption></figure><h2 id="restricted-stock-vs-stock-options-everything-you-need-to-know" tabindex="-1" class="sb h2-sbb-cls">Restricted Stock vs. Stock Options (Everything You Need to Know)</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/CWr6NonhiLM" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="what-are-stock-options" tabindex="-1" class="sb h2-sbb-cls">What Are Stock Options?</h2>
+<p>Stock options are agreements that give employees the <em>right</em> - but not the obligation - to buy a specific number of company shares at a fixed price, known as the <strong>strike price</strong>. This strike price is usually set to the company’s fair market value (FMV) at the time the options are granted, as determined by a 409A valuation. The key benefit? If the company’s value rises above the strike price, employees can profit from the difference.</p>
+<p>For founders, stock options are a practical way to conserve cash, particularly between fundraising rounds when competing with big-company salaries is tough. As Matt Rowe, an entrepreneur and marketing expert, explains: <em>&quot;Equity is how you close the gap between what you can afford and the caliber of people you need to win.&quot;</em> Beyond financial incentives, stock options encourage employees to focus on the company’s long-term success by tying their rewards to its growth.</p>
+<p>Stock options have four main parts:</p>
+<ul>
+<li><strong>Strike price</strong>: The price per share employees pay to exercise their options.</li>
+<li><strong>Vesting</strong>: The timeline over which employees gain the right to exercise their options.</li>
+<li><strong>Exercise</strong>: The act of purchasing shares at the strike price.</li>
+<li><strong>Expiration</strong>: The deadline for exercising the options.</li>
+</ul>
+<p>A standard vesting schedule spans four years with a one-year cliff. This means 25% of the options vest after the first year, with the rest vesting monthly or quarterly over the next three years.</p>
+<h3 id="types-of-stock-options" tabindex="-1">Types of Stock Options</h3>
+<p>There are two main kinds of stock options, each with different tax rules and eligibility criteria:</p>
+<ul>
+<li>
+<strong>Incentive Stock Options (ISOs)</strong>: These are only available to W-2 employees and come with favorable tax treatment. If the shares are held for at least two years from the grant date and one year from exercise, gains are taxed at the lower long-term capital gains rate instead of ordinary income tax. However, exercising ISOs can trigger the Alternative Minimum Tax (AMT), which ranges from 26% to 28%. There’s also a $100,000 annual vesting limit (based on FMV at the time of the grant) - any amount above this is treated as NSOs.
+</li>
+<li>
+<strong>Non-Qualified Stock Options (NSOs)</strong>: These are more flexible and can be offered to employees, contractors, advisors, and board members. When NSOs are exercised, the difference between the strike price and the current FMV (the “spread”) is taxed as ordinary income. While this creates an immediate tax obligation, NSOs are simpler to manage since they don’t involve holding period requirements or AMT concerns like ISOs.
+</li>
+</ul>
+<h3 id="how-stock-options-work" tabindex="-1">How Stock Options Work</h3>
+<p>The process starts when a founder grants options with a strike price equal to the company’s FMV, determined by a 409A valuation. To stay compliant with IRS rules, companies must update their 409A valuation at least once a year or after major events like a funding round.</p>
+<p>As employees’ options vest, they can exercise them by paying the strike price to convert their options into shares. For example, if an employee has 10,000 options with a $1.00 strike price and the FMV is $5.00, they’d pay $10,000 to acquire shares worth $50,000 - resulting in a $40,000 spread. This spread is taxed as ordinary income for NSOs or may trigger AMT for ISOs.</p>
+<p>Options typically have a 10-year exercise window, but there are exceptions. For instance, some companies require employees to exercise their options within 90 days of leaving. To make things easier, some startups have extended this post-departure window to 7–10 years.</p>
+<p>Next, we’ll dive into RSUs and see how they differ from stock options.</p>
+<h2 id="what-are-rsus" tabindex="-1" class="sb h2-sbb-cls">What Are RSUs?</h2>
+<p>Restricted Stock Units (RSUs) are a type of equity compensation that guarantees employees actual shares once certain conditions are met, typically tied to a vesting schedule. Unlike stock options, RSUs don’t require an exercise decision, strike price, or upfront payment. Once they vest, they automatically convert into shares owned by the employee. This structure makes RSUs a popular tool for aligning employees' interests with the growth of the company.</p>
+<blockquote>
+<p>&quot;RSUs offer more certainty than options. Because there's no upfront cost and the shares always have some value at vesting, RSUs provide a guaranteed outcome as long as your company stock has any value.&quot;</p>
+</blockquote>
+<p>RSUs are most commonly used by companies at later stages, often when they reach a valuation of around $1 billion or are approximately 5.5 years old. Public companies like <a href="https://abc.xyz/" target="_blank" rel="nofollow noopener noreferrer">Alphabet</a>, <a href="https://www.meta.com/about/?srsltid=AfmBOorfWc-Ar4Dw2s9MxZGYwOXt-tSDYDGl3sogIFMxRppRNia430hB" target="_blank" rel="nofollow noopener noreferrer">Meta</a>, and <a href="https://www.nvidia.com/en-us/" target="_blank" rel="nofollow noopener noreferrer">Nvidia</a> often rely on RSUs because they are straightforward and provide employees with predictable value.</p>
+<h3 id="rsu-vesting-and-conversion" tabindex="-1">RSU Vesting and Conversion</h3>
+<p>RSUs usually follow a four-year vesting schedule with a one-year cliff, mirroring standard option schedules. Once vested, RSUs convert into shares that are deposited directly into the employee’s account. To handle tax obligations, most employers use a &quot;sell-to-cover&quot; method, where a portion of the shares is sold to cover tax withholdings, which are generally about 22% for federal taxes on amounts under $1 million.</p>
+<p>Some startups add a double-trigger vesting requirement, meaning employees must meet both a service period and a liquidity event, such as an IPO or acquisition, before receiving their shares. This approach ensures employees don’t face tax liabilities for shares they can’t sell yet. This structured approach ensures employees have a clear understanding of their equity outcomes.</p>
+<h3 id="predictable-value" tabindex="-1">Predictable Value</h3>
+<p>One of the biggest advantages of RSUs is their built-in certainty. Since RSUs don’t require upfront payments and always retain some value, they are easier to understand and manage. As the <a href="https://www.esofund.com/" target="_blank" rel="nofollow noopener noreferrer">ESO Fund</a> puts it:</p>
+<blockquote>
+<p>&quot;An RSU is never underwater.&quot;</p>
+</blockquote>
+<p>For example, if a company grants $100,000 worth of RSUs, the employee can easily calculate the number of shares by dividing the dollar value by the current fair market price. This simplicity eliminates concerns about exercising options or the possibility of options expiring worthless.</p>
+<p>Daniel Messeca, a Certified Financial Planner at <a href="https://craftworkcapitalllc.com/" target="_blank" rel="nofollow noopener noreferrer">Craftwork Capital</a>, highlights this advantage:</p>
+<blockquote>
+<p>&quot;RSUs follow predictable timelines. They're not risk-free but they're less risky because the employee doesn't have to buy shares like they do with stock options and will retain some value unless the share price goes to $0.&quot;</p>
+</blockquote>
+<p>These characteristics make RSUs a key part of compensation strategies, helping founders decide when to use them instead of stock options.</p>
+<h2 id="key-differences-between-rsus-and-stock-options" tabindex="-1" class="sb h2-sbb-cls">Key Differences Between RSUs and Stock Options</h2>
+<p>Understanding how Restricted Stock Units (RSUs) and stock options differ is essential for making informed decisions about equity strategies. While both often follow similar vesting schedules, their mechanics and outcomes for employees vary significantly. Stock options grant employees the <strong>right to purchase shares at a predetermined price</strong>, whereas RSUs <strong>automatically deliver shares at no cost</strong> once vesting conditions are met. This distinction leads to very different results for employees.</p>
+<p>One key difference is ownership. RSUs convert directly into shares upon vesting, giving employees <strong>immediate voting rights</strong> and eligibility for dividends. In contrast, stock options require employees to exercise their options - paying the strike price to acquire ownership. Jon Kowieski, Growth Marketing Lead at <a href="https://www.brex.com/" target="_blank" rel="nofollow noopener noreferrer">Brex</a>, sums it up well:</p>
+<blockquote>
+<p>&quot;RSUs create automatic ownership at vesting. The shares transfer to the employee without any action or payment required. RSU recipients immediately get voting rights and dividends on their vested shares, just like any other shareholder.&quot; </p>
+</blockquote>
+<p>Another major difference lies in risk. Stock options can lose their value entirely if the <strong>strike price exceeds the market price</strong>, leaving employees with nothing. RSUs, however, retain some value as long as the stock price stays above $0.</p>
+<p>For founders, RSUs also offer an advantage: they provide comparable compensation with fewer shares, reducing the amount of equity dilution. To break this down further, here’s a side-by-side comparison of the two:</p>
+<h3 id="comparison-table-rsus-vs-stock-options" tabindex="-1">Comparison Table: RSUs vs Stock Options</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Stock Options</th>
+<th>Restricted Stock Units (RSUs)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Employee Cost at Vesting/Exercise</strong></td>
+<td>Strike price required to exercise</td>
+<td>$0 (No purchase required)</td>
+</tr>
+<tr>
+<td><strong>Tax Treatment</strong></td>
+<td>Taxed at exercise (NSO) or sale (ISO)</td>
+<td>Taxed as ordinary income at vesting</td>
+</tr>
+<tr>
+<td><strong>Risk Level</strong></td>
+<td>Higher (Can expire worthless/underwater)</td>
+<td>Lower (Value remains unless stock hits $0)</td>
+</tr>
+<tr>
+<td><strong>409A Requirement</strong></td>
+<td>Required to set strike price</td>
+<td>Used to determine tax value at vesting</td>
+</tr>
+<tr>
+<td><strong>Dilution Impact</strong></td>
+<td>Higher (Requires more shares for same value)</td>
+<td>Lower (More equity-efficient)</td>
+</tr>
+<tr>
+<td><strong>Value Predictability</strong></td>
+<td>Low (Depends on price spread)</td>
+<td>High (Full market value of shares)</td>
+</tr>
+<tr>
+<td><strong>Expiration</strong></td>
+<td>Typically 10 years (or 90 days after leaving)</td>
+<td>No expiration once vested</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pros-and-cons-of-rsus-and-stock-options" tabindex="-1" class="sb h2-sbb-cls">Pros and Cons of RSUs and Stock Options</h2>
+<p>Here’s a closer look at the advantages and drawbacks of RSUs and stock options for both founders and employees.</p>
+<p>Stock options and RSUs each come with their own set of trade-offs, making them suitable for different scenarios depending on the needs of the company and its team members.</p>
+<p>For <strong>founders</strong>, stock options help conserve cash and encourage employees to think like owners. They also offer significant upside potential, especially when the strike price is low. However, they come with downsides, such as requiring more shares to deliver the same value - leading to higher dilution  - and the need for costly 409A valuations on a regular basis.</p>
+<p>For <strong>employees</strong>, stock options carry risks. If the stock price doesn’t rise above the strike price, the options could end up worthless. Exercising options also requires employees to pay out-of-pocket, and they typically have just 90 days to exercise them after leaving the company.</p>
+<p><strong>RSUs</strong>, on the other hand, are more efficient in terms of equity, as fewer shares are needed to match the same compensation value. They can also be directly tied to a specific dollar amount (e.g., $100,000 worth of RSUs). Employees tend to favor RSUs for their simplicity and guaranteed value - so long as the stock price stays above zero, the RSUs retain worth. However, RSUs come with immediate tax implications, as taxes are withheld at vesting - 22% for amounts under $1 million and 37% for amounts above. Additionally, RSUs offer limited upside compared to stock options and trigger taxes upon vesting, whether or not the shares are sold.</p>
+<p>Jon Kowieski, Growth Marketing Lead at Brex, sums up the core difference between the two:</p>
+<blockquote>
+<p>&quot;RSUs work like a salary bonus tied to stock price, while options work like a leveraged bet on your company's growth.&quot; </p>
+</blockquote>
+<h3 id="pros-and-cons-comparison-table" tabindex="-1">Pros and Cons Comparison Table</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Stock Options</th>
+<th>RSUs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Founder Advantage</strong></td>
+<td>Conserves cash; attracts risk-tolerant talent</td>
+<td>Fewer shares needed; reduces dilution</td>
+</tr>
+<tr>
+<td><strong>Founder Drawback</strong></td>
+<td>Higher dilution; requires 409A valuations</td>
+<td>Tax withholding burden; potential IPO costs spike</td>
+</tr>
+<tr>
+<td><strong>Employee Advantage</strong></td>
+<td>High upside potential; tax flexibility (ISOs)</td>
+<td>Guaranteed value; easy to understand</td>
+</tr>
+<tr>
+<td><strong>Employee Drawback</strong></td>
+<td>Can become worthless; requires cash to exercise; 90-day exercise window</td>
+<td>Limited upside; immediate tax at vesting</td>
+</tr>
+<tr>
+<td><strong>Risk Level</strong></td>
+<td>High (can expire worthless)</td>
+<td>Low (retains value if stock &gt; $0)</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>High (exercise decisions, AMT concerns)</td>
+<td>Low (automatic conversion)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="when-to-offer-stock-options-vs-rsus" tabindex="-1" class="sb h2-sbb-cls">When to Offer Stock Options vs RSUs</h2>
+<p>The decision between stock options and RSUs hinges on factors like your company’s growth stage, financial standing, and the type of talent you aim to attract. While early-stage startups often lean toward stock options for their potential high rewards, later-stage companies frequently prefer RSUs for their predictable compensation structure.</p>
+<p>Startups generally transition to RSUs around 5.5 years into their lifecycle, often when their valuation approaches $1.05 billion. This shift reflects both the company's maturity and the changing expectations of its workforce.</p>
+<h3 id="best-scenarios-for-stock-options" tabindex="-1">Best Scenarios for Stock Options</h3>
+<p>Stock options are most effective when your company’s 409A valuation is relatively low - typically during the seed or Series A stages. With a low strike price, employees stand to gain significantly as the company grows, making stock options an enticing &quot;lottery ticket&quot; for risk-tolerant early hires. This approach also helps conserve cash since there’s no immediate cost, tax withholding, or accounting impact.</p>
+<blockquote>
+<p>&quot;Options signal an earlier stage and higher upside with more risk... RSUs signal maturity, predictability and lower risk, which often appeal to senior leaders.&quot;</p>
+</blockquote>
+<p>As Gemma Marshall points out, stock options are ideal for attracting early-stage talent willing to take on more risk in exchange for the potential of high rewards.</p>
+<h3 id="best-scenarios-for-rsus" tabindex="-1">Best Scenarios for RSUs</h3>
+<p>RSUs shine when your company is nearing liquidity - typically within one to two years, such as during Series C funding or IPO preparations. By this stage, a high 409A valuation can make stock option strike prices unaffordable for employees, making RSUs a more practical choice.</p>
+<p>RSUs also offer greater efficiency in equity allocation. Since each RSU represents the full value of a share, you can grant fewer units while delivering the same compensation value, minimizing dilution. RSUs are particularly appealing to senior hires from established public companies, where predictable equity compensation is often a priority. Many late-stage companies use double-trigger RSU structures to delay tax liabilities until a liquidity event occurs.</p>
+<blockquote>
+<p>&quot;The choice you make shapes your compensation philosophy and can affect everything from your burn rate to your ability to hire that critical engineering lead.&quot;</p>
+</blockquote>
+<p>Jon Kowieski, former Growth Marketing Lead at Brex, highlights how these decisions influence everything from your hiring strategy to your financial planning. Tax and valuation implications, which play a key role in these choices, will be discussed next.</p>
+<h2 id="tax-and-valuation-considerations" tabindex="-1" class="sb h2-sbb-cls">Tax and Valuation Considerations</h2>
+<p>Understanding tax implications is a key part of aligning your equity strategy with your startup’s growth and financial planning. The timing of tax liabilities - and the amount employees owe - can have a major impact on hiring decisions and employee finances.</p>
+<h3 id="tax-timing-and-83b-elections" tabindex="-1">Tax Timing and 83(b) Elections</h3>
+<p>RSUs are taxed at the time they vest. Employees owe ordinary income tax on the full fair market value of the shares at that moment. For example, if 1,000 RSUs vest at $50 per share, the taxable income is $50,000. Companies typically withhold 22% for federal taxes, but high earners may face additional liabilities.</p>
+<p>Stock options have a different tax treatment. Non-qualified stock options (NSOs) are taxed on the spread - the difference between the exercise price and the fair market value - at the time of exercise. Incentive stock options (ISOs) generally avoid immediate income tax at exercise, but the spread may trigger the Alternative Minimum Tax (AMT). If ISO holders meet the required holding periods (one year after exercise and two years after the grant), any subsequent gains qualify for long-term capital gains treatment.</p>
+<p>The 83(b) election is a useful tax strategy for founders who receive restricted stock at a nominal price (e.g., $0.0001 per share) during incorporation. Filing the election within 30 days locks in a low taxable value. Ryan Wang, CPA, explains:</p>
+<blockquote>
+<p>&quot;If you file an 83(b) within 30 days of the grant, you pay tax on $1,000 of income... Imagine paying ordinary income tax on $1 million (if the shares hit $1 each at some point) that could be a $370k tax bill just because you missed a tiny upfront filing.&quot;</p>
+</blockquote>
+<p>Failing to file an 83(b) election on nominally priced stock can lead to a significant tax burden if the stock’s value rises. RSUs, however, are not eligible for 83(b) elections since they represent a promise of future shares rather than a current grant of restricted stock.</p>
+<p>Next, let’s explore how 409A valuations play a role in compliance and tax efficiency.</p>
+<h3 id="409a-valuations" tabindex="-1">409A Valuations</h3>
+<p>Stock options require a 409A valuation to establish a compliant strike price that matches or exceeds the current fair market value. Without a valid 409A valuation, the IRS could reclassify the options, leading to immediate taxation and a 20% penalty. A qualified 409A valuation offers safe harbor protection, meaning the IRS would need to prove the valuation was &quot;grossly unreasonable&quot; to challenge it. These valuations are typically valid for 12 months or until a material event, like a new funding round, occurs. Costs generally range from $2,000 to $5,000 for pre-revenue startups and $10,000 to $25,000 for later-stage companies.</p>
+<p>RSUs don’t require a 409A valuation since there’s no exercise price involved. However, companies may still use a 409A valuation to determine fair market value for accounting and tax withholding purposes when RSUs vest.</p>
+<p>Tools like <a href="https://www.lucid.now/">Lucid Financials</a> can help simplify these processes. <a href="https://www.lucid.now/">Lucid Financials</a>, an AI-powered full-stack accounting firm designed for startups, supports founders in managing equity grants, 83(b) elections, and multi-entity structures with proactive risk management and real-time insights.</p>
+<h2 id="conclusion" tabindex="-1" class="sb h2-sbb-cls">Conclusion</h2>
+<p>When deciding between RSUs and stock options, it's clear that this choice can influence a company's culture, its ability to attract talent, and its tax strategies. Stock options tend to be a better fit for early-stage startups, where lower valuations can create significant potential for growth. On the other hand, RSUs provide the stability and predictability that later-stage companies often need to compete with established public tech firms. Many businesses make this transition around the 5.5-year mark or when reaching a valuation of approximately $1.05 billion.</p>
+<p>Mistakes in managing equity compensation can lead to steep tax bills and dilution costs. For example, missing the 83(b) election deadline or failing to update a 409A valuation can result in irreversible tax consequences. As Ryan Wang, CPA/MBT, emphasizes:</p>
+<blockquote>
+<p>&quot;Equity compensation is one area where a little planning goes a long way... Given the potential dollar amounts, good advice is well worth it&quot;.</p>
+</blockquote>
+<p>To avoid these pitfalls, specialized support can make all the difference. Lucid Financials offers tools and expertise to guide founders through equity grants, 83(b) elections, and complex multi-entity structures. With AI-powered insights and a team of professionals, they help ensure compliance and tax efficiency. From 409A valuations to investor-ready reports, Lucid Financials provides the clarity and risk management you need, so you can focus on growing your business.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-decide-between-rsus-and-stock-options-for-my-next-senior-hire" tabindex="-1" data-faq-q>How do I decide between RSUs and stock options for my next senior hire?</h3>
+<p>When choosing between <strong>RSUs (Restricted Stock Units)</strong> and <strong>stock options</strong>, it's important to weigh your company's stage and your preference for balancing risk with certainty.</p>
+<ul>
+<li><strong>RSUs</strong> tend to be a better fit for later-stage or public companies. Why? They offer more predictable value since they convert to actual shares upon vesting, regardless of stock price movement.</li>
+<li><strong>Stock options</strong>, on the other hand, are often more appealing in early-stage startups. They provide a chance for significant upside if the company's valuation increases over time.</li>
+</ul>
+<p>For senior-level hires, the choice depends on what aligns with your company's direction. If stability is key, RSUs might be the way to go. But if you're aiming for high-growth potential and want to align incentives with company performance, stock options could be the better fit.</p>
+<h3 id="what-happens-to-employee-equity-taxes-if-theres-no-ipo-or-acquisition-for-years" tabindex="-1" data-faq-q>What happens to employee equity taxes if there’s no IPO or acquisition for years?</h3>
+<p>When RSUs (Restricted Stock Units) vest and are settled, they are typically taxed as <strong>ordinary income</strong>, even if there hasn’t been an IPO or acquisition for years. This means taxes are owed at the time of vesting, regardless of whether a liquidity event - like an IPO or company sale - takes place.</p>
+<h3 id="how-can-i-reduce-dilution-when-offering-competitive-equity-packages" tabindex="-1" data-faq-q>How can I reduce dilution when offering competitive equity packages?</h3>
+<p>Founders aiming to minimize dilution should pay close attention to the size of the employee equity pool. It’s important to strike a balance - keeping the pool large enough to attract and retain talent, but not so large that it results in excessive dilution. Structuring equity grants, such as RSUs or stock options, with well-thought-out vesting schedules can make a big difference. Performance-based or milestone-based vesting is another smart approach, as it ties share issuance directly to the company’s growth and achievements. Additionally, reviewing and adjusting the equity pool during each funding round helps keep dilution in check.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=69ed5746ac8ee36f7ceea494"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I decide between RSUs and stock options for my next senior hire?","acceptedAnswer":{"@type":"Answer","text":"When choosing between RSUs (Restricted Stock Units) and stock options, it's important to weigh your company's stage and your preference for balancing risk with certainty. RSUs tend to be a better fit for later-stage or public companies. Why? They offer more predictable value since they convert to actual shares upon vesting, regardless of stock price movement. Stock options, on the other hand, are often more appealing in early-stage startups. They provide a chance for significant upside if the company's valuation increases over time. For senior-level hires, the choice depends on what aligns with your company's direction. If stability is key, RSUs might be the way to go. But if you're aiming for high-growth potential and want to align incentives with company performance, stock options could be the better fit."}},{"@type":"Question","name":"What happens to employee equity taxes if there’s no IPO or acquisition for years?","acceptedAnswer":{"@type":"Answer","text":"When RSUs (Restricted Stock Units) vest and are settled, they are typically taxed as ordinary income, even if there hasn’t been an IPO or acquisition for years. This means taxes are owed at the time of vesting, regardless of whether a liquidity event - like an IPO or company sale - takes place."}},{"@type":"Question","name":"How can I reduce dilution when offering competitive equity packages?","acceptedAnswer":{"@type":"Answer","text":"Founders aiming to minimize dilution should pay close attention to the size of the employee equity pool. It’s important to strike a balance - keeping the pool large enough to attract and retain talent, but not so large that it results in excessive dilution. Structuring equity grants, such as RSUs or stock options, with well-thought-out vesting schedules can make a big difference. Performance-based or milestone-based vesting is another smart approach, as it ties share issuance directly to the company’s growth and achievements. Additionally, reviewing and adjusting the equity pool during each funding round helps keep dilution in check."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

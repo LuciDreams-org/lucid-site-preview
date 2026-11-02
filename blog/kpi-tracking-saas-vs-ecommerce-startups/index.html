@@ -1,0 +1,511 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>KPI Tracking for SaaS vs. E-commerce Startups - Lucid</title>
+<meta name="description" content="Compare essential KPIs for SaaS and e-commerce startups: MRR, NRR, churn, ROAS, contribution margin, LTV:CAC, and cadence."/>
+<link rel="canonical" href="https://www.lucid.now/blog/kpi-tracking-saas-vs-ecommerce-startups/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="KPI Tracking for SaaS vs. E-commerce Startups"/>
+<meta property="og:description" content="Compare essential KPIs for SaaS and e-commerce startups: MRR, NRR, churn, ROAS, contribution margin, LTV:CAC, and cadence."/>
+<meta property="og:url" content="https://www.lucid.now/blog/kpi-tracking-saas-vs-ecommerce-startups/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a07b58b800645b46e62af1a-1778894888879.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="KPI Tracking for SaaS vs. E-commerce Startups"/>
+<meta name="twitter:description" content="Compare essential KPIs for SaaS and e-commerce startups: MRR, NRR, churn, ROAS, contribution margin, LTV:CAC, and cadence."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a07b58b800645b46e62af1a-1778894888879.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "KPI Tracking for SaaS vs. E-commerce Startups", "description": "Compare essential KPIs for SaaS and e-commerce startups: MRR, NRR, churn, ROAS, contribution margin, LTV:CAC, and cadence.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a07b58b800645b46e62af1a-1778894888879.jpg", "datePublished": "2026-05-16T01:28:08.879Z", "dateModified": "2026-05-16T01:28:08.879Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/kpi-tracking-saas-vs-ecommerce-startups/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">KPI Tracking for SaaS vs. E-commerce Startups</h1>
+<div class="article-meta"><time datetime="2026-05-16T01:28:08.879Z">May 16, 2026</time> &middot; 16 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a07b58b800645b46e62af1a-1778894888879.jpg" alt="KPI Tracking for SaaS vs. E-commerce Startups" loading="eager" />
+<div class="article-body">
+<p><strong>SaaS and e-commerce startups require different KPIs to measure success.</strong> While SaaS relies on recurring revenue, e-commerce focuses on transactional sales. This difference impacts how retention, growth, and profitability are evaluated. For SaaS, metrics like Monthly Recurring Revenue (MRR), Net Revenue Retention (NRR), and churn are critical. In contrast, e-commerce prioritizes contribution margin, Return on Ad Spend (ROAS), and repeat purchase rates.</p>
+<p>Key insights:</p>
+<ul>
+<li><strong>SaaS:</strong> Predictable revenue streams, with NRR above 100% signaling growth without new customers.</li>
+<li><strong>E-commerce:</strong> Seasonal revenue spikes and faster CAC payback (ideally under 3 months).</li>
+<li>Both models benefit from tracking LTV:CAC ratios (target 3:1) and maintaining financial clarity for investors.</li>
+</ul>
+<h3 id="quick-comparison" tabindex="-1">Quick Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>SaaS</th>
+<th>E-commerce</th>
+<th>Investor Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Revenue Model</strong></td>
+<td>Subscription-based (MRR/ARR)</td>
+<td>Transactional (GMV/Sales)</td>
+<td>Predictability vs. volume</td>
+</tr>
+<tr>
+<td><strong>Retention Metric</strong></td>
+<td>Net Revenue Retention (NRR)</td>
+<td>Repeat Purchase Rate</td>
+<td>Growth through retention</td>
+</tr>
+<tr>
+<td><strong>CAC Payback</strong></td>
+<td>6–12 months</td>
+<td>Under 3 months</td>
+<td>Speed of capital recovery</td>
+</tr>
+<tr>
+<td><strong>Profitability</strong></td>
+<td>High gross margins (70–90%)</td>
+<td>Contribution margin (30–40%)</td>
+<td>Unit-level profitability</td>
+</tr>
+</tbody>
+</table>
+<p>Understanding these metrics ensures startups focus on what matters most, helping them scale effectively and attract investors.</p>
+<h2 id="kpis-and-metrics-for-ecommerce-or-evaluate-your-ecomm-performance" tabindex="-1" class="sb h2-sbb-cls">KPIs and Metrics for eCommerce | Evaluate Your eComm Performance</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/aJzRMoFTdiQ" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="kpi-fundamentals-common-to-both-saas-and-e-commerce-startups" tabindex="-1" class="sb h2-sbb-cls">KPI Fundamentals Common to Both SaaS and E-Commerce Startups</h2>
+<p>Before diving into the differences between these sectors, startups need to establish a consistent financial foundation. This means focusing on core metrics that allow investors to compare performance across industries without bias.</p>
+<h3 id="revenue-metrics-and-unit-economics" tabindex="-1">Revenue Metrics and Unit Economics</h3>
+<p>A critical shared metric is the <strong>contribution margin</strong> - calculated as revenue minus the cost of goods sold (COGS) and variable costs like shipping and payment processing. This metric shows whether additional revenue translates into profit. It's possible for a company to boast impressive top-line growth while its contribution margin deteriorates, a red flag that savvy investors are quick to spot.</p>
+<p>Other universal metrics include <strong>Customer Acquisition Cost (CAC)</strong> and <strong>Customer Lifetime Value (CLV)</strong>. To ensure accuracy, CAC should encompass all marketing expenses, not just media spend. Similarly, CLV should be calculated using contribution margin to avoid inflated projections. A <strong>3:1 LTV to CAC ratio</strong> is a widely accepted benchmark for healthy and scalable unit economics across both SaaS and e-commerce models.</p>
+<p>Both types of startups also need to define a <strong>North Star Metric (NSM)</strong> - a single figure that reflects genuine customer value and ties directly to revenue. For SaaS businesses, this might be weekly active users, while for e-commerce, it could be weekly unique purchasing customers. This metric keeps teams focused and provides investors with a clear indicator of meaningful growth rather than vanity metrics.</p>
+<h3 id="cash-flow-and-runway-tracking" tabindex="-1">Cash Flow and Runway Tracking</h3>
+<p>Burn rate and runway are non-negotiable metrics for both sectors. These figures help investors assess whether a startup is &quot;default alive&quot; - able to achieve profitability without additional funding - or &quot;default dead&quot;, where survival hinges on securing the next round of investment.</p>
+<p>The <strong>CAC payback period</strong> is a metric that applies to both sectors but varies in expectations. In e-commerce, recovering CAC within 3 months is ideal, while 6–12 months signals caution. For SaaS, a 12-month payback is often acceptable. A longer payback period ties up working capital, limiting flexibility and extending the time needed to recover acquisition costs. Another shared benchmark is the <strong>Rule of 40</strong>, which combines revenue growth rate and profit margin to ensure the total is at least 40%. This metric helps gauge whether a startup is balancing growth with efficiency.</p>
+<h3 id="data-consistency-and-ai-driven-platforms" tabindex="-1">Data Consistency and AI-Driven Platforms</h3>
+<p>Reliable data is the backbone of accurate metrics. By 2026, privacy restrictions and the decline of third-party cookies could cause discrepancies of over 30% between reported analytics and actual sales data. This makes tools like server-side tracking and integrated financial systems indispensable.</p>
+<p>Platforms like <a href="https://www.lucid.now">Lucid Financials</a> address this challenge by consolidating bookkeeping, billing, and accounting data into a single system. This integration provides real-time updates on key metrics like contribution margin, CAC payback, and cash runway, eliminating delays from month-end reporting. These tools ensure startups and investors have a clear, up-to-date picture of financial health.</p>
+<blockquote>
+<p>&quot;A KPI you cannot measure is not a KPI.&quot; - C.E. Aksan </p>
+</blockquote>
+<h2 id="kpi-tracking-for-saas-startups" tabindex="-1" class="sb h2-sbb-cls">KPI Tracking for SaaS Startups</h2>
+<p>SaaS companies thrive on subscription-based revenue, creating a steady stream of income. This model shapes the key performance indicators (KPIs) that investors prioritize. By relying on strong data systems, these KPIs are monitored daily through integrated tools. Let’s break down the essential KPIs that define success for SaaS businesses.</p>
+<h3 id="core-saas-kpis" tabindex="-1">Core SaaS KPIs</h3>
+<p>At the heart of SaaS reporting are <strong>Monthly Recurring Revenue (MRR)</strong> and <strong>Annual Recurring Revenue (ARR)</strong>. MRR is used for day-to-day decision-making, while ARR provides a broader benchmark for investors.</p>
+<blockquote>
+<p>&quot;If you are using ARR to make monthly decisions, you are looking at the wrong number. If you are pitching investors with MRR, you are making yourself harder to benchmark.&quot; - The SaaS Library </p>
+</blockquote>
+<p>Beyond MRR, <strong>Net Revenue Retention (NRR)</strong> and <strong>Gross Revenue Retention (GRR)</strong> are critical indicators of business health. NRR captures the impact of expansion revenue, churn, and downgrades from existing customers, while GRR focuses solely on revenue losses. A company with an NRR above 100% is growing from its current customer base alone, without needing new customers.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Good</th>
+<th>Best-in-Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NRR</strong></td>
+<td>(Start ARR + Expansion - Churn - Contraction) / Start ARR</td>
+<td>100–110%</td>
+<td>130%+</td>
+</tr>
+<tr>
+<td><strong>Gross Revenue Retention</strong></td>
+<td>(Start ARR - Churn - Contraction) / Start ARR</td>
+<td>90%+</td>
+<td>95%+</td>
+</tr>
+<tr>
+<td><strong>LTV:CAC Ratio</strong></td>
+<td>Gross-Margin LTV / Full CAC</td>
+<td>3:1</td>
+<td>5:1+</td>
+</tr>
+<tr>
+<td><strong>CAC Payback</strong></td>
+<td>CAC / (ARPA × Gross Margin)</td>
+<td>12–15 mo.</td>
+<td>&lt; 12 mo.</td>
+</tr>
+<tr>
+<td><strong>Rule of 40</strong></td>
+<td>YoY Growth Rate + EBITDA Margin</td>
+<td>40+</td>
+<td>60+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: Composite data from <a href="https://chartmogul.com/" target="_blank" rel="nofollow noopener noreferrer">ChartMogul</a>, <a href="https://www.benchmarkit.ai/" target="_blank" rel="nofollow noopener noreferrer">Benchmarkit</a>, and <a href="https://www.bvp.com/" target="_blank" rel="nofollow noopener noreferrer">Bessemer</a> (2025–2026).</em></p>
+<p>Churn is another crucial factor, with the average monthly rate hovering around 3.5%. This includes 2.6% from voluntary cancellations and 0.8% due to failed payments. Notably, failed credit card payments account for 23% of all churn in SaaS businesses. Automated dunning tools can help reduce this preventable issue.</p>
+<h3 id="how-investors-read-saas-kpis" tabindex="-1">How Investors Read SaaS KPIs</h3>
+<p>Investors don’t just focus on growth - they evaluate the <em>quality</em> of that growth. Companies that scale MRR through expansion within their existing customer base are seen as more sustainable than those relying solely on new customer acquisition. For SaaS companies in the $15–30M ARR range, approximately 40% of growth comes from expansion MRR.</p>
+<p>Among all metrics, <strong>NRR</strong> is the one investors analyze most closely. Companies with NRR above 100% grow nearly twice as fast as those below that benchmark - 48% year-over-year compared to the broader average. The <strong>Rule of 40</strong> has become a key benchmark for Series B and later-stage funding. Currently, only 11–30% of SaaS companies meet this threshold. For AI-focused SaaS companies with gross margins exceeding 80%, a stricter &quot;Rule of 60&quot; is emerging.</p>
+<blockquote>
+<p>&quot;Mastering your SaaS KPIs is not optional - it's the difference between fundraising with leverage and scrambling to explain churn to investors.&quot; - Josh Sturgeon, EmberTribe </p>
+</blockquote>
+<p>A practical tip for founders: always calculate <strong>LTV using gross margin</strong>, not total revenue. Using revenue-only LTV inflates customer value by 20–30% and won’t hold up during investor due diligence. The correct formula is:<br>
+<strong>LTV = (ARPA × Gross Margin %) / Churn Rate</strong></p>
+<h3 id="tracking-tools-and-reporting-cadence" tabindex="-1">Tracking Tools and Reporting Cadence</h3>
+<p>SaaS startups typically track MRR and churn on a monthly basis using platforms like <strong><a href="https://stripe.com/" target="_blank" rel="nofollow noopener noreferrer">Stripe</a></strong> or <strong><a href="https://www.chargebee.com/" target="_blank" rel="nofollow noopener noreferrer">Chargebee</a></strong>, which offer real-time dashboards. A weekly review of MRR changes - broken down into New, Expansion, Contraction, and Churned MRR - can help spot early signs of churn before it becomes a larger issue.</p>
+<p><a href="https://www.lucid.now">Lucid Financials</a> simplifies this process by integrating bookkeeping, billing, and accounting into one platform. This ensures metrics like CAC payback, NRR, and gross margin are always up-to-date. For startups looking to fundraise, having real-time access to these numbers isn’t just helpful - it’s a competitive edge.</p>
+<h2 id="kpi-tracking-for-e-commerce-startups" tabindex="-1" class="sb h2-sbb-cls">KPI Tracking for E-Commerce Startups</h2>
+<p>E-commerce startups operate on a transactional revenue model, where each sale stands as an individual event. Because of this, tracking the right metrics is critical to understanding performance and ensuring long-term profitability. While the SaaS KPI framework provides a foundation, e-commerce businesses need specific metrics tailored to their unique dynamics.</p>
+<h3 id="core-e-commerce-kpis" tabindex="-1">Core E-Commerce KPIs</h3>
+<p>E-commerce success relies on what can be called a &quot;profitability stack&quot; of key metrics. At the top is <strong>ROAS</strong> (Return on Ad Spend), which evaluates how efficiently marketing dollars translate into revenue. Next is <strong>AOV</strong> (Average Order Value), which highlights the revenue generated per transaction. Beneath that is <strong>Contribution Margin</strong>, which shows what's left after factoring in costs like COGS (Cost of Goods Sold), shipping, and returns. For startups, <strong>CAC Payback</strong> (Customer Acquisition Cost Payback) should ideally stay under three months to maintain efficient use of capital. Finally, <strong>LTV:CAC</strong> (Lifetime Value to Customer Acquisition Cost) serves as a critical indicator of sustainability, with a healthy ratio ensuring long-term viability.</p>
+<p>However, focusing too much on ROAS can be misleading.</p>
+<blockquote>
+<p>&quot;ROAS alone is dangerous: a 4.5x ROAS campaign can yield just 7.8% effective margin after all costs.&quot; - Luca AI </p>
+</blockquote>
+<p>Operational KPIs like cart abandonment and conversion rates also play a major role. For example, <strong>cart abandonment</strong> rates average 70.22% globally and rise to 79.61% on mobile devices. This is especially concerning given that <strong>mobile traffic</strong> makes up over 72% of e-commerce visits but converts at just 2.1%, compared to 3.5% on desktop. These inefficiencies can significantly eat into margins.</p>
+<p>While these metrics help measure operational performance, investors are more focused on how efficiently and sustainably a business can grow.</p>
+<h3 id="how-investors-read-e-commerce-kpis" tabindex="-1">How Investors Read E-Commerce KPIs</h3>
+<p>Investors aren’t just looking for growth - they want <strong>efficient growth</strong>. A business showing rising revenue but shrinking contribution margins raises alarms rather than confidence.</p>
+<blockquote>
+<p>&quot;Revenue growth hides business health... Rising revenue with deteriorating margins means you're selling more while making less.&quot; - Danielle Voorhees, Growth Engineer, The Decision Loop </p>
+</blockquote>
+<p>When it comes to unit economics, investors often use an <strong>LTV:CAC ratio of at least 3:1</strong> as a benchmark for scalability. For DTC (Direct-to-Consumer) brands, a CAC Payback period under three months signals strong capital efficiency and readiness for aggressive scaling. If this period stretches beyond 12 months, it’s usually a sign of unsustainability without ongoing external funding.</p>
+<p>Additionally, investors are increasingly wary of platform-reported ROAS metrics. Instead, they prefer <strong>ncROAS</strong> (New Customer ROAS), which excludes retargeting data to focus solely on acquisition efficiency.</p>
+<p>Another metric under scrutiny is <strong>Inventory Turnover</strong>, as slow-moving inventory ties up cash and increases the risk of write-offs.</p>
+<blockquote>
+<p>&quot;Inventory turn is a core metric that directly impacts cash conversion cycles and reduces the risk of obsolete inventory write-offs.&quot; - Ascent CFO Solutions </p>
+</blockquote>
+<h3 id="tracking-tools-and-reporting-cadence-1" tabindex="-1">Tracking Tools and Reporting Cadence</h3>
+<p>To effectively monitor these KPIs, tools like <a href="https://www.shopify.com/analytics" target="_blank" rel="nofollow noopener noreferrer">Shopify Analytics</a> are invaluable for tracking daily sales, customer retention, and product performance. <strong><a href="https://marketingplatform.google.com/about/analytics/" target="_blank" rel="nofollow noopener noreferrer">Google Analytics 4</a></strong> complements this by providing insights into cross-channel traffic and user behavior throughout the sales funnel.</p>
+<p>Equally important is how often these metrics are reviewed. Daily checks should focus on traffic, conversion rates, and ad performance. Weekly reviews are better suited for AOV, CAC, and fulfillment metrics. More in-depth metrics like contribution margin, LTV, and inventory turnover should be analyzed monthly. This structured cadence helps founders avoid overreacting to daily fluctuations while still catching meaningful trends early.</p>
+<p>For startups preparing to pitch to investors, tools like <a href="https://www.lucid.now">Lucid Financials</a> can help integrate operational data with financial reporting. This ensures that key metrics like contribution margin and CAC payback are tied directly to accurate financial records - a crucial step for building credibility in fundraising discussions.</p>
+<h2 id="saas-vs-e-commerce-kpis-a-direct-comparison" tabindex="-1" class="sb h2-sbb-cls">SaaS vs. E-Commerce KPIs: A Direct Comparison</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a07b58b800645b46e62af1a-1778894303749.jpg" alt="SaaS vs. E-Commerce KPIs: Key Metrics Compared" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">SaaS vs. E-Commerce KPIs: Key Metrics Compared</p>
+</figcaption></figure><p>This section builds on earlier discussions by diving into how sector-specific KPIs reflect the unique priorities of investors in SaaS and e-commerce businesses. The core difference isn't just <em>what</em> is measured but <em>why</em>. SaaS investors are drawn to revenue predictability and growth potential, while e-commerce investors focus on profitability at the unit level and fast recovery of customer acquisition costs. As of Q1 2026, SaaS companies trade at a median of <strong>3.7x EBITDA</strong>, compared to <strong>2.9x EBITDA</strong> for e-commerce businesses. This valuation gap stems largely from SaaS's recurring revenue model.</p>
+<h3 id="comparison-table-core-kpi-metrics" tabindex="-1">Comparison Table: Core KPI Metrics</h3>
+<p>The table below highlights how specific metrics guide investor decisions in SaaS and e-commerce models.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>SaaS</th>
+<th>E-Commerce</th>
+<th>What It Signals to Investors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary Revenue Metric</strong></td>
+<td>MRR / ARR</td>
+<td>GMV / Total Sales</td>
+<td>Stability and predictability vs. transaction volume</td>
+</tr>
+<tr>
+<td><strong>Retention Metric</strong></td>
+<td>Net Revenue Retention (NRR)</td>
+<td>Repeat Purchase Rate</td>
+<td>Growth through retention vs. customer loyalty</td>
+</tr>
+<tr>
+<td><strong>Churn Definition</strong></td>
+<td>Logo Churn vs. Revenue Churn</td>
+<td>Cohort drop-off / purchase frequency</td>
+<td>Customer loss vs. revenue loss</td>
+</tr>
+<tr>
+<td><strong>Growth Driver</strong></td>
+<td>Expansion revenue (upsells)</td>
+<td>Ad spend &amp; inventory turnover</td>
+<td>Internal growth vs. spending-driven growth</td>
+</tr>
+<tr>
+<td><strong>Critical Risk</strong></td>
+<td>Churn &amp; technical debt</td>
+<td>Seasonality &amp; supplier reliance</td>
+<td>Internal stability vs. external vulnerabilities</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>&quot;A SaaS business with a net revenue retention rate above 100% is actually growing without acquiring a single new customer.&quot; - Regalis Capital </p>
+</blockquote>
+<p>For SaaS, churn directly affects recurring revenue, while e-commerce relies heavily on Repeat Purchase Rate, often analyzed through cohort tracking.</p>
+<h3 id="comparison-table-unit-economics" tabindex="-1">Comparison Table: Unit Economics</h3>
+<p>The following table compares unit economics, offering a snapshot of how profitability differs between SaaS and e-commerce models.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>E-Commerce (DTC) Target</th>
+<th>SaaS Target</th>
+<th>Investor Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CAC Payback</strong></td>
+<td>&lt; 3 months (ideal)</td>
+<td>6–12 months (acceptable)</td>
+<td>Speed of capital recovery</td>
+</tr>
+<tr>
+<td><strong>LTV:CAC Ratio</strong></td>
+<td>3:1</td>
+<td>3:1 to 5:1</td>
+<td>Efficiency of growth investments</td>
+</tr>
+<tr>
+<td><strong>Contribution Margin</strong></td>
+<td>30–40%</td>
+<td>70–90% (gross margin)</td>
+<td>Profitability at the unit level</td>
+</tr>
+<tr>
+<td><strong>Magic Number</strong></td>
+<td>N/A</td>
+<td>0.75+</td>
+<td>Sales and marketing efficiency</td>
+</tr>
+</tbody>
+</table>
+<p>The differences in CAC payback are striking. E-commerce businesses must recover acquisition costs quickly due to lower margins and added expenses like inventory and shipping. In contrast, SaaS companies, with their recurring revenue and high gross margins, can afford longer payback periods - up to 12 months.</p>
+<h3 id="comparison-table-tracking-cadence" tabindex="-1">Comparison Table: Tracking Cadence</h3>
+<table>
+<thead>
+<tr>
+<th>Frequency</th>
+<th>E-Commerce Focus</th>
+<th>SaaS Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Daily</strong></td>
+<td>Ad spend pacing, conversion rate</td>
+<td>Sign-ups, system uptime</td>
+</tr>
+<tr>
+<td><strong>Weekly</strong></td>
+<td>CAC trends, inventory alerts, AOV</td>
+<td>Active users (WAU), feature engagement</td>
+</tr>
+<tr>
+<td><strong>Monthly</strong></td>
+<td>Contribution margin, repeat purchase rate</td>
+<td>MRR growth, churn rate, NRR</td>
+</tr>
+<tr>
+<td><strong>Quarterly</strong></td>
+<td>LTV:CAC by channel, inventory turns</td>
+<td>Rule of 40, burn multiple, LTV:CAC by cohort</td>
+</tr>
+</tbody>
+</table>
+<p>These tracking cadences reflect the operating rhythms of each model. E-commerce businesses deal with daily fluctuations due to ad performance and inventory dynamics, which can quickly impact margins. SaaS metrics, on the other hand, evolve more gradually. For instance, tracking MRR weekly often creates unnecessary noise, while monthly reviews provide more actionable insights. These differences highlight how each business model aligns with distinct investor priorities, guiding the creation of KPI dashboards tailored to their needs.</p>
+<h2 id="building-investor-ready-kpi-dashboards" tabindex="-1" class="sb h2-sbb-cls">Building Investor-Ready KPI Dashboards</h2>
+<p>Once you've identified the right sector-specific KPIs, the next step is presenting them effectively through dashboards designed with investors in mind.</p>
+<p>A KPI dashboard does more than just report numbers - it plays a key role in earning investor confidence. By presenting sector-specific data clearly and concisely, you save investors from sifting through endless spreadsheets. This approach builds on the earlier KPI comparisons, ensuring the data is not only accurate but also accessible for critical decision-making.</p>
+<h3 id="designing-kpi-views-for-mixed-sector-portfolios" tabindex="-1">Designing KPI Views for Mixed-Sector Portfolios</h3>
+<p>The most impactful dashboards follow a three-layer structure:</p>
+<ul>
+<li>
+<strong>Executive Layer</strong>: This top-level view focuses on your North Star Metric (NSM), along with key metrics like MRR (Monthly Recurring Revenue), GMV (Gross Merchandise Value), churn, and NRR (Net Revenue Retention). These are typically reviewed weekly or monthly by founders and investors.
+</li>
+<li>
+<strong>Channel/Segment Layer</strong>: This middle layer dives deeper, breaking down metrics like CAC (Customer Acquisition Cost) by channel and retention rates by customer cohort. These insights help guide resource allocation and strategic adjustments.
+</li>
+<li>
+<strong>Diagnostic Layer</strong>: At the base level, this layer tracks daily operational metrics like funnel conversions and error rates, offering a granular view of performance.
+</li>
+</ul>
+<p>For SaaS startups, the NSM often revolves around metrics like <em>weekly active users</em> or <em>weekly value delivered</em>. For e-commerce startups, it might be <em>weekly unique purchasing customers</em>. Keeping these metrics separate within a shared dashboard ensures clarity and avoids confusion.</p>
+<p>To add depth, pair lagging metrics (like churn) with leading indicators (such as product usage frequency). This combination provides a forward-looking perspective, helping investors and founders anticipate trends rather than just reacting to them.</p>
+<h3 id="automating-data-ingestion-and-anomaly-detection" tabindex="-1">Automating Data Ingestion and Anomaly Detection</h3>
+<p>Manually updating data is not only time-consuming but also erodes investor trust. Instead, integrate systems like advertising platforms, web analytics, ERP tools, and accounting software to eliminate data silos. This is especially critical for e-commerce startups, where real-time data is essential to keep up with rapid market changes.</p>
+<p>Automated alerts are another must-have. These alerts immediately flag issues when KPIs deviate from expected ranges. Vikas Gautam, Principal Product Manager at <a href="https://www.thoughtspot.com/" target="_blank" rel="nofollow noopener noreferrer">ThoughtSpot</a>, explains it best:</p>
+<blockquote>
+<p>&quot;SaaS metrics replace assumptions with clarity. They show you which parts of your business are working, which aren't, and where to focus next.&quot; </p>
+</blockquote>
+<p>The move from outdated, static spreadsheets to real-time dashboards - like Liveboards that provide AI-generated context for sudden KPI shifts - is now a baseline expectation for startups aiming to attract investors.</p>
+<p>These automated tools ensure your dashboard stays up-to-date, empowering quick and informed decisions.</p>
+<h3 id="how-lucid-financials-supports-investor-ready-reporting" tabindex="-1">How <a href="https://www.lucid.now/">Lucid Financials</a> Supports Investor-Ready Reporting</h3>
+<p><img src="https://assets.seobotai.com/lucid.now/6a07b58b800645b46e62af1a/1eb54ee01e26ea6948fbd2b4573c1aa4.jpg" alt="Lucid Financials"></p>
+<p>For startups without a dedicated finance team, keeping dashboards investor-ready can be a tall order. That’s where <a href="https://www.lucid.now">Lucid Financials</a> steps in. By consolidating operational and financial metrics, Lucid bridges the gap between day-to-day performance tracking and the polished reporting investors expect.</p>
+<p>Lucid Financials offers real-time monitoring and integrates directly with Slack. Founders can check their runway, burn rate, or spending by simply asking Lucid’s AI in Slack. If deeper insights are needed, expert support is just a message away.</p>
+<p>With clean financial records delivered in just seven days and investor-grade reports available on demand, Lucid ensures startups are always prepared for due diligence, no matter their stage of growth. This level of preparedness can make all the difference when it comes to securing investor trust.</p>
+<h2 id="conclusion-picking-the-right-kpi-strategy-for-your-startup" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Picking the Right KPI Strategy for Your Startup</h2>
+<p>Choosing the right KPIs is crucial for steering your startup in the right direction. Your business model should dictate which metrics matter most. For SaaS startups, recurring revenue is the lifeblood, making metrics like MRR growth, NRR, and churn rate essential. On the other hand, e-commerce startups thrive on transaction volume and profit margins, so contribution margin, CAC payback, and repeat purchase rates are the key numbers investors care about. Focusing on the right metrics can help you avoid costly mistakes.</p>
+<p>A common pitfall for founders is using the wrong framework for their business model. For instance, an e-commerce brand that prioritizes ROAS without factoring in contribution margin could be in trouble. A campaign with a 4.5x ROAS might look great on the surface but could leave you with an effective margin of just 7.8% once you account for COGS, shipping, and returns. This highlights how top-line metrics can sometimes hide underlying inefficiencies. Similarly, SaaS founders who focus solely on revenue growth without monitoring NRR might overlook a churn problem that could quietly undermine their business.</p>
+<p>The good news? Building a KPI strategy doesn't have to be overly complex. Align your metrics with your company’s growth stage and pair lagging indicators with leading ones. This approach helps you anticipate challenges before they escalate, ensuring your strategy stays aligned with the growth priorities discussed earlier in this article.</p>
+<blockquote>
+<p>&quot;The difference between scaling sustainably and burning through runway lies in choosing the right performance indicators.&quot; - Ascent CFO </p>
+</blockquote>
+<p>A well-thought-out KPI strategy not only drives growth but also strengthens investor confidence. For founders juggling operations without a dedicated finance team, keeping investor-grade reports up to date can feel overwhelming. That’s where <a href="https://www.lucid.now">Lucid Financials</a> steps in. It combines AI-powered bookkeeping, real-time financial insights, and CFO-level support to consolidate your financial data into one platform. Whether you're a SaaS startup monitoring NRR or an e-commerce brand managing inventory turnover, Lucid ensures your books are clean in just seven days, with board-ready reports available anytime. It’s a game-changer for staying investor-ready while focusing on scaling your business.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-pick-the-right-north-star-metric-for-my-startup" tabindex="-1" data-faq-q>How do I pick the right North Star Metric for my startup?</h3>
+<p>To steer your business effectively, focus on a single, high-level KPI that captures your core value and aligns with your growth objectives. For SaaS companies, metrics like <strong>net revenue retention</strong> or the <strong>LTV:CAC ratio</strong> are often the go-to choices. On the other hand, e-commerce businesses might zero in on <strong>contribution margin</strong> or <strong>conversion rate</strong>.</p>
+<p>The key is to choose a metric that checks three boxes: it should be <strong>actionable</strong>, <strong>easy to explain</strong>, and <strong>a reliable predictor of success</strong>. This clarity not only sharpens your strategy but also keeps your team aligned and motivated.</p>
+<h3 id="whats-the-best-way-to-calculate-ltv-without-overstating-it" tabindex="-1" data-faq-q>What’s the best way to calculate LTV without overstating it?</h3>
+<p>To get an accurate <strong>Customer Lifetime Value (LTV)</strong>, you need to go beyond basic calculations. Use formulas that factor in key metrics like <strong>average order value</strong>, <strong>purchase frequency</strong>, <strong>retention rate</strong>, and <strong>profit margins</strong>. Don’t forget to include costs and churn rates to get a clear picture.</p>
+<p>For a deeper analysis, consider using <strong>cohort-based</strong> or <strong>predictive models</strong>, which can provide insights into customer behavior over time. Also, make it a habit to update your calculations regularly with actual customer data. This helps you stay aligned with changing retention patterns and gives you a more realistic understanding of your customers' long-term value.</p>
+<h3 id="how-can-i-build-an-investor-ready-kpi-dashboard-with-consistent-data" tabindex="-1" data-faq-q>How can I build an investor-ready KPI dashboard with consistent data?</h3>
+<p>To build a KPI dashboard that impresses investors and ensures reliable data, follow these steps:</p>
+<ul>
+<li><strong>Pinpoint the right KPIs</strong>: Choose metrics that align with your industry. For example, SaaS companies might focus on Monthly Recurring Revenue (MRR), while e-commerce businesses may prioritize conversion rates.</li>
+<li><strong>Connect your data sources</strong>: Integrate all relevant systems to maintain data accuracy and consistency across the board.</li>
+<li><strong>Automate your reporting</strong>: Streamline the process to reduce manual errors and save time.</li>
+</ul>
+<p>Make it a habit to review and refine your metrics regularly. This helps you identify trends early and keep your dashboard clear and organized. Using standardized formats ensures your dashboard aligns with what investors expect and supports smart decision-making.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a07b58b800645b46e62af1a"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I pick the right North Star Metric for my startup?","acceptedAnswer":{"@type":"Answer","text":"To steer your business effectively, focus on a single, high-level KPI that captures your core value and aligns with your growth objectives. For SaaS companies, metrics like net revenue retention or the LTV:CAC ratio are often the go-to choices. On the other hand, e-commerce businesses might zero in on contribution margin or conversion rate. The key is to choose a metric that checks three boxes: it should be actionable, easy to explain, and a reliable predictor of success. This clarity not only sharpens your strategy but also keeps your team aligned and motivated."}},{"@type":"Question","name":"What’s the best way to calculate LTV without overstating it?","acceptedAnswer":{"@type":"Answer","text":"To get an accurate Customer Lifetime Value (LTV), you need to go beyond basic calculations. Use formulas that factor in key metrics like average order value, purchase frequency, retention rate, and profit margins. Don’t forget to include costs and churn rates to get a clear picture. For a deeper analysis, consider using cohort-based or predictive models, which can provide insights into customer behavior over time. Also, make it a habit to update your calculations regularly with actual customer data. This helps you stay aligned with changing retention patterns and gives you a more realistic understanding of your customers' long-term value."}},{"@type":"Question","name":"How can I build an investor-ready KPI dashboard with consistent data?","acceptedAnswer":{"@type":"Answer","text":"To build a KPI dashboard that impresses investors and ensures reliable data, follow these steps: Pinpoint the right KPIs: Choose metrics that align with your industry. For example, SaaS companies might focus on Monthly Recurring Revenue (MRR), while e-commerce businesses may prioritize conversion rates. Connect your data sources: Integrate all relevant systems to maintain data accuracy and consistency across the board. Automate your reporting: Streamline the process to reduce manual errors and save time. Make it a habit to review and refine your metrics regularly. This helps you identify trends early and keep your dashboard clear and organized. Using standardized formats ensures your dashboard aligns with what investors expect and supports smart decision-making."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

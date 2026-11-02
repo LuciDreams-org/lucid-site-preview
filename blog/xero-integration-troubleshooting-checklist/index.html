@@ -1,0 +1,369 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Checklist for Troubleshooting Xero Integration - Lucid</title>
+<meta name="description" content="Confirm access, fix connection, validate mapping, and match reports to stop small integration errors from breaking month‑end finances."/>
+<link rel="canonical" href="https://www.lucid.now/blog/xero-integration-troubleshooting-checklist/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Checklist for Troubleshooting Xero Integration"/>
+<meta property="og:description" content="Confirm access, fix connection, validate mapping, and match reports to stop small integration errors from breaking month‑end finances."/>
+<meta property="og:url" content="https://www.lucid.now/blog/xero-integration-troubleshooting-checklist/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a8e2d03f0ae24ed42a3300a-1787704352137.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Checklist for Troubleshooting Xero Integration"/>
+<meta name="twitter:description" content="Confirm access, fix connection, validate mapping, and match reports to stop small integration errors from breaking month‑end finances."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a8e2d03f0ae24ed42a3300a-1787704352137.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Checklist for Troubleshooting Xero Integration", "description": "Confirm access, fix connection, validate mapping, and match reports to stop small integration errors from breaking month\u2011end finances.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a8e2d03f0ae24ed42a3300a-1787704352137.jpg", "datePublished": "2026-08-26T00:32:32.137Z", "dateModified": "2026-08-26T00:32:32.137Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/xero-integration-troubleshooting-checklist/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Checklist for Troubleshooting Xero Integration</h1>
+<div class="article-meta"><time datetime="2026-08-26T00:32:32.137Z">August 26, 2026</time> &middot; 9 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a8e2d03f0ae24ed42a3300a-1787704352137.jpg" alt="Checklist for Troubleshooting Xero Integration" loading="eager" />
+<div class="article-body">
+<p><strong>If your <a href="https://www.xero.com/us/" target="_blank" rel="nofollow noopener noreferrer">Xero</a> integration breaks, I’d check four things first: access, connection, data mapping, and report match.</strong> That order helps me fix the issue without making month-end reporting worse.</p>
+<p>Here’s the short version:</p>
+<ul>
+<li>I confirm I’m in the <strong>right Xero organization</strong></li>
+<li>I check <strong>Xero, bank feed, and app status</strong></li>
+<li>I save the <strong>exact error, time, and last good sync</strong></li>
+<li>I fix <strong>bank feed, OAuth, or sync job failures</strong></li>
+<li>I review <strong>account mapping, tracking categories, and date filters</strong></li>
+<li>I compare <strong>Xero reports vs. dashboards</strong></li>
+<li>I add monthly checks for <strong>API limits, token renewals, and bank rules</strong></li>
+</ul>
+<p>The reason this matters is simple: <strong>30% to 50% of integration projects fail</strong> because of bad setup or bad data. And one small issue - like an expired token or old bank rule - can throw off cash balances, P&amp;L, and board reporting.</p>
+<p>A few warning signs usually show up first:</p>
+<ul>
+<li><strong>OAuth errors</strong> → sync stops</li>
+<li><strong>Missing bank transactions</strong> → cash balance is off</li>
+<li><strong>Duplicate entries</strong> → revenue or expenses look too high</li>
+<li><strong>Uncategorized transactions</strong> → account coding goes wrong</li>
+<li><strong>Dashboard totals that don’t match Xero</strong> → filters, mappings, or report basis may be off</li>
+</ul>
+<p>I’d use this checklist in one pass: <strong>confirm status, isolate the issue, fix the cause, verify the data, then validate reports</strong>. That keeps the close on track and cuts down on bad re-syncs.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a8e2d03f0ae24ed42a3300a-1787703836869.jpg" alt="Xero Integration Troubleshooting: 4-Step Fix Checklist" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Xero Integration Troubleshooting: 4-Step Fix Checklist</p>
+</figcaption></figure><h2 id="how-to-fix-xero-account-connection-error-full-guide-2026" tabindex="-1" class="sb h2-sbb-cls">How to Fix <a href="https://www.xero.com/us/" target="_blank" rel="nofollow noopener noreferrer">Xero</a> Account Connection Error Full Guide 2026</h2>
+<p><img src="https://assets.seobotai.com/lucid.now/6a8e2d03f0ae24ed42a3300a/a9383aedaba2ce440ed8e8efb05a8597.jpg" alt="Xero"></p>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/XNdrZMn_rYA" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="step-1-confirm-access-service-status-and-the-scope-of-the-problem" tabindex="-1" class="sb h2-sbb-cls">Step 1: Confirm Access, Service Status, and the Scope of the Problem</h2>
+<p>First, make sure the issue is tied to the right organization and the active sync path. Before you change anything, confirm you're in the correct Xero organization, that the right user has access, and that you're looking at the live connection that handles the sync.</p>
+<h3 id="verify-the-correct-xero-organization-user-access-and-us-settings" tabindex="-1">Verify the Correct Xero Organization, User Access, and U.S. Settings</h3>
+<p>Log into Xero and check that the organization name matches the entity you're working on. Then review your user role and app permissions so you know you can access the settings needed to fix the problem.</p>
+<p>This sounds basic, but it's an easy place to trip up. If you're in the wrong organization or signed in with a user that has limited access, you can waste a lot of time chasing the wrong issue.</p>
+<p>Confirm these items before you touch any settings:</p>
+<ul>
+<li>The correct Xero organization</li>
+<li>The user's role and access level</li>
+<li>The app permissions tied to the sync</li>
+<li>The U.S. settings in use for that organization, if those settings affect the connection</li>
+</ul>
+<h3 id="check-xero-bank-feed-and-connected-app-status" tabindex="-1">Check Xero, Bank Feed, and Connected App Status</h3>
+<p>Next, check the status of Xero, the bank feed, and the connected app before changing any settings. If one of them shows a disruption, sync alert, or sync job failure, stop there and wait for the issue to clear.</p>
+<p>Make a note of which module is affected. That helps narrow the scope of the problem and keeps you from making changes in the wrong place.</p>
+<p>Only move to connection fixes after you confirm there isn't a platform or service outage.</p>
+<h3 id="record-the-error-before-making-any-changes" tabindex="-1">Record the Error Before Making Any Changes</h3>
+<p>Before you refresh, reconnect, or reauthorize anything, capture the exact failure. Take a screenshot of the error, note the time, and record the last successful sync date. If you can, also note which module is affected.</p>
+<p>It also helps to log any changes made right before the failure, especially password resets or permission updates. Those small details often point straight to the cause.</p>
+<h2 id="step-2-fix-connection-authentication-and-sync-failures" tabindex="-1" class="sb h2-sbb-cls">Step 2: Fix Connection, Authentication, and Sync Failures</h2>
+<p>Once you've confirmed the scope, it's time to fix the problem. Start with the connection itself: reconnect the feed, reauthorize access, and then get sync jobs running again. If service status looks fine, work through the connection layer in this order: <strong>feed, auth, then sync jobs</strong>.</p>
+<h3 id="reconnect-bank-feeds-and-connected-apps" tabindex="-1">Reconnect Bank Feeds and Connected Apps</h3>
+<p>First, look for disconnected links or permission errors. If a feed has dropped, reauthorize it and make sure the integration points to the correct Xero organization. That part matters more than it seems.</p>
+<p>If it's tied to the wrong organization, transactions won't show up where you expect them to. On the surface, it can look like the feed is working. In practice, the data is just landing in the wrong place.</p>
+<h3 id="check-oauth-20-settings-and-token-rotation" tabindex="-1">Check OAuth 2.0 Settings and Token Rotation</h3>
+<p>Expired tokens and stale refresh tokens are a common cause of sync failures. That matches the same &quot;OAuth errors or expired tokens&quot; warning sign from the table above. Review the setup closely:</p>
+<ul>
+<li>client ID</li>
+<li>client secret</li>
+<li>redirect URI</li>
+<li>scopes</li>
+<li>refresh-token handling</li>
+</ul>
+<p>Watch for common failure messages like <code>invalid_scope</code>, <code>unauthorized_client</code>, or syncs that stop right after a permission change. If your app offers built-in OAuth handling, use it. Manual token refresh tends to go wrong in small, annoying ways.</p>
+<p>If the feed still won't sync, switch to a manual import so transactions stay up to date.</p>
+<h3 id="use-a-manual-import-if-the-bank-feed-is-down" tabindex="-1">Use a Manual Import If the Bank Feed Is Down</h3>
+<p>Use manual import as a short-term bridge while you repair the connection. If the feed is down, import an OFX or CSV file into Xero. Use U.S. formatting: <strong>$ amounts</strong>, commas for thousands, decimals for cents, and <strong>MM/DD/YYYY</strong> dates.</p>
+<h2 id="step-3-check-data-mapping-date-filters-and-report-accuracy" tabindex="-1" class="sb h2-sbb-cls">Step 3: Check Data Mapping, Date Filters, and Report Accuracy</h2>
+<p>Once the connection is live, make sure the mapped data and report settings are correct. A live feed can still show bad numbers when account mapping, filters, or sync settings are off.</p>
+<h3 id="review-chart-of-accounts-tracking-categories-and-sync-filters" tabindex="-1">Review Chart of Accounts, Tracking Categories, and Sync Filters</h3>
+<p>Start with your <strong>revenue, expense, and balance sheet accounts</strong>. Confirm they line up with the accounts used in the integration.</p>
+<p>Then check <strong>tracking categories</strong>, such as departments or cost centers. This part is easy to overlook, but it matters a lot. If a category is set up the wrong way, spend can land in the wrong account or tracking category across every report.</p>
+<p>You should also confirm whether the integration uses <strong>summary sync</strong> or <strong>individual transaction sync</strong>. Summary sync rolls transactions into one daily invoice. That can make reports look clean, but it can also hide item-level mistakes. If you're trying to review burn rate or cash runway in detail, individual transaction sync gives you a much clearer view.</p>
+<p>If the mapping looks right, move down to the transaction level.</p>
+<h3 id="find-and-fix-missing-duplicated-or-partial-transactions" tabindex="-1">Find and Fix Missing, Duplicated, or Partial Transactions</h3>
+<p>After that, compare Xero output with your dashboards for the same date range. Open the bank reconciliation view and line it up with the source system for that same period.</p>
+<p>Look for a few common issues:</p>
+<ul>
+<li>Gaps between pending and posted transactions</li>
+<li>Skipped date ranges</li>
+<li>Duplicate entries from overlapping sync cycles</li>
+</ul>
+<p>If the problem shows up in one month, re-run only that date range instead of forcing a full resync.</p>
+<p>Before you re-sync anything, review the data across four checks: <strong>completeness, consistency, duplication, and recency</strong>. Also inspect your bank rules during reconciliation. Old rules can code transactions the wrong way month after month.</p>
+<h3 id="compare-xero-reports-to-automated-dashboards-and-board-packs" tabindex="-1">Compare Xero Reports to Automated Dashboards and Board Packs</h3>
+<p>Pull Xero reports for the same period, then compare totals line by line. If the numbers don't match, use the table below to go straight from symptom to likely cause.</p>
+<table>
+<thead>
+<tr>
+<th>Issue Type</th>
+<th>Likely Root Cause</th>
+<th>Checklist Step to Resolve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Missing Tax Data</strong></td>
+<td>Integration may not support US sales tax </td>
+<td>Install a tax-specific app from the <a href="https://apps.xero.com/us" target="_blank" rel="nofollow noopener noreferrer">Xero App Store</a></td>
+</tr>
+<tr>
+<td><strong>Incomplete or Duplicate Transactions</strong></td>
+<td>Summary sync or overlapping sync cycles </td>
+<td>Switch to individual transaction sync and resolve duplicates at the architecture layer before re-syncing</td>
+</tr>
+<tr>
+<td><strong>Misclassified Fees</strong></td>
+<td>Incorrect Chart of Accounts mapping for gateway fees </td>
+<td>Review the daily summary invoice breakdown and re-map accounts</td>
+</tr>
+<tr>
+<td><strong>Basis Mismatch</strong></td>
+<td>Cash vs. accrual basis mismatch </td>
+<td>Compare Xero Cash Position to Profit and Loss reports</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>Data volume growth degrading sync performance </td>
+<td>Check API limits and sync schedules</td>
+</tr>
+</tbody>
+</table>
+<p>Match the report basis before comparing totals. Cash and accrual reports won't line up.</p>
+<p>If your team wants a faster way to check report accuracy without pulling reports by hand, AI-enabled connectors can expose tools like <code>get_profit_and_loss</code> and <code>get_cash_position</code> to pull real-time summaries straight from Xero.</p>
+<h2 id="step-4-stabilize-the-integration-and-prevent-repeat-issues" tabindex="-1" class="sb h2-sbb-cls">Step 4: Stabilize the Integration and Prevent Repeat Issues</h2>
+<p>After the fix is live, move into monitoring mode. Once syncs and mappings are back on track, put guardrails in place so the same problems don't pop up again. Keep your attention on the usual trouble spots: feed drops, expired auth, mapping drift, and stale reports.</p>
+<h3 id="monitor-api-limits-retry-logic-and-sync-schedules" tabindex="-1">Monitor API Limits, Retry Logic, and Sync Schedules</h3>
+<p>API limits and large sync jobs can trigger timeouts as data volume climbs. Spread out large sync runs, and set alerts for failed syncs so issues don't sit in the background unnoticed. Review OAuth 2.0 token renewals and retry behavior too. If a connection goes stale, you don't want it failing silently for days.</p>
+<p>It also helps to give each connected platform a clear owner. When one person is responsible, issues get picked up faster. Alongside that, keep a simple data-flow map. Nothing fancy. Just enough to show how data moves between systems and where manual handoffs happen.</p>
+<h3 id="run-a-monthly-health-check-before-month-end-close-and-reporting" tabindex="-1">Run a Monthly Health Check Before Month-End Close and Reporting</h3>
+<p>Use a monthly review to catch drift before close.</p>
+<table>
+<thead>
+<tr>
+<th>Health Check Area</th>
+<th>Monthly Task</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Connectivity</strong> (Step 2)</td>
+<td>Review failed sync logs and API status</td>
+<td>Catches timeout patterns before they affect reports</td>
+</tr>
+<tr>
+<td><strong>Data Integrity</strong> (Step 3)</td>
+<td>Check for duplicates, partial records, and stale data</td>
+<td>Prevents incorrect data from reaching dashboards</td>
+</tr>
+<tr>
+<td><strong>Automation</strong> (Step 3)</td>
+<td>Review bank rules and the chart of accounts</td>
+<td>Keeps new vendors and expense categories classified correctly</td>
+</tr>
+<tr>
+<td><strong>Reporting</strong> (Step 3)</td>
+<td>Spot-check the P&amp;L and balance sheet</td>
+<td>Confirms the numbers are ready for board reporting</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong> (Step 2)</td>
+<td>Verify U.S. sales tax handling and token renewals</td>
+<td>Keeps tax handling and access current</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conclusion-the-core-troubleshooting-steps-to-follow-every-time" tabindex="-1">Conclusion: The Core Troubleshooting Steps to Follow Every Time</h3>
+<p>Every Xero integration fix should follow the same order: confirm status, isolate the failure, fix auth or config, verify data, and then validate reports. That sequence matters. Skip the verification step, and a small issue can turn into a month-end close mess.</p>
+<p>Use the same flow every time:</p>
+<ul>
+<li>Confirm status</li>
+<li>Isolate the failure</li>
+<li>Fix auth or configuration</li>
+<li>Verify the data</li>
+<li>Validate the reports</li>
+</ul>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-know-if-the-issue-is-with-xero-or-the-connected-app" tabindex="-1" data-faq-q>How do I know if the issue is with Xero or the connected app?</h3>
+<p>Trace the data flow to find where the problem begins. Start with the connected app’s status and make sure authentication still works, including OAuth2 tokens.</p>
+<p>Then check error logs in the app and in Xero. You’re looking for the exact cause of the failure, such as an API limit, an invalid endpoint, a schema mismatch, or a data validation error.</p>
+<p>After that, review transaction logs in both systems to see exactly where the sync stops.</p>
+<h3 id="when-should-i-re-sync-one-date-range-instead-of-everything" tabindex="-1" data-faq-q>When should I re-sync one date range instead of everything?</h3>
+<p>Re-sync a specific date range when the problem is tied to a known window of time, like a missed transaction or a sync failure during that period.</p>
+<p>This targeted approach helps you avoid duplicates and cuts down the time and effort spent reprocessing past data that's already correct.</p>
+<h3 id="why-dont-my-dashboard-totals-match-xero-reports" tabindex="-1" data-faq-q>Why don't my dashboard totals match Xero reports?</h3>
+<p>Dashboard totals can differ from Xero reports for a pretty simple reason: <strong>the data underneath them isn’t always clean</strong>.</p>
+<p>Incomplete records, stale sync data, or duplicate entries can throw numbers off. You can also run into trouble when naming conventions or field structures don’t line up between systems. Even small mismatches in setup can lead to different totals on each side.</p>
+<p>Another common issue is transaction coding. Automated bank rules or an outdated chart of accounts can put items in the wrong category, which changes how your finances appear in reports and dashboards.</p>
+<p><a href="https://www.lucid.now/">Lucid Financials</a> helps close those gaps by validating data, merging duplicate records, and flagging anomalies in real time.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a8e2d03f0ae24ed42a3300a"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I know if the issue is with Xero or the connected app?","acceptedAnswer":{"@type":"Answer","text":"Trace the data flow to find where the problem begins. Start with the connected app’s status and make sure authentication still works, including OAuth2 tokens. Then check error logs in the app and in Xero. You’re looking for the exact cause of the failure, such as an API limit, an invalid endpoint, a schema mismatch, or a data validation error. After that, review transaction logs in both systems to see exactly where the sync stops."}},{"@type":"Question","name":"When should I re-sync one date range instead of everything?","acceptedAnswer":{"@type":"Answer","text":"Re-sync a specific date range when the problem is tied to a known window of time, like a missed transaction or a sync failure during that period. This targeted approach helps you avoid duplicates and cuts down the time and effort spent reprocessing past data that's already correct."}},{"@type":"Question","name":"Why don't my dashboard totals match Xero reports?","acceptedAnswer":{"@type":"Answer","text":"Dashboard totals can differ from Xero reports for a pretty simple reason: the data underneath them isn’t always clean. Incomplete records, stale sync data, or duplicate entries can throw numbers off. You can also run into trouble when naming conventions or field structures don’t line up between systems. Even small mismatches in setup can lead to different totals on each side. Another common issue is transaction coding. Automated bank rules or an outdated chart of accounts can put items in the wrong category, which changes how your finances appear in reports and dashboards. Lucid Financials helps close those gaps by validating data, merging duplicate records, and flagging anomalies in real time."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

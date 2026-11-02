@@ -1,0 +1,602 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Cap Table Waterfalls: Balancing Investor Returns - Lucid</title>
+<meta name="description" content="Model exit waterfalls to show who gets paid and why—reconcile preferences, conversions, and payouts across exit scenarios."/>
+<link rel="canonical" href="https://www.lucid.now/blog/cap-table-waterfalls-balancing-investor-returns/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Cap Table Waterfalls: Balancing Investor Returns"/>
+<meta property="og:description" content="Model exit waterfalls to show who gets paid and why—reconcile preferences, conversions, and payouts across exit scenarios."/>
+<meta property="og:url" content="https://www.lucid.now/blog/cap-table-waterfalls-balancing-investor-returns/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae7d4669bd1adf924f84bd6-1793580954215.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Cap Table Waterfalls: Balancing Investor Returns"/>
+<meta name="twitter:description" content="Model exit waterfalls to show who gets paid and why—reconcile preferences, conversions, and payouts across exit scenarios."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae7d4669bd1adf924f84bd6-1793580954215.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Cap Table Waterfalls: Balancing Investor Returns", "description": "Model exit waterfalls to show who gets paid and why\u2014reconcile preferences, conversions, and payouts across exit scenarios.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae7d4669bd1adf924f84bd6-1793580954215.jpg", "datePublished": "2026-11-02T00:55:54.215Z", "dateModified": "2026-11-02T00:55:54.215Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/cap-table-waterfalls-balancing-investor-returns/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Cap Table Waterfalls: Balancing Investor Returns</h1>
+<div class="article-meta"><time datetime="2026-11-02T00:55:54.215Z">November 2, 2026</time> &middot; 13 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae7d4669bd1adf924f84bd6-1793580954215.jpg" alt="Cap Table Waterfalls: Balancing Investor Returns" loading="eager" />
+<div class="article-body">
+<p><strong>Your ownership percentage doesn’t tell you what you’ll receive in a sale.</strong> I start with the cash available after debt, fees, and deal adjustments - then apply each holder’s payout rights. In the article’s hypothetical $20 million sale, just $16 million reaches equity holders, and investor preferences leave $4 million for owners and eligible employees.</p>
+<p>Here’s what I check before relying on an exit waterfall:</p>
+<ul>
+<li><strong>Who owns the entity being sold:</strong> A practice sale and an MSO sale may pay different holders.</li>
+<li><strong>Who gets paid first:</strong> Signed documents set preference amounts, payment priority, conversion rights, and participation caps.</li>
+<li><strong>What each holder can receive:</strong> Employee awards depend on vesting, exercise costs, and transaction terms - not just fully diluted ownership.</li>
+<li><strong>When payment arrives:</strong> Closing cash, escrow, earnouts, and rollover equity need separate treatment.</li>
+<li><strong>Whether the numbers hold up:</strong> I compare low, middle, and high sale values, reconcile every dollar, and update the model as terms change.</li>
+</ul>
+<p>The goal is simple: show &lt;u&gt;who gets paid, how much, and why&lt;/u&gt; - with <em>legal and tax review</em> before treating estimates as final.</p>
+<h2 id="the-flow-of-funds-how-to-make-cap-tables-flow-like-water" tabindex="-1" class="sb h2-sbb-cls">The Flow of Funds: How to Make Cap Tables Flow Like Water</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/WVcgPxnmD1o" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="build-the-water-from-ownership-and-deal-terms" tabindex="-1" class="sb h2-sbb-cls">Build the Water From Ownership and Deal Terms</h2>
+<p>Once the payout order is set, build the waterfall from the <strong>executed deal documents - not the informal cap table</strong>. Link every input to its source document.</p>
+<p>Use the charter and amendments, stock purchase and financing agreements, investor rights agreements, option and warrant agreements, SAFE and convertible-note documents, board approvals, and merger or purchase agreement. Reconcile those documents with the entity-level general ledger, capitalization records, and closing statement.</p>
+<h3 id="calculate-proceeds-available-to-equity-holders" tabindex="-1">Calculate Proceeds Available to Equity Holders</h3>
+<p>Start by checking what the headline figure represents: enterprise value, equity value, or total consideration. For an enterprise-value deal, use:</p>
+<p><strong>Equity proceeds = enterprise value + cash − debt − debt-like liabilities ± working-capital adjustments − transaction expenses</strong></p>
+<p>This calculation comes before escrow, holdbacks, and similar adjustments. Follow the purchase agreement’s definitions, including its working-capital target. If the headline figure already represents equity value, don’t apply the enterprise-to-equity calculation again.</p>
+<p>Keep closing cash separate from escrow, holdbacks, earnouts, deferred consideration, and rollover equity. Model later payments separately using their contractual allocation rules, and count fees and debt only once.</p>
+<p>For a multi-entity sale, allocate consideration, expenses, debt, and retained cash by entity before applying each entity’s waterfall. This establishes the pool available before preference terms apply.</p>
+<h3 id="record-securities-and-preference-terms" tabindex="-1">Record Securities and Preference Terms</h3>
+<p>Use <strong>verified terms only</strong>. Track accrued dividends, redemption amounts, and similar entitlements in a separate schedule, and include them only when payable.</p>
+<p>Reconcile issued shares, fully diluted capitalization, and securities entitled to distributions separately. Keep granted options separate from ungranted reserves. Document how options, warrants, notes, and SAFEs are exercised, canceled, or converted.</p>
+<p>Record the verified terms in this input structure:</p>
+<table>
+<thead>
+<tr>
+<th>Security class</th>
+<th>Shares or units</th>
+<th>Original investment</th>
+<th>Preference multiple</th>
+<th>Participation</th>
+<th>Participation cap</th>
+<th>Seniority</th>
+<th>Conversion ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Each preferred class</td>
+<td>Ledger balance</td>
+<td>Contractual preference basis</td>
+<td>Charter multiple</td>
+<td>Participating or nonparticipating</td>
+<td>Contractual cap or none</td>
+<td>Charter ranking</td>
+<td>Current adjusted ratio</td>
+</tr>
+<tr>
+<td>Common stock</td>
+<td>Outstanding shares</td>
+<td>Record separately; not a preference</td>
+<td>Not applicable</td>
+<td>Residual rights</td>
+<td>Not applicable</td>
+<td>Below applicable preferences</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Options and warrants</td>
+<td>Granted or outstanding awards</td>
+<td>Exercise price and cost separately</td>
+<td>Only if contractually applicable</td>
+<td>Award-specific</td>
+<td>Contract-specific</td>
+<td>Based on award treatment</td>
+<td>Exercise or conversion terms</td>
+</tr>
+</tbody>
+</table>
+<h3 id="set-the-order-of-payment" tabindex="-1">Set the Order of Payment</h3>
+<p>Group preferred equity into <strong>senior, pari passu, and junior tiers</strong>, subject to allowed conversion choices. Pay senior tiers first, followed by pari passu tiers, then junior tiers. Common stock receives the residual, with participating preferred sharing as its terms allow.</p>
+<p><em>Pari passu</em> means equal rank - not equal proceeds. If the available proceeds cannot cover a tier, apply the agreement’s pro rata shortfall formula rather than ownership percentages. Preferred liquidation preferences are equity rights, not creditor claims.</p>
+<h2 id="calculate-preferences-conversions-and-remaining-payouts" tabindex="-1" class="sb h2-sbb-cls">Calculate Preferences, Conversions, and Remaining Payouts</h2>
+<p>Once the payment order is set, calculate what each class receives at each exit value.</p>
+<h3 id="compare-preferred-equity-payout-rules" tabindex="-1">Compare Preferred Equity Payout Rules</h3>
+<p><strong>Nonparticipating preferred receives its preference or its as-converted value - whichever is better - not both.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Preferred type</th>
+<th>Payment order</th>
+<th>Conversion behavior</th>
+<th>Residual participation</th>
+<th>Investor return and effect on common</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nonparticipating</td>
+<td>Receives its preference before junior securities, unless conversion pays more</td>
+<td>Takes the better permitted preference or conversion amount</td>
+<td>None when taking the preference</td>
+<td>Protects against downside while allowing upside through conversion</td>
+</tr>
+<tr>
+<td>Participating, uncapped</td>
+<td>Receives its preference first, then shares in remaining proceeds on an as-converted basis</td>
+<td>Usually keeps preferred status to receive both payments</td>
+<td>Yes, without a cap</td>
+<td>Can materially reduce common holders’ proceeds</td>
+</tr>
+<tr>
+<td>Participating, capped</td>
+<td>Receives its preference first, then participates until the contractual cap is reached</td>
+<td>Stops participating at the cap; conversion may pay more if permitted</td>
+<td>Yes, but limited</td>
+<td>Protects investors while setting a defined limit on their proceeds</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Specify whether the cap includes the preference, dividends, or both.</strong></p>
+<h3 id="test-conversion-and-divide-remaining-proceeds" tabindex="-1">Test Conversion and Divide Remaining Proceeds</h3>
+<p>Test all permitted conversion elections together. One class’s conversion changes both the preference claims and the shares eligible for remaining proceeds.</p>
+<p>Apply automatic-conversion triggers, election requirements, and adjusted conversion ratios. Then pay valid preferences and divide the remaining proceeds among eligible shares only. When a class reaches its participation cap, stop its participation and exclude it from later allocations if the agreement requires.</p>
+<p>Employee awards sit below the preferred stack and require separate eligibility checks. Review vesting, exercise rights, assumption, acceleration, cancellation, and cash-out terms. Deduct exercise costs where required, and use cashless settlement only when permitted. <strong>A fully diluted award doesn’t automatically qualify for a payout.</strong></p>
+<h3 id="check-that-every-dollar-is-accounted-for" tabindex="-1">Check That Every Dollar Is Accounted For</h3>
+<p><strong>Reconcile to zero:</strong> payouts must be nonnegative, debt and fees must be deducted only once, and no holder may receive incompatible preference and conversion payments. Allocation weights must total 100% within each funded distribution pool. Track retained and contingent amounts separately from closing cash.</p>
+<p>Run these checks for every exit-value scenario so the allocation matches total proceeds. Investor protection, common upside, and transaction mechanics must all reconcile in the calculation.</p>
+<table>
+<thead>
+<tr>
+<th>Calculation step</th>
+<th>Calculation or required check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sale-price basis used</td>
+<td>Identify the sale-price basis used in the model</td>
+</tr>
+<tr>
+<td>Debt and closing adjustments</td>
+<td>Apply only the adjustments required by that basis; deduct each once</td>
+</tr>
+<tr>
+<td>Net equity proceeds</td>
+<td>Reconcile total equity consideration, separating closing cash from retained or contingent amounts</td>
+</tr>
+<tr>
+<td>Conversion elections</td>
+<td>Record each permitted election; remove converted shares’ preference claims</td>
+</tr>
+<tr>
+<td>Preference payments</td>
+<td>Pay valid claims within available proceeds and priority rules</td>
+</tr>
+<tr>
+<td>Residual distributions</td>
+<td>Subtract preferences from the closing equity pool; allocate the remainder using eligible weights and caps</td>
+</tr>
+<tr>
+<td>Total closing payouts</td>
+<td>Confirm that preference payments plus residual distributions equal closing equity proceeds</td>
+</tr>
+<tr>
+<td>Investor return multiple</td>
+<td>Divide total investor proceeds by invested capital; distinguish closing proceeds from later payments</td>
+</tr>
+<tr>
+<td>Retained and contingent amounts</td>
+<td>Maintain separate schedules for escrow, holdbacks, earnouts, and other deferred consideration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compare-returns-across-exit-values" tabindex="-1" class="sb h2-sbb-cls">Compare Returns Across Exit Values</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6ae7d4669bd1adf924f84bd6-1793580586157.jpg" alt="Cap Table Waterfall: Where a $20 Million Exit Goes" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Cap Table Waterfall: Where a $20 Million Exit Goes</p>
+</figcaption></figure><p>Once the waterfall mechanics are set, test returns at different exit values. Scenario tables show where preferences protect investors and where conversion shifts more value to common holders.</p>
+<h3 id="build-an-exit-value-scenario-table" tabindex="-1">Build an Exit-Value Scenario Table</h3>
+<p>Compare low, moderate, and high exits to see how preferred terms affect the split between investors and common holders.</p>
+<blockquote>
+<p><strong>Hypothetical case - not an actual transaction:</strong> Northstar Practice Group, Inc., a U.S. C corporation operating 12 outpatient clinics, sells 100% of its equity. Senior Series B invested $8 million for 20% fully diluted ownership; junior Series A invested $4 million for 15%. Both have 1.0x nonparticipating preferences. Owners hold 55%; eligible employee and clinician awards represent 10%, with $1 million of aggregate exercise cost if all eligible awards are exercised. Debt is $3 million; transaction costs equal 5% of enterprise value. There are no dividends, rollover, or earnouts in the base waterfall. Employee and clinician awards are modeled separately so exercise cost can be shown alongside gross proceeds.</p>
+</blockquote>
+<p><strong>Net equity proceeds = 95% of enterprise value − $3 million.</strong> The table assumes each class makes its best permitted election after applying the other class’s choice. Common holders include owners and eligible staff. The preference and residual columns explain the allocations - <strong>don’t add them again to stakeholder totals.</strong></p>
+<p><em>Dollar amounts in millions; figures rounded.</em></p>
+<table>
+<thead>
+<tr>
+<th>Headline enterprise value</th>
+<th>Net equity proceeds</th>
+<th>Preference payouts</th>
+<th>Residual proceeds</th>
+<th>Total investor proceeds</th>
+<th>Common proceeds</th>
+<th>Investor gross multiple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$10.00</td>
+<td>$6.50</td>
+<td>$6.50</td>
+<td>$0.00</td>
+<td>$6.50</td>
+<td>$0.00</td>
+<td>0.54x</td>
+</tr>
+<tr>
+<td>$14.00</td>
+<td>$10.30</td>
+<td>$10.30</td>
+<td>$0.00</td>
+<td>$10.30</td>
+<td>$0.00</td>
+<td>0.86x</td>
+</tr>
+<tr>
+<td>$20.00</td>
+<td>$16.00</td>
+<td>$12.00</td>
+<td>$4.00</td>
+<td>$12.00</td>
+<td>$4.00</td>
+<td>1.00x</td>
+</tr>
+<tr>
+<td>$35.00</td>
+<td>$30.25</td>
+<td>$0.00</td>
+<td>$30.25</td>
+<td>$10.59</td>
+<td>$19.66</td>
+<td>0.88x</td>
+</tr>
+<tr>
+<td>$60.00</td>
+<td>$54.00</td>
+<td>$0.00</td>
+<td>$54.00</td>
+<td>$18.90</td>
+<td>$35.10</td>
+<td>1.58x</td>
+</tr>
+</tbody>
+</table>
+<h3 id="find-conversion-thresholds-and-participation-caps" tabindex="-1">Find Conversion Thresholds and Participation Caps</h3>
+<p>At higher exits, conversion can pay more than the preference. But <strong>test both classes’ elections together</strong>, rather than comparing ownership percentages alone. Series B’s 1.0x preference equals its as-converted value at $40.0 million in net equity proceeds. Series A reaches that point at about $26.67 million. Because B is senior, A cannot receive proceeds ahead of B unless the governing documents allow it.</p>
+<table>
+<thead>
+<tr>
+<th>Net equity proceeds</th>
+<th>Series B result</th>
+<th>Series A result</th>
+<th>Common and employee result</th>
+<th>Key lesson</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$5.0M</td>
+<td>Receives available senior proceeds</td>
+<td>$0</td>
+<td>$0</td>
+<td>Senior claims exhaust proceeds</td>
+</tr>
+<tr>
+<td>$12.0M</td>
+<td>Receives $8.0M preference</td>
+<td>Receives $4.0M preference</td>
+<td>$0</td>
+<td>Preference stack consumes all proceeds</td>
+</tr>
+<tr>
+<td>$20.0M</td>
+<td>May retain preference or convert, depending on comparison</td>
+<td>May retain preference or convert</td>
+<td>Receives only residual value</td>
+<td>Moderate exits can protect investors while limiting common upside</td>
+</tr>
+<tr>
+<td>$40.0M</td>
+<td>Conversion value approaches $8.0M</td>
+<td>Conversion is more attractive than preference in isolation</td>
+<td>Receives residual according to fully diluted rights</td>
+<td>Election mechanics become important</td>
+</tr>
+<tr>
+<td>$75.0M</td>
+<td>Conversion generally pays more than a 1.0x preference</td>
+<td>Conversion generally pays more than a 1.0x preference</td>
+<td>Receives a large share of residual value</td>
+<td>High exits reduce the practical effect of simple preferences</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>For a participating preferred class with a 2.0x cap on a $5.0 million investment, the maximum contractual proceeds are $10.0 million.</p>
+</blockquote>
+<p>A <strong>cap</strong> limits total proceeds. A <strong>threshold</strong> compares the preference with the as-converted value. Once a cap is reached, later residual proceeds can shift to common holders.</p>
+<h3 id="measure-returns-for-investors-owners-and-employees" tabindex="-1">Measure Returns for Investors, Owners, and Employees</h3>
+<p>At the $60 million sale, both classes convert. Owners receive 55% of net equity proceeds, and staff receive 10%. At the $20 million sale, those same ownership percentages produce a different split: owners receive just $3.38 million and staff receive $0.62 million from the $4.0 million residual pool.</p>
+<p>The table separates contractual proceeds from cash and excludes tax. <strong>Gross multiples equal proceeds divided by invested capital.</strong> Employee gross proceeds aren’t take-home value: subtract exercise cost separately, without reducing investor payouts.</p>
+<p><em>Dollar amounts in millions; $60 million headline-sale scenario.</em></p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Investment or exercise cost</th>
+<th>Gross proceeds</th>
+<th>Closing cash, before tax</th>
+<th>Rollover</th>
+<th>Contingent consideration</th>
+<th>Return metric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Series B</td>
+<td>$8.00</td>
+<td>$10.80</td>
+<td>$10.80</td>
+<td>$0</td>
+<td>$0</td>
+<td>1.35x gross multiple</td>
+</tr>
+<tr>
+<td>Series A</td>
+<td>$4.00</td>
+<td>$8.10</td>
+<td>$8.10</td>
+<td>$0</td>
+<td>$0</td>
+<td>2.03x gross multiple</td>
+</tr>
+<tr>
+<td>Owners</td>
+<td>Historical basis varies</td>
+<td>$29.70</td>
+<td>$29.70</td>
+<td>$0</td>
+<td>$0</td>
+<td>55% of net equity proceeds</td>
+</tr>
+<tr>
+<td>Employees and clinicians</td>
+<td>$1.00, exercise cost paid separately</td>
+<td>$5.40</td>
+<td>$5.40</td>
+<td>$0</td>
+<td>$0</td>
+<td>$4.40M net gain before tax</td>
+</tr>
+</tbody>
+</table>
+<h3 id="compare-financing-term-trade-offs" tabindex="-1">Compare Financing-Term Trade-Offs</h3>
+<p>Use the same Northstar inputs to see how each term changes downside protection and upside sharing. <strong>Change one term at a time</strong>, holding investment amounts, ownership, debt, fees, and exit values fixed. Each term balances investor protection against common upside; the trade-offs depend on risk, capital needs, and negotiated rights.</p>
+<table>
+<thead>
+<tr>
+<th>Term tested</th>
+<th>Investor benefit</th>
+<th>Effect on common holders</th>
+<th>Best stress-test scenarios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0x nonparticipating preference</td>
+<td>Protects invested capital or allows conversion upside</td>
+<td>Common may receive little at low exits but shares more at high exits</td>
+<td>Below and near the conversion threshold</td>
+</tr>
+<tr>
+<td>2.0x nonparticipating preference</td>
+<td>Larger priority claim</td>
+<td>Delays or eliminates common proceeds</td>
+<td>Low and moderate exits</td>
+</tr>
+<tr>
+<td>Participating preferred</td>
+<td>Investor receives the preference and then shares in residual proceeds</td>
+<td>Can sharply reduce common proceeds, especially at moderate exits</td>
+<td>Moderate and strong exits</td>
+</tr>
+<tr>
+<td>Participating preferred with a cap</td>
+<td>Preserves participation up to a negotiated ceiling</td>
+<td>Returns value to common after the cap is reached</td>
+<td>Moderate exits and high exits above the cap</td>
+</tr>
+<tr>
+<td>Senior liquidation preference</td>
+<td>Gives one class priority over junior investors</td>
+<td>Junior investors and common bear more downside risk</td>
+<td>Exits where proceeds cannot satisfy all claims</td>
+</tr>
+<tr>
+<td>Pari passu preference</td>
+<td>Shares priority among classes at the same level</td>
+<td>Distributes available preference proceeds across the same-ranking investors</td>
+<td>Distressed or below-stack exits</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keep-the-waterfall-current-and-review-its-inputs" tabindex="-1" class="sb h2-sbb-cls">Keep the Waterfall Current and Review Its Inputs</h2>
+<h3 id="update-terms-and-check-model-controls" tabindex="-1">Update Terms and Check Model Controls</h3>
+<p>Update the waterfall whenever ownership, payout rights, debt, or sale terms change. This includes financings, secondary sales, grants, conversions, repurchases, and amendments. Outdated inputs can misstate who gets paid first and how much investors, owners, and employees receive. Reconcile inputs with the current capitalization ledger, charter or operating agreement, financing documents, award records, and approvals. Give each version an <strong>as-of date</strong> and record when each change took effect.</p>
+<p>Keep a change log that records the source document, old and new values, preparer, reviewer, and prior version. Lock formulas while leaving inputs editable. A second reviewer should independently check ownership totals, preference balances, and conversion calculations. They should also confirm that holder-level payouts reconcile to distributable proceeds under a documented rounding rule. Track the legal and tax assumptions alongside these controls.</p>
+<p>At each update, label every input as a <strong>documented fact</strong>, <strong>assumption</strong>, or <strong>counsel/tax review required</strong>. Counsel should resolve unclear priority, participation, conversion, and change-of-control provisions that could affect investor protection and common upside. Before treating modeled proceeds as final, tax professionals should review withholding, equity-compensation treatment, and the tax consequences of an asset sale versus an equity sale.</p>
+<h3 id="use-current-entity-level-financial-reports" tabindex="-1">Use Current Entity-Level Financial Reports</h3>
+<p>Keep these controls accurate with current financial data. Use the same reporting cutoff for entity-level balance sheets, trial balances, debt schedules, and transaction-cost estimates. Replace book debt with current payoff amounts, including accrued interest and applicable penalties. Check that intercompany balances aren't counted twice and that fees don't appear in both recorded expenses and closing estimates. Update these inputs monthly or quarterly, again at signing, and immediately before closing.</p>
+<p><a href="https://www.lucid.now">Lucid Financials</a> can help keep entity-level financial inputs current for the waterfall. Counsel and tax professionals remain responsible for interpreting payout rights and assessing tax consequences. <strong>Reporting supplies balances, not payout rights.</strong></p>
+<h2 id="conclusion-balance-investor-protection-and-owner-upside" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Balance Investor Protection and Owner Upside</h2>
+<p><strong>Ownership percentages do not determine exit returns.</strong> Debt, expenses, and other adjustments reduce exit proceeds before the contract’s payment order determines equity payouts. Compare liquidation preferences, conversion values, and participation rights, then check that payouts add up to net proceeds.</p>
+<p>Run downside, base-case, and upside exit scenarios to see how these rules affect payouts. Identify conversion thresholds and participation caps, and show when founders and employees start sharing in the proceeds.</p>
+<p>Those thresholds shift as terms change, so keep the model current. Before a financing or exit decision, update it, check it against current documents, and get legal, tax, and accounting review. Present the results as <strong>conditional outcomes</strong>, showing each stakeholder what they could receive and why.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-can-i-estimate-the-exit-value-needed-to-receive-a-payout" tabindex="-1" data-faq-q>How can I estimate the exit value needed to receive a payout?</h3>
+<p>Build a <strong>liquidation waterfall model</strong> using your fully diluted cap table, including common shares, options, warrants, and SAFEs/convertible notes. Apply your investors’ actual liquidation preferences - such as 1x non-participating or 2x participating - to determine who gets paid first and how much each holder receives.</p>
+<p>Then test different exit valuations to find the <strong>lowest exit value that meets your target payout</strong>. <a href="https://www.lucid.now/">Lucid Financials</a> supports this modeling, so you can quickly compare multiple exit values.</p>
+<h3 id="can-my-options-cost-more-to-exercise-than-my-exit-payout" tabindex="-1" data-faq-q>Can my options cost more to exercise than my exit payout?</h3>
+<p>Yes. <strong>Exercising your stock options can cost more than you receive at exit.</strong> This can happen if your strike price is higher than the fair market value per share at exit. It can also happen if the distribution waterfall pays investors with liquidation preferences first, leaving little or nothing for common shareholders.</p>
+<p>Lucid Financials can help you model these exit scenarios with real-time data so you can see your potential financial outcomes in advance.</p>
+<h3 id="which-financing-terms-should-i-negotiate-to-protect-my-exit-proceeds" tabindex="-1" data-faq-q>Which financing terms should I negotiate to protect my exit proceeds?</h3>
+<p>Negotiate <strong>1x non-participating liquidation preferences</strong>. Avoid 2x or participating preferences, which can cut founder payouts. Favor weighted-average anti-dilution over full ratchet.</p>
+<p>Define drag-along and tag-along rights narrowly. Require a supermajority for drag-along, and structure tag-along rights to preserve founder control.</p>
+<p>If an option pool is required, base its size on a realistic <strong>12–24-month hiring plan</strong>. Favor post-money sizing to avoid the option pool shuffle. </p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6ae7d4669bd1adf924f84bd6"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How can I estimate the exit value needed to receive a payout?","acceptedAnswer":{"@type":"Answer","text":"Build a liquidation waterfall model using your fully diluted cap table, including common shares, options, warrants, and SAFEs/convertible notes. Apply your investors’ actual liquidation preferences - such as 1x non-participating or 2x participating - to determine who gets paid first and how much each holder receives. Then test different exit valuations to find the lowest exit value that meets your target payout. Lucid Financials supports this modeling, so you can quickly compare multiple exit values."}},{"@type":"Question","name":"Can my options cost more to exercise than my exit payout?","acceptedAnswer":{"@type":"Answer","text":"Yes. Exercising your stock options can cost more than you receive at exit. This can happen if your strike price is higher than the fair market value per share at exit. It can also happen if the distribution waterfall pays investors with liquidation preferences first, leaving little or nothing for common shareholders. Lucid Financials can help you model these exit scenarios with real-time data so you can see your potential financial outcomes in advance."}},{"@type":"Question","name":"Which financing terms should I negotiate to protect my exit proceeds?","acceptedAnswer":{"@type":"Answer","text":"Negotiate 1x non-participating liquidation preferences. Avoid 2x or participating preferences, which can cut founder payouts. Favor weighted-average anti-dilution over full ratchet. Define drag-along and tag-along rights narrowly. Require a supermajority for drag-along, and structure tag-along rights to preserve founder control. If an option pool is required, base its size on a realistic 12–24-month hiring plan. Favor post-money sizing to avoid the option pool shuffle."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

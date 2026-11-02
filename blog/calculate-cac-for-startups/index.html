@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How to Calculate CAC for Startups - Lucid</title>
+<meta name="description" content="Compute fully-loaded CAC: what to include/exclude, align timeframes, and use LTV:CAC and payback benchmarks for startups."/>
+<link rel="canonical" href="https://www.lucid.now/blog/calculate-cac-for-startups/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How to Calculate CAC for Startups"/>
+<meta property="og:description" content="Compute fully-loaded CAC: what to include/exclude, align timeframes, and use LTV:CAC and payback benchmarks for startups."/>
+<meta property="og:url" content="https://www.lucid.now/blog/calculate-cac-for-startups/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a221335de8dfabce3720b40-1780622491112.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Calculate CAC for Startups"/>
+<meta name="twitter:description" content="Compute fully-loaded CAC: what to include/exclude, align timeframes, and use LTV:CAC and payback benchmarks for startups."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a221335de8dfabce3720b40-1780622491112.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Calculate CAC for Startups", "description": "Compute fully-loaded CAC: what to include/exclude, align timeframes, and use LTV:CAC and payback benchmarks for startups.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a221335de8dfabce3720b40-1780622491112.jpg", "datePublished": "2026-06-05T01:21:31.112Z", "dateModified": "2026-06-05T01:21:31.112Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/calculate-cac-for-startups/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How to Calculate CAC for Startups</h1>
+<div class="article-meta"><time datetime="2026-06-05T01:21:31.112Z">June 5, 2026</time> &middot; 12 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a221335de8dfabce3720b40-1780622491112.jpg" alt="How to Calculate CAC for Startups" loading="eager" />
+<div class="article-body">
+<p><strong>Customer Acquisition Cost (CAC)</strong> is the amount you spend to gain one new paying customer. It’s more than just ad spend - it includes salaries, tools, commissions, and other expenses tied to acquiring customers. Calculating CAC accurately is critical for startups because it helps you understand if your growth strategy is efficient and scalable. Investors also look for strong metrics like a <strong>3:1 LTV:CAC ratio</strong>, meaning customers generate three times the revenue of their acquisition cost.</p>
+<h3 id="key-points" tabindex="-1">Key Points:</h3>
+<ul>
+<li><strong>CAC Formula</strong>: Total Sales &amp; Marketing Costs ÷ Number of New Customers Acquired.</li>
+<li><strong>What to Include</strong>: Ad spend, sales/marketing salaries, software, and agency fees.</li>
+<li><strong>What to Exclude</strong>: Costs tied to retention, product development, or upselling.</li>
+<li><strong>Common Mistakes</strong>: Misaligned timeframes, mixing retention costs, and excluding founder/team time.</li>
+</ul>
+<p>By tracking CAC properly, you can make smarter decisions about pricing, marketing budgets, and growth strategies.</p>
+<h2 id="how-to-calculate-cac-for-saas-with-sales-team-or-eric-andrews-clips" tabindex="-1" class="sb h2-sbb-cls">How to Calculate CAC for SaaS With Sales Team | Eric Andrews Clips</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/Lbh1KABncfk" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h2 id="what-goes-into-a-cac-calculation" tabindex="-1" class="sb h2-sbb-cls">What Goes Into a CAC Calculation</h2>
+<p>Figuring out your Customer Acquisition Cost (CAC) starts with knowing what expenses to include - and what to leave out. If you only count ad spend, you'll end up with an incomplete picture. A <strong>fully-loaded CAC</strong> accounts for every dollar spent to bring in a new customer. This more comprehensive approach helps you make better business decisions. Let’s break down what should be included in your fully-loaded CAC and what should be excluded.</p>
+<p>A good rule of thumb is to apply the <strong>&quot;Growth Test&quot;</strong>: ask yourself, “Would I spend this money if I wasn’t trying to acquire new customers?” If the answer is no, it’s an acquisition cost and belongs in your CAC calculation.</p>
+<h3 id="costs-to-include-in-cac" tabindex="-1">Costs to Include in CAC</h3>
+<p>Start with people costs. This includes fully-loaded compensation for your sales reps, SDRs, and marketers. Fully-loaded means factoring in base salary, payroll taxes, benefits, and bonuses. If someone splits their time between acquiring new customers and other tasks, only the portion dedicated to acquisition should count.</p>
+<blockquote>
+<p>&quot;If a team member spends half their time on top-of-funnel content and half on customer retention emails, only 50% of their compensation should be included in your CAC calculation. Precision here is non-negotiable.&quot;  -  Jonathan Price, Fractional CFO, Jumpstart Partners </p>
+</blockquote>
+<p>Next, consider your tech stack. Tools like CRM software, marketing automation platforms, SEO tools, analytics, and sales enablement software all support acquisition efforts. Payments to external agencies, freelance content creators, and consultants who focus on acquiring new customers should also be included.</p>
+<p>If your business operates on a <strong>freemium model</strong>, don’t forget to include hosting and support costs for free users who eventually convert into paying customers.</p>
+<h3 id="costs-to-leave-out-of-cac" tabindex="-1">Costs to Leave Out of CAC</h3>
+<p>Once you’ve outlined acquisition costs, it’s equally important to exclude expenses that don’t belong. Any costs related to keeping existing customers happy - like onboarding or support - are retention costs, not acquisition costs.</p>
+<blockquote>
+<p>&quot;An understated CAC doesn't make your business look efficient. It just means you're making growth decisions based on a number that isn't real.&quot;  -  Aleksandar Stojanovic, Fractional CFO, Fiscallion </p>
+</blockquote>
+<p>Here’s a quick guide to help you decide:</p>
+<table>
+<thead>
+<tr>
+<th>Expense Category</th>
+<th>Include in CAC?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sales reps, SDRs, marketers (fully-loaded)</td>
+<td>✅ Yes</td>
+<td>Their work directly drives new customer acquisition</td>
+</tr>
+<tr>
+<td>CRM, ad platforms, SEO tools</td>
+<td>✅ Yes</td>
+<td>These tools support acquisition activities</td>
+</tr>
+<tr>
+<td>External agencies and freelancers</td>
+<td>✅ Yes</td>
+<td>They focus on acquisition-related work</td>
+</tr>
+<tr>
+<td>Customer support and success teams</td>
+<td>❌ No</td>
+<td>Their role is to serve existing customers, so they fall under retention</td>
+</tr>
+<tr>
+<td>Product engineering salaries</td>
+<td>❌ No</td>
+<td>These costs go toward building the product, not acquiring customers</td>
+</tr>
+<tr>
+<td>Finance, HR, and legal</td>
+<td>❌ No</td>
+<td>These are general administrative expenses</td>
+</tr>
+<tr>
+<td>Upsell and expansion costs</td>
+<td>❌ No</td>
+<td>These are tied to existing customers, not new ones</td>
+</tr>
+</tbody>
+</table>
+<p>Be consistent when deciding whether to include early onboarding costs. Inconsistent calculations can make your CAC unreliable over time.</p>
+<h2 id="how-to-calculate-cac-a-step-by-step-guide" tabindex="-1" class="sb h2-sbb-cls">How to Calculate CAC: A Step-by-Step Guide</h2>
+<p>Now that we've defined acquisition costs, let's break down how to calculate your Customer Acquisition Cost (CAC) step by step.</p>
+<h3 id="step-1-pick-a-time-frame-and-stick-to-it" tabindex="-1">Step 1: Pick a Time Frame and Stick to It</h3>
+<p>Start by choosing a consistent time frame - monthly or quarterly works best. For startups with short sales cycles, like e-commerce or self-serve SaaS, a monthly window makes sense. However, for B2B businesses with longer sales cycles, a monthly view can be misleading.</p>
+<p>To account for longer deal timelines, use a <strong>lagged CAC calculation</strong>. This means aligning your marketing spend from one period with the customers who close in the next. For example, if your average deal takes 90 days to close, apply Q1 expenses to the customers that closed in Q2. Whatever time frame you choose, document it and use it consistently for accurate comparisons.</p>
+<p>Once your time period is set, gather all the associated acquisition costs.</p>
+<h3 id="step-2-add-up-all-acquisition-costs" tabindex="-1">Step 2: Add Up All Acquisition Costs</h3>
+<p>Next, total up all sales and marketing expenses. Pull data from your accounting and payroll systems to include every cost tied to acquiring new customers. This includes:</p>
+<ul>
+<li>Ad spend</li>
+<li>Salaries of sales and marketing teams</li>
+<li>Software subscriptions</li>
+<li>Agency fees</li>
+<li>A proportional share of overhead costs</li>
+</ul>
+<p>For employees who split their time, only include the portion of their work dedicated to acquisition.</p>
+<blockquote>
+<p>&quot;Many founders are surprised by their true CAC once we account for prorated salaries and software stack costs. A seemingly profitable channel can quickly turn into a cash drain.&quot;  -  Jonathan Price, Fractional CFO </p>
+</blockquote>
+<h3 id="step-3-count-new-paying-customers" tabindex="-1">Step 3: Count New Paying Customers</h3>
+<p>After calculating your total acquisition costs, move on to counting new customers. Focus only on <strong>first-time paying customers</strong>. This excludes:</p>
+<ul>
+<li>Leads</li>
+<li>Free trial users</li>
+<li>Freemium accounts</li>
+<li>Renewals or upgrades from existing customers</li>
+</ul>
+<p>If you operate a freemium or trial model, only count users who convert to a paid plan. For instance, if someone signed up six months ago but upgraded to a paid plan this month, they count as a new paying customer in the month they converted - not when they first registered.</p>
+<p>Use your billing system or CRM to pull this number for the same time period you established in Step 1.</p>
+<h3 id="step-4-apply-the-cac-formula" tabindex="-1">Step 4: Apply the CAC Formula</h3>
+<p>Finally, calculate your CAC using the formula:<br>
+<strong>CAC = Total Sales &amp; Marketing Costs ÷ Number of New Customers Acquired</strong></p>
+<p>Here’s an example to illustrate. In Q1 2026, a B2B SaaS company with $3M ARR acquired 35 new customers. Initially, they calculated their CAC as $4,450. However, after a detailed audit, they found the true CAC was $22,156. Here’s the breakdown:</p>
+<ul>
+<li>$487,500 in headcount costs across 11 staff members</li>
+<li>$22,000 in software (<a href="https://www.hubspot.com/" target="_blank" rel="nofollow noopener noreferrer">HubSpot</a>, <a href="https://www.salesforce.com/" target="_blank" rel="nofollow noopener noreferrer">Salesforce</a>, <a href="https://www.gong.io/" target="_blank" rel="nofollow noopener noreferrer">Gong</a>)</li>
+<li>$29,000 in agency fees</li>
+<li>$58,500 in overhead allocation (12%)</li>
+</ul>
+<p>This example highlights why accuracy is critical. Miscalculating CAC - even by 40% - can lead to overspending on channels that don’t deliver real value. A precise CAC calculation is essential for shaping your growth strategy and financial planning.</p>
+<h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="common-cac-mistakes-and-how-to-fix-them" tabindex="-1" class="sb h2-sbb-cls">Common CAC Mistakes and How to Fix Them</h2>
+<p>Even when you use the correct formula, certain missteps can throw off your Customer Acquisition Cost (CAC) by as much as 40% to 60%. Here are a few common pitfalls to avoid.</p>
+<h3 id="mismatched-time-periods" tabindex="-1">Mismatched Time Periods</h3>
+<p>One frequent mistake is relying on data from a single month when your sales cycle extends beyond 30 days. For example, if it typically takes 60 days to close a deal, attributing this month's new customers solely to this month's marketing spend ignores the delayed impact of earlier efforts. Aleksandar Stojanovic, Fractional CFO at Fiscallion, explains:</p>
+<blockquote>
+<p>&quot;If your average deal takes 60 days to close and you're calculating CAC on a single month of data, you're misaligning new customer data with mismatched marketing expenses. The two don't belong together.&quot; </p>
+</blockquote>
+<p>To fix this, align your calculation window with the length of your sales cycle. For a 60-day cycle, use a rolling average to account for timing differences. This adjustment is especially important for channels like SEO, where a blog post published in January might not generate paying customers until April. Keeping your data aligned with your sales cycle ensures consistency across all acquisition metrics.</p>
+<h3 id="mixing-acquisition-and-retention-costs" tabindex="-1">Mixing Acquisition and Retention Costs</h3>
+<p>Another common error is combining acquisition and retention costs into your CAC calculation. Expenses like customer success, support, and renewal efforts should not be included. Instead, focus solely on costs tied directly to acquisition. For instance, exclude salaries related to post-onboarding retention efforts and only include the portion of salaries or expenses that directly support acquiring new customers.</p>
+<p>Take this example: If a team member splits their time between creating top-of-funnel content and managing retention-focused emails, only the acquisition-related portion of their salary should count. Separating these costs offers a clearer view of which channels are driving new customer growth.</p>
+<h3 id="leaving-out-founder-and-team-time" tabindex="-1">Leaving Out Founder and Team Time</h3>
+<p>A common oversight is failing to account for the time founders or team members spend on sales calls, demos, or other acquisition-related activities. This omission can lead to an artificially low CAC. To calculate a more accurate &quot;fully burdened&quot; CAC, include payroll taxes, benefits, commissions, and a proportional share of any founder or executive time spent on acquisition tasks.</p>
+<p>In B2B companies, sales-related personnel costs often make up 20% to 40% of total acquisition expenses, yet they are frequently left out. Additionally, if engineers are working on referral systems or self-serve onboarding flows specifically aimed at driving acquisition, a portion of their time should also be factored into CAC. Including all relevant personnel costs ensures your unit economics reflect the full picture.</p>
+<h2 id="how-to-use-cac-in-financial-planning" tabindex="-1" class="sb h2-sbb-cls">How to Use CAC in Financial Planning</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a221335de8dfabce3720b40-1780621979397.jpg" alt="CAC Benchmarks by GTM Motion: Ranges, Payback & LTV:CAC Targets" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">CAC Benchmarks by GTM Motion: Ranges, Payback &amp; LTV:CAC Targets</p>
+</figcaption></figure><h3 id="cac-ltv-and-unit-economics" tabindex="-1">CAC, LTV, and Unit Economics</h3>
+<p>CAC (Customer Acquisition Cost) becomes far more insightful when paired with Lifetime Value (LTV). Together, they help assess whether your business model can grow efficiently and remain profitable.</p>
+<p>The <strong>LTV:CAC ratio</strong> is a critical metric that shows the return on every dollar spent to acquire a customer. For early-stage businesses, a 3:1 ratio is the standard benchmark that investors expect at the Series A stage. Ratios between 5:1 and 8:1 are considered outstanding. However, if your ratio dips below 2:1, it could signal you're spending more to gain customers than they'll bring in over their lifetime.</p>
+<blockquote>
+<p>&quot;LTV:CAC is theoretical, but payback period isn't. You can see it in your historical cohort data, which is why growth equity and late-stage investors use it to judge capital efficiency.&quot;  -  Woosung Chun, CFO, DualEntry </p>
+</blockquote>
+<p>Another key metric is the <strong>CAC payback period</strong>, which measures how many months it takes to recover your acquisition costs. For early-stage startups, this directly affects cash flow and runway. The best-performing SaaS companies report a median payback of 16 months, while companies in the bottom quartile take up to 47 months. A good rule of thumb for startups is to aim for a payback period of 12 months or less.</p>
+<p>When calculating LTV, always use gross margin instead of revenue. Gross margins above 70% significantly improve your LTV:CAC ratio. On the other hand, relying on revenue-based LTV while operating with a gross margin below 60% can paint an overly optimistic picture of your financial health.</p>
+<table>
+<thead>
+<tr>
+<th><strong>GTM Motion</strong></th>
+<th><strong>Typical CAC Range</strong></th>
+<th><strong>Payback Target</strong></th>
+<th><strong>LTV:CAC Target</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Product-Led (PLG)</strong></td>
+<td>$50–$500</td>
+<td>&lt; 6 months</td>
+<td>5:1+</td>
+</tr>
+<tr>
+<td><strong>Sales-Led (SMB)</strong></td>
+<td>$1,000–$5,000</td>
+<td>6–12 months</td>
+<td>3:1–4:1</td>
+</tr>
+<tr>
+<td><strong>Mid-Market</strong></td>
+<td>$5,000–$25,000</td>
+<td>12–18 months</td>
+<td>3:1–5:1</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>$25,000–$150,000+</td>
+<td>18–24 months</td>
+<td>4:1+</td>
+</tr>
+</tbody>
+</table>
+<p>Interestingly, an LTV:CAC ratio exceeding 10:1 might not always be a positive sign. It could indicate that you're under-investing in growth rather than achieving exceptional efficiency.</p>
+<p>Once you understand these benchmarks, the next step is ensuring your financial records are well-organized for accurate CAC calculations.</p>
+<h3 id="keeping-clean-books-to-track-cac-accurately" tabindex="-1">Keeping Clean Books to Track CAC Accurately</h3>
+<p>Accurate financial planning starts with clean and organized records. Tracking CAC properly requires pulling data from multiple sources - payroll systems, ad spend platforms, and CRM tools, to name a few. When these systems aren’t integrated, you risk incomplete data, leading to inaccurate CAC calculations and poor decision-making.</p>
+<blockquote>
+<p>&quot;An understated CAC doesn't make your business look efficient. It just means you're making growth decisions based on a number that isn't real.&quot;  -  Aleksandar Stojanovic, CEO &amp; Founder, Fiscallion </p>
+</blockquote>
+<p>To calculate CAC accurately, every expense - salaries, tools, agency fees, and contractor costs - must be accounted for. Clean financial records make it much easier to compile fully burdened CAC calculations in minutes rather than days.</p>
+<p>This is where platforms like <a href="https://www.lucid.now">Lucid Financials</a> come into play. Lucid combines AI-driven bookkeeping with CFO-level support, ensuring your books are ready in just seven days. Founders can even ask CAC-related questions directly in Slack and receive instant answers. Whether you're preparing for a board meeting or gearing up for a fundraising round, having reliable numbers at your fingertips can make all the difference.</p>
+<h2 id="conclusion-and-key-takeaways" tabindex="-1" class="sb h2-sbb-cls">Conclusion and Key Takeaways</h2>
+<p>Calculating CAC (Customer Acquisition Cost) accurately is essential for understanding the sustainability of your business. It’s more than just a figure for investor presentations - it’s a real-time indicator of how effectively your spending translates into revenue.</p>
+<p>A common pitfall for founders is underestimating their CAC. Studies reveal that startups often undercount their CAC by 40–60% because they exclude critical expenses like salaries, tools, and overhead costs. This oversight can lead to poor financial planning and unexpected cash flow issues, especially as the business scales.</p>
+<p>To avoid these missteps, focus on a few important principles:</p>
+<ul>
+<li>Always include fully loaded costs - not just ad spend.</li>
+<li>Align your calculation timeframe with your actual sales cycle.</li>
+<li>Break down CAC by channel instead of relying on a single blended figure to identify where your growth efforts are yielding the best results.</li>
+</ul>
+<blockquote>
+<p>&quot;Investors fund founders who understand their numbers, not founders with perfect numbers.&quot;  -  Seth Girsky, Founder, Inflection CFO </p>
+</blockquote>
+<p>The key is to develop a habit of consistent tracking and making decisions based on solid data. Whether you’re planning next quarter’s budget or preparing for a Series A pitch, a clear grasp of your CAC will set you up for smarter financial strategies and sustainable growth.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="should-i-use-monthly-or-quarterly-cac" tabindex="-1" data-faq-q>Should I use monthly or quarterly CAC?</h3>
+<p>Tracking your <strong>Customer Acquisition Cost (CAC)</strong> depends on your business goals and the length of your sales cycle. For quick insights and trend monitoring, it's best to check CAC on a monthly basis. However, for strategic planning, quarterly figures are more reliable since they smooth out the noise caused by monthly fluctuations.</p>
+<p>If your business has a longer sales cycle, avoid directly linking monthly spending to newly acquired customers. Instead, consider using a <strong>lagged calculation</strong> or a <strong>rolling average</strong> to get a clearer picture of your acquisition costs over time. Tools like <strong><a href="https://www.lucid.now/">Lucid Financials</a></strong> can simplify this process by automating calculations, providing real-time data, and delivering insights that are ready for investors.</p>
+<h3 id="how-do-i-account-for-a-long-sales-cycle-in-cac" tabindex="-1" data-faq-q>How do I account for a long sales cycle in CAC?</h3>
+<p>To properly account for a long sales cycle, avoid simply dividing your current period expenses by the number of customers acquired in the same period - these figures don’t align. Instead, use a <strong>lagged approach</strong> to calculate your Customer Acquisition Cost (CAC). This means aligning your expense period with your average sales cycle.</p>
+<p>For instance, if your sales cycle lasts 60 days, take the sales and marketing expenses from that 60-day period and divide them by the number of customers acquired during the same timeframe. This method ensures a more accurate reflection of your CAC.</p>
+<h3 id="what-costs-are-most-often-missed-in-cac" tabindex="-1" data-faq-q>What costs are most often missed in CAC?</h3>
+<p>When founders calculate Customer Acquisition Cost (CAC), they often miss several important expenses, leading to significant underestimations. Here are some commonly overlooked costs:</p>
+<ul>
+<li><strong>Employee Compensation</strong>: This goes beyond just salaries. It includes taxes, benefits, and commissions, all of which add up quickly.</li>
+<li><strong>General Overhead</strong>: Portions of rent, utilities, and even the value of a founder's time should be factored in.</li>
+<li><strong>Software Fees</strong>: Tools like CRMs and marketing platforms often come with recurring costs that are easy to forget.</li>
+<li><strong>External Services</strong>: Agency retainers and contractor fees are frequently left out but can significantly impact the bottom line.</li>
+<li><strong>Onboarding Costs</strong>: The expense of bringing new customers up to speed is another area that founders tend to miss.</li>
+</ul>
+<p>Overlooking these elements can cause CAC to be underestimated by anywhere from 25% to 60%. Including all these factors ensures a more accurate understanding of how much it truly costs to acquire a customer.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a221335de8dfabce3720b40"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Should I use monthly or quarterly CAC?","acceptedAnswer":{"@type":"Answer","text":"Tracking your Customer Acquisition Cost (CAC) depends on your business goals and the length of your sales cycle. For quick insights and trend monitoring, it's best to check CAC on a monthly basis. However, for strategic planning, quarterly figures are more reliable since they smooth out the noise caused by monthly fluctuations. If your business has a longer sales cycle, avoid directly linking monthly spending to newly acquired customers. Instead, consider using a lagged calculation or a rolling average to get a clearer picture of your acquisition costs over time. Tools like Lucid Financials can simplify this process by automating calculations, providing real-time data, and delivering insights that are ready for investors."}},{"@type":"Question","name":"How do I account for a long sales cycle in CAC?","acceptedAnswer":{"@type":"Answer","text":"To properly account for a long sales cycle, avoid simply dividing your current period expenses by the number of customers acquired in the same period - these figures don’t align. Instead, use a lagged approach to calculate your Customer Acquisition Cost (CAC). This means aligning your expense period with your average sales cycle. For instance, if your sales cycle lasts 60 days, take the sales and marketing expenses from that 60-day period and divide them by the number of customers acquired during the same timeframe. This method ensures a more accurate reflection of your CAC."}},{"@type":"Question","name":"What costs are most often missed in CAC?","acceptedAnswer":{"@type":"Answer","text":"When founders calculate Customer Acquisition Cost (CAC), they often miss several important expenses, leading to significant underestimations. Here are some commonly overlooked costs: Employee Compensation: This goes beyond just salaries. It includes taxes, benefits, and commissions, all of which add up quickly. General Overhead: Portions of rent, utilities, and even the value of a founder's time should be factored in. Software Fees: Tools like CRMs and marketing platforms often come with recurring costs that are easy to forget. External Services: Agency retainers and contractor fees are frequently left out but can significantly impact the bottom line. Onboarding Costs: The expense of bringing new customers up to speed is another area that founders tend to miss. Overlooking these elements can cause CAC to be underestimated by anywhere from 25% to 60%. Including all these factors ensures a more accurate understanding of how much it truly costs to acquire a customer."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

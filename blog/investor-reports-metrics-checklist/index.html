@@ -1,0 +1,465 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Checklist: Metrics to Include in Investor Reports - Lucid</title>
+<meta name="description" content="Standardize investor updates with a fixed KPI set: revenue efficiency, cash runway, unit economics, retention, and productivity."/>
+<link rel="canonical" href="https://www.lucid.now/blog/investor-reports-metrics-checklist/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Checklist: Metrics to Include in Investor Reports"/>
+<meta property="og:description" content="Standardize investor updates with a fixed KPI set: revenue efficiency, cash runway, unit economics, retention, and productivity."/>
+<meta property="og:url" content="https://www.lucid.now/blog/investor-reports-metrics-checklist/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aa5e818c5072cdcadb59aca-1789260212286.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Checklist: Metrics to Include in Investor Reports"/>
+<meta name="twitter:description" content="Standardize investor updates with a fixed KPI set: revenue efficiency, cash runway, unit economics, retention, and productivity."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aa5e818c5072cdcadb59aca-1789260212286.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Checklist: Metrics to Include in Investor Reports", "description": "Standardize investor updates with a fixed KPI set: revenue efficiency, cash runway, unit economics, retention, and productivity.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aa5e818c5072cdcadb59aca-1789260212286.jpg", "datePublished": "2026-09-13T00:43:32.286Z", "dateModified": "2026-09-13T00:43:32.286Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/investor-reports-metrics-checklist/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">Checklist: Metrics to Include in Investor Reports</h1>
+<div class="article-meta"><time datetime="2026-09-13T00:43:32.286Z">September 13, 2026</time> &middot; 11 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aa5e818c5072cdcadb59aca-1789260212286.jpg" alt="Checklist: Metrics to Include in Investor Reports" loading="eager" />
+<div class="article-body">
+<p><strong>If you want investor reports people can scan in under 2 minutes, track the same KPI set every month.</strong> I’d keep the report focused on three blocks: <strong>revenue efficiency</strong>, <strong>cash and capital efficiency</strong>, and <strong>productivity</strong>.</p>
+<p>Here’s the short version: investors want to see <strong>growth</strong>, <strong>retention</strong>, <strong>cash left</strong>, <strong>burn rate</strong>, and <strong>team output</strong> in one fixed format. That usually means showing <strong>MRR/ARR</strong>, <strong>GRR/NRR</strong>, <strong>CAC and payback</strong>, <strong>cash balance and runway</strong>, <strong>burn multiple</strong>, <strong>Rule of 40</strong>, <strong>customer and usage data</strong>, <strong>ARR per FTE</strong>, and <strong>pipeline coverage</strong>. Use <strong>USD</strong>, <strong>mm/dd/yyyy</strong>, and the same formulas every time.</p>
+<p>If I were building this report, I’d make sure it includes:</p>
+<ul>
+<li><strong>Revenue movement:</strong> MRR, ARR, new MRR, expansion, contraction, and churn</li>
+<li><strong>Retention:</strong> GRR, NRR, logo churn, revenue churn, and cohort data</li>
+<li><strong>Unit economics:</strong> CAC, CAC payback, LTV, LTV:CAC, and gross margin</li>
+<li><strong>Cash view:</strong> ending cash, average net burn, and runway</li>
+<li><strong>Capital use:</strong> burn multiple and Rule of 40</li>
+<li><strong>Output:</strong> paying customers, churned customers, usage, and health flags</li>
+<li><strong>Team efficiency:</strong> headcount, net hires, and ARR per FTE</li>
+<li><strong>Sales predictability:</strong> qualified pipeline, conversion rates, and sales cycle length</li>
+</ul>
+<p>A few benchmark numbers stand out. Many investors want <strong>12–18 months of runway</strong>. <strong>NRR above 110%</strong> is strong. <strong>CAC payback under 12 months</strong> is rare; <strong>12–18 months</strong> is more common. <strong>Burn multiple under 1.5x</strong> is strong, while <strong>above 2.0x</strong> can be a problem.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6aa5e818c5072cdcadb59aca-1789259775404.jpg" alt="Key SaaS Investor Report Metrics & Benchmarks at a Glance" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Key SaaS Investor Report Metrics &amp; Benchmarks at a Glance</p>
+</figcaption></figure><h2 id="your-saas-metrics-playbook-for-2025-or-saas-metrics-school-or-saas-playbook" tabindex="-1" class="sb h2-sbb-cls">Your SaaS Metrics Playbook for 2025 | <a href="https://www.youtube.com/channel/UCEyzWXG1oAX6pzgdHv67v5w" target="_blank" rel="nofollow noopener noreferrer">SaaS Metrics School</a> | SaaS Playbook</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/X2Wz1XMKEz4" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="quick-comparison" tabindex="-1" class="sb h2-sbb-cls">Quick Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Metric Block</th>
+<th>What to Show</th>
+<th>What investors look for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revenue efficiency</td>
+<td>MRR, ARR, retention, churn, CAC, LTV</td>
+<td>Is growth efficient and sticky?</td>
+</tr>
+<tr>
+<td>Cash and capital efficiency</td>
+<td>Cash, burn, runway, burn multiple, Rule of 40</td>
+<td>How long cash lasts and how spend turns into growth</td>
+</tr>
+<tr>
+<td>Productivity</td>
+<td>Customers, usage, headcount, ARR per FTE, pipeline</td>
+<td>Whether the team is turning spend into output</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bottom line:</strong> I’d keep the report short, numeric, and fixed from period to period so <strong>MoM</strong>, <strong>QoQ</strong>, and <strong>YoY</strong> changes are easy to read.</p>
+<h2 id="revenue-efficiency-metrics-to-include" tabindex="-1" class="sb h2-sbb-cls">Revenue efficiency metrics to include</h2>
+<h3 id="mrr-arr-and-net-new-revenue-movement" tabindex="-1">MRR, ARR, and net new revenue movement</h3>
+<p>Start with <strong>MRR</strong> and <strong>ARR</strong>, then show the bridge behind the change. <strong>Monthly Recurring Revenue (MRR)</strong> is recurring monthly subscription revenue. For subscription businesses, ARR is usually <strong>MRR × 12</strong>. Report both in <strong>USD</strong>.</p>
+<p>Then break net new MRR into the same four parts each period:</p>
+<ul>
+<li><strong>New MRR</strong></li>
+<li><strong>Expansion MRR</strong></li>
+<li><strong>Contraction MRR</strong></li>
+<li><strong>Churned MRR</strong></li>
+</ul>
+<p>This revenue bridge makes the story easy to read. You can see whether growth is coming from new logos, upsells, or both. And you can spot where revenue is slipping out.</p>
+<table>
+<thead>
+<tr>
+<th>MRR Movement (July 2026)</th>
+<th>Amount (USD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starting MRR (June 2026)</td>
+<td>$120,000</td>
+</tr>
+<tr>
+<td>New MRR</td>
+<td>+$18,000</td>
+</tr>
+<tr>
+<td>Expansion MRR</td>
+<td>+$7,000</td>
+</tr>
+<tr>
+<td>Contraction MRR</td>
+<td>−$4,000</td>
+</tr>
+<tr>
+<td>Churned MRR</td>
+<td>−$6,000</td>
+</tr>
+<tr>
+<td>Net New MRR</td>
+<td>$15,000</td>
+</tr>
+<tr>
+<td>Ending MRR (July 2026)</td>
+<td>$135,000</td>
+</tr>
+<tr>
+<td>MoM MRR Growth</td>
+<td>12.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Use the same breakdown every month so investors can compare changes cleanly. If one line swings hard because of a single customer or deal, add a short note.</p>
+<h3 id="grr-nrr-churn-and-expansion" tabindex="-1">GRR, NRR, churn, and expansion</h3>
+<p><strong>Gross Revenue Retention (GRR)</strong> shows how much recurring revenue you kept from existing customers before expansion. <strong>Net Revenue Retention (NRR)</strong> adds expansion back in. GRR tops out at <strong>100%</strong>. NRR can go above <strong>100%</strong> when upsells beat churn.</p>
+<p>For SMB-focused SaaS, a <strong>GRR above 90%</strong> is healthy. Mid-market companies often aim for <strong>95%+</strong>, and enterprise companies can be <strong>98%+</strong>. For NRR, <strong>100%</strong> is acceptable, <strong>110–120%</strong> is strong, and <strong>120%+</strong> is best-in-class.</p>
+<p>Don’t show GRR and NRR by themselves. Pair them with <strong>logo churn</strong> and a simple cohort table. <strong>Logo churn</strong> measures the share of customers lost. <strong>Revenue churn</strong> is revenue lost to contraction and churn divided by starting MRR.</p>
+<p>Cohorts help prove whether retention holds up over time. Group customers by the quarter they started, then show their MRR remaining at <strong>6, 12, and 18 months</strong>. A cohort table tells you much more than one retention percentage ever could.</p>
+<h3 id="cac-payback-period-ltv-and-gross-margin" tabindex="-1">CAC, payback period, LTV, and gross margin</h3>
+<p>Once retention is clear, show whether growth is efficient. Put these metrics into one <strong>unit economics block</strong>. Investors read them together to answer one thing: <em>is growth capital-efficient?</em></p>
+<p><strong>Customer Acquisition Cost (CAC)</strong> is total sales and marketing expense for a period divided by new customers acquired in that same period. Use <strong>GAAP-based</strong> sales and marketing expenses from your income statement. <strong>CAC payback</strong>, in months, is CAC divided by average monthly gross profit per customer. A payback under <strong>12 months</strong> is excellent. <strong>12–18 months</strong> is sustainable. Beyond <strong>18 months</strong> can trigger concern, especially in a tighter capital market where median CAC payback across <strong>$5 million–$50 million ARR</strong> companies has stretched to about <strong>17–18 months</strong>. Report <strong>gross margin</strong> next to CAC and payback, since both depend on gross profit.</p>
+<p><strong>LTV</strong> is calculated as average MRR per customer × gross margin % ÷ monthly churn rate. If average MRR per customer is <strong>$500</strong>, gross margin is <strong>80%</strong>, and monthly churn is <strong>2%</strong>, then <strong>LTV = $20,000</strong>. The <strong>LTV:CAC ratio</strong> should be at least <strong>3:1</strong> to show healthy unit economics. Use <strong>gross profit</strong>, not revenue, in both LTV and payback formulas.</p>
+<p>Present <strong>CAC, payback, LTV:CAC, and gross margin</strong> in one quarterly table so investors can scan the unit economics picture in seconds. Keep these numbers reconciled across billing, CRM, and the general ledger.</p>
+<h2 id="cash-and-capital-efficiency-metrics-to-include" tabindex="-1" class="sb h2-sbb-cls">Cash and capital efficiency metrics to include</h2>
+<h3 id="cash-balance-net-burn-and-runway" tabindex="-1">Cash balance, net burn, and runway</h3>
+<p>After unit economics, investors usually go straight to liquidity. They want to know one thing: <strong>can this company stay alive long enough to reach the next milestone?</strong> That’s why these three numbers should show up at the top of every update.</p>
+<p>Present them in a simple table each period:</p>
+<table>
+<thead>
+<tr>
+<th>Cash Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ending cash balance (09/30/2026)</td>
+<td>$2,450,000</td>
+</tr>
+<tr>
+<td>Average net burn (Jul–Sep 2026)</td>
+<td>$185,000/month</td>
+</tr>
+<tr>
+<td>Runway</td>
+<td>13.2 months</td>
+</tr>
+</tbody>
+</table>
+<p>If you track gross burn, put it in the same table.</p>
+<p><strong>Net burn</strong> is operating cash outflows minus operating cash inflows, excluding financing. Use a 3–6 month average, because one big annual collection can throw off a single month. Always spell out the formula and time period you used. For example: <em>Net burn = operating cash outflows − operating cash inflows; 3-month average for Jul–Sep 2026.</em></p>
+<p><strong>Runway</strong> is ending cash divided by average monthly net burn. Using the example above: $2,450,000 ÷ $185,000 ≈ 13.2 months. Many U.S. seed and Series A investors want to see at least <strong>12–18 months</strong> of runway. If runway is below 12 months, say what you plan to do about it.</p>
+<p>It also helps to add a short note on anything likely to move these numbers in a big way. For example: <em>With 5 planned AE hires and 3 engineers starting in November, net burn is expected to rise to around $215,000/month, reducing runway to about 11 months - partially offset by $400,000 in annual renewals scheduled for December.</em> That kind of note tells investors you’re watching cash ahead of time, not scrambling after the fact.</p>
+<h3 id="burn-multiple-and-rule-of-40" tabindex="-1">Burn multiple and Rule of 40</h3>
+<p>Once ARR has settled into a steady pattern, add burn multiple and Rule of 40. These metrics show capital efficiency in plain terms.</p>
+<p><strong>Burn multiple</strong> = net burn ÷ net new ARR over the same period. If you burned $600,000 in a quarter and added $400,000 in net new ARR, your burn multiple is <strong>1.5x</strong>. Lower is better. Common benchmark ranges look roughly like this:</p>
+<table>
+<thead>
+<tr>
+<th>Burn Multiple</th>
+<th>Efficiency Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Under 1.0x</td>
+<td>Exceptional</td>
+</tr>
+<tr>
+<td>1.0x–1.5x</td>
+<td>Great</td>
+</tr>
+<tr>
+<td>1.5x–2.0x</td>
+<td>Acceptable</td>
+</tr>
+<tr>
+<td>2.0x–3.0x</td>
+<td>Concerning</td>
+</tr>
+<tr>
+<td>Above 3.0x</td>
+<td>Very inefficient</td>
+</tr>
+</tbody>
+</table>
+<p>According to <a href="https://www.scalevp.com/" target="_blank" rel="nofollow noopener noreferrer">ScaleVP</a> analysis, the average burn multiple across SaaS companies from seed to IPO is about <strong>1.6x</strong>, with top-quartile companies at <strong>$25M+ ARR</strong> often hitting <strong>under 1.0x</strong>. In tighter funding markets, burn multiples above 2–2.5x at Series A or B are getting hit harder by investors.</p>
+<p><strong>Rule of 40</strong> = year-over-year revenue growth rate (%) + operating margin (%). So if a company is growing at 35% YoY with a −15% operating margin, it scores 20%. If it’s growing at 25% with a +20% margin, it scores 45%. Scores above 40% are generally seen as healthy across public and private SaaS benchmarks.</p>
+<p>Only report Rule of 40 after you have several quarters of steady revenue, and show the last four quarters in a small table. Also, always say which margin definition you used - operating, EBITDA, or free cash flow - and call out any one-time adjustments.</p>
+<p>These metrics show how well capital turns into growth. Next, show how well the team turns spend into output.</p>
+<h2 id="productivity-metrics-to-include" tabindex="-1" class="sb h2-sbb-cls">Productivity metrics to include</h2>
+<p>Once investors see that cash is covered, they usually shift to a different question: <strong>Is the operating engine getting more efficient?</strong> That’s where productivity metrics come in. They help show whether the business is scaling in a healthy way.</p>
+<p>A simple way to frame this section is to start with customer output, then move into team efficiency and funnel performance.</p>
+<h3 id="customers-usage-and-customer-health" tabindex="-1">Customers, usage, and customer health</h3>
+<p>Show the customer metrics that explain retention and expansion. Every investor update should include <strong>paying customers or active accounts</strong>, <strong>net new customers added</strong>, and <strong>churned customers</strong> for the period, with simple deltas. Break churned customers out by reason and customer tier so investors can spot risk patterns early. Also separate new logos from reactivations.</p>
+<p>For usage, choose <strong>one to three metrics that tie straight to delivered value</strong>. Good examples include transactions processed, models run, projects completed, or workflows automated per account. Skip vanity metrics like total logins. And once you define active accounts, stick with that same rule in every report. For example: accounts with at least one tracked event in the last 30 days, excluding test or internal accounts.</p>
+<p>Customer health scores start to help once you can calculate them the same way every time. If the score combines usage depth, support volume, and engagement signals, automated health scoring can flag churn risk <strong>60+ days before cancellation</strong>. A simple green/yellow/red table works well here. Include columns for ARR, health tier, last usage spike or drop, and upcoming renewal date. That gives investors a quick read on which revenue looks steady and which revenue may be at risk.</p>
+<h3 id="headcount-arr-per-fte-and-hiring-pace" tabindex="-1">Headcount, ARR per FTE, and hiring pace</h3>
+<p>Report <strong>total headcount</strong>, <strong>net hires for the period</strong>, and a functional breakdown across GTM, Product &amp; Engineering, and G&amp;A. Then add <strong>ARR per FTE</strong> - total ARR divided by total full-time equivalents, including long-term contractors counted as FTEs.</p>
+<p>Here’s why this matters. If ARR grows from <strong>$2 million to $4 million</strong> while headcount grows from <strong>20 to 30</strong>, ARR per FTE moves from <strong>$100,000</strong> to about <strong>$133,000</strong>. That’s a clear gain in efficiency. Track this number over time so the trend is easy to see.</p>
+<p>Benchmark ARR per FTE by stage:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>ARR per Employee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Early-stage (&lt;$10M ARR)</td>
+<td>$150K–$200K</td>
+</tr>
+<tr>
+<td>Growth-stage ($10M–$50M ARR)</td>
+<td>$200K–$300K</td>
+</tr>
+<tr>
+<td>Mature (&gt;$50M ARR)</td>
+<td>$300K–$500K</td>
+</tr>
+<tr>
+<td>Top-quartile public SaaS</td>
+<td>$350K–$600K+</td>
+</tr>
+</tbody>
+</table>
+<p>AI-native platforms can exceed <strong>$800K per employee</strong>.</p>
+<p>If headcount is growing faster than ARR, say why. A short note on large hiring waves and the expected revenue impact over the next <strong>12–18 months</strong> answers the obvious follow-up before investors have to ask.</p>
+<p>From there, most investors want to know whether sales output is keeping pace too.</p>
+<h3 id="pipeline-conversion-rates-and-sales-cycle-length" tabindex="-1">Pipeline, conversion rates, and sales cycle length</h3>
+<p>These metrics show whether revenue growth looks predictable. Report pipeline, conversion, and sales cycle together so the picture is easy to follow.</p>
+<p><strong>Qualified pipeline in USD</strong> should include only opportunities that meet your qualification threshold: budget, authority, need, and timeline. <strong>Pipeline coverage</strong> is that number divided by the next period's revenue target. A <strong>3x coverage ratio</strong> is a common benchmark for SMB SaaS, with a typical range of <strong>2.5x–4.0x</strong> and a warning level below <strong>2.0x</strong>. If you sell across SMB, mid-market, and enterprise, show coverage by segment. Otherwise, heavy concentration in one tier can make the top-line number look better than it is.</p>
+<p>For <strong>conversion rates</strong>, report the main funnel stages and explain any material change by segment or channel.</p>
+<p>Report <strong>median sales cycle</strong> by deal size. Shorter cycles usually improve forecast reliability. Longer cycles often point to friction in the process.</p>
+<h2 id="how-to-package-these-metrics-in-investor-reports" tabindex="-1" class="sb h2-sbb-cls">How to package these metrics in investor reports</h2>
+<p>Once you've defined the metrics, the next job is simple: <strong>package them the same way every time</strong> so investors can scan them fast.</p>
+<h3 id="use-the-same-fixed-reporting-template-every-period" tabindex="-1">Use the same fixed reporting template every period</h3>
+<p>Use one fixed reporting template every period. Build each monthly or quarterly update around the same three sections: <strong>revenue efficiency</strong>, <strong>cash and capital efficiency</strong>, and <strong>productivity</strong>. Keep that order locked so investors can compare one report to the next without having to relearn the layout each time.</p>
+<p>Keep KPI definitions fixed too. If you change the way you calculate NRR or redefine &quot;active customer&quot;, call it out clearly.</p>
+<p>That makes month-to-month and quarter-to-quarter comparison immediate.</p>
+<h3 id="present-metrics-in-compact-tables" tabindex="-1">Present metrics in compact tables</h3>
+<p>For each block, use a compact table with four columns: <strong>Current Period</strong>, <strong>Previous Period</strong>, <strong>Change</strong>, and <strong>% Change</strong>. Keep each table to 5–10 metrics.</p>
+<p>Here’s what that looks like in practice:</p>
+<p><strong>Revenue Efficiency</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Aug 2026</th>
+<th>Jul 2026</th>
+<th>Change</th>
+<th>% Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARR</td>
+<td>$1,200,000</td>
+<td>$1,050,000</td>
+<td>+$150,000</td>
+<td>+14.3%</td>
+</tr>
+<tr>
+<td>NRR</td>
+<td>118%</td>
+<td>115%</td>
+<td>+3 pts</td>
+<td>+2.6%</td>
+</tr>
+<tr>
+<td>Gross Margin</td>
+<td>72%</td>
+<td>68%</td>
+<td>+4 pts</td>
+<td>+5.9%</td>
+</tr>
+</tbody>
+</table>
+<p>Add one short note on the main driver behind the change. Investors shouldn’t have to guess whether the NRR lift came from upsells, lower churn, or something else.</p>
+<h3 id="conclusion-the-core-metrics-investors-expect-every-time" tabindex="-1">Conclusion: The core metrics investors expect every time</h3>
+<p>The point is consistency, not volume. Investors want the same core metrics, in the same format, every period.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="which-investor-report-metrics-matter-most-at-my-stage" tabindex="-1" data-faq-q>Which investor report metrics matter most at my stage?</h3>
+<p>The metrics you track should shift as your company grows. What mattered on day one won't always be the thing that matters a year later.</p>
+<p>In the early stage, the focus is simple: <strong>burn rate</strong>, cash runway, and customer acquisition cost. At this point, you're trying to stay alive, learn fast, and avoid spending $10 to make $1.</p>
+<p>In the growth stage, the picture changes. Now it's about revenue growth, LTV:CAC ratio, and cohort retention. You're no longer just asking, &quot;Can we get customers?&quot; You're asking, <strong>&quot;Can we keep them, and does the math work?&quot;</strong></p>
+<p>Later on, attention moves to gross margins, operating leverage, and cash flow generation. That's when the business needs to show it can turn growth into a durable company, not just a fast-moving one.</p>
+<h3 id="how-often-should-i-update-investor-kpis" tabindex="-1" data-faq-q>How often should I update investor KPIs?</h3>
+<p>It depends on your company stage, but <strong>consistency</strong> matters most when you're building investor trust. Early-stage startups should usually send monthly updates. Growth-stage companies, on the other hand, tend to report quarterly.</p>
+<p>That said, not every metric runs on the same clock.</p>
+<p>Some operating numbers, like cash position, burn rate, and runway, should be watched daily. Growth metrics such as revenue and acquisition costs are often tracked weekly.</p>
+<h3 id="what-formulas-should-stay-consistent-across-reports" tabindex="-1" data-faq-q>What formulas should stay consistent across reports?</h3>
+<p>Keep <strong>metric definitions</strong> and calculation formulas the same across every report. Each KPI needs a clear definition. For example, define MRR as successful, non-refunded charges. And if you ever change a metric definition, explain it plainly instead of shifting the meaning over time.</p>
+<p>Use the same terms and scaling in every report. Your charts and metrics should line up with your general ledger and source data. Just as important, document how each number is calculated. That paper trail helps with transparency, audits, and investor trust.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6aa5e818c5072cdcadb59aca"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which investor report metrics matter most at my stage?","acceptedAnswer":{"@type":"Answer","text":"The metrics you track should shift as your company grows. What mattered on day one won't always be the thing that matters a year later. In the early stage, the focus is simple: burn rate, cash runway, and customer acquisition cost. At this point, you're trying to stay alive, learn fast, and avoid spending $10 to make $1. In the growth stage, the picture changes. Now it's about revenue growth, LTV:CAC ratio, and cohort retention. You're no longer just asking, \"Can we get customers?\" You're asking, \"Can we keep them, and does the math work?\" Later on, attention moves to gross margins, operating leverage, and cash flow generation. That's when the business needs to show it can turn growth into a durable company, not just a fast-moving one."}},{"@type":"Question","name":"How often should I update investor KPIs?","acceptedAnswer":{"@type":"Answer","text":"It depends on your company stage, but consistency matters most when you're building investor trust. Early-stage startups should usually send monthly updates. Growth-stage companies, on the other hand, tend to report quarterly. That said, not every metric runs on the same clock. Some operating numbers, like cash position, burn rate, and runway, should be watched daily. Growth metrics such as revenue and acquisition costs are often tracked weekly."}},{"@type":"Question","name":"What formulas should stay consistent across reports?","acceptedAnswer":{"@type":"Answer","text":"Keep metric definitions and calculation formulas the same across every report. Each KPI needs a clear definition. For example, define MRR as successful, non-refunded charges. And if you ever change a metric definition, explain it plainly instead of shifting the meaning over time. Use the same terms and scaling in every report. Your charts and metrics should line up with your general ledger and source data. Just as important, document how each number is calculated. That paper trail helps with transparency, audits, and investor trust."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

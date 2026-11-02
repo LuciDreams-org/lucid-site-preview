@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How Cap Tables Change Across Funding Rounds - Lucid</title>
+<meta name="description" content="How cap tables evolve across seed to Series B — ownership shifts, option pools, SAFEs and liquidation preferences that drive dilution."/>
+<link rel="canonical" href="https://www.lucid.now/blog/cap-tables-change-across-funding-rounds/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How Cap Tables Change Across Funding Rounds"/>
+<meta property="og:description" content="How cap tables evolve across seed to Series B — ownership shifts, option pools, SAFEs and liquidation preferences that drive dilution."/>
+<meta property="og:url" content="https://www.lucid.now/blog/cap-tables-change-across-funding-rounds/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a26091bde8dfabce37263d0-1780883850194.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How Cap Tables Change Across Funding Rounds"/>
+<meta name="twitter:description" content="How cap tables evolve across seed to Series B — ownership shifts, option pools, SAFEs and liquidation preferences that drive dilution."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a26091bde8dfabce37263d0-1780883850194.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How Cap Tables Change Across Funding Rounds", "description": "How cap tables evolve across seed to Series B \u2014 ownership shifts, option pools, SAFEs and liquidation preferences that drive dilution.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a26091bde8dfabce37263d0-1780883850194.jpg", "datePublished": "2026-06-08T01:57:30.194Z", "dateModified": "2026-06-08T01:57:30.194Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/cap-tables-change-across-funding-rounds/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How Cap Tables Change Across Funding Rounds</h1>
+<div class="article-meta"><time datetime="2026-06-08T01:57:30.194Z">June 8, 2026</time> &middot; 14 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a26091bde8dfabce37263d0-1780883850194.jpg" alt="How Cap Tables Change Across Funding Rounds" loading="eager" />
+<div class="article-body">
+<p>Cap tables, or capitalization tables, track ownership in a startup and evolve with each funding round. They show who owns what and how much, including founders, employees, and investors. As funding progresses, founders face dilution, governance shifts, and payout changes. Here’s a quick summary:</p>
+<ul>
+<li>
+<strong>Key Stages</strong>:
+<ul>
+<li><strong>Incorporation</strong>: Founders own 100%.</li>
+<li><strong>Pre-Seed/Seed</strong>: SAFEs/convertible notes introduced; 10–15% option pool created.</li>
+<li><strong>Series A</strong>: SAFEs convert to preferred stock; founders retain ~36% ownership.</li>
+<li><strong>Series B</strong>: Founders’ ownership drops to ~23%; secondary sales may appear.</li>
+</ul>
+</li>
+<li>
+<strong>Dilution</strong>:
+<ul>
+<li>Seed rounds dilute ~19–20%.</li>
+<li>Series A/B rounds dilute ~15–25%.</li>
+<li>Early decisions, like option pools and SAFEs, impact founder ownership heavily.</li>
+</ul>
+</li>
+<li>
+<strong>Key Terms</strong>:
+<ul>
+<li><strong>Option Pool</strong>: Reserved shares for employees, often 10–20%.</li>
+<li><strong>Preferred Stock</strong>: Investors’ shares with rights like liquidation preferences.</li>
+<li><strong>Liquidation Preferences</strong>: Investors get paid first in an exit.</li>
+</ul>
+</li>
+<li>
+<strong>Best Practices</strong>:
+<ul>
+<li>Keep cap tables clean and updated.</li>
+<li>Model dilution before fundraising.</li>
+<li>Use tools like <a href="https://carta.com/equity-management/cap-table/" target="_blank" rel="nofollow noopener noreferrer">Carta</a> or <a href="https://pulley.com/" target="_blank" rel="nofollow noopener noreferrer">Pulley</a> for management.</li>
+<li>Plan option pools based on short-term hiring needs.</li>
+</ul>
+</li>
+</ul>
+<p>Cap tables are more than spreadsheets - they shape control, payouts, and investor confidence. Founders who understand and plan for dilution are better prepared for funding and exits.</p>
+<h2 id="cap-table-mechanics-and-equity-basics" tabindex="-1" class="sb h2-sbb-cls">Cap Table Mechanics and Equity Basics</h2>
+<h3 id="key-equity-terms-and-how-they-show-up-on-a-cap-table" tabindex="-1">Key Equity Terms and How They Show Up on a Cap Table</h3>
+<p>Getting familiar with basic equity terms is crucial for understanding how a cap table evolves. Each entry on a cap table represents a claim on your company, and these claims can vary significantly in how they function.</p>
+<ul>
+<li><strong>Authorized shares</strong>: This is the maximum number of shares your company can issue, as set by legal documents.</li>
+<li><strong>Issued shares</strong>: These are shares already distributed to shareholders, deducted from the authorized total.</li>
+<li><strong>Option pool</strong>: A reserve of authorized but unissued shares, typically set aside for employees, advisors, and consultants. This pool usually represents 10–20% of the fully diluted share count.</li>
+</ul>
+<p>Option pools immediately affect the fully diluted share count, which is a key metric for understanding ownership percentages.</p>
+<ul>
+<li><strong>Common stock</strong>: Typically allocated to founders and employees.</li>
+<li><strong>Preferred stock</strong>: Given to investors, often with special rights like liquidation preferences, anti-dilution protections, and governance veto powers.</li>
+<li><strong>SAFEs</strong> (Simple Agreements for Future Equity) and <strong>convertible notes</strong>: These convert into preferred stock during a priced funding round. Until then, they appear on the cap table as potential sources of future dilution.</li>
+</ul>
+<blockquote>
+<p>&quot;A founder who asks only for valuation gets a sales pitch. A founder who asks for the fully diluted cap table gets the truth.&quot; - Jumpstart Partners </p>
+</blockquote>
+<p>With these terms in mind, the next step is understanding how valuation and share issuance influence dilution.</p>
+<h3 id="valuation-share-price-and-dilution" tabindex="-1">Valuation, Share Price, and Dilution</h3>
+<p>Once you grasp the basics of equity, calculating valuation becomes critical for predicting dilution. Dilution, while straightforward, often catches founders off guard. Your ownership percentage is calculated by dividing your shares by the total fully diluted share count. When new shares are issued, your share count remains the same, but the total share count increases - reducing your ownership percentage.</p>
+<ul>
+<li><strong>Pre-money valuation</strong>: The company’s value before new investment.</li>
+<li><strong>Post-money valuation</strong>: The pre-money valuation plus the new investment.</li>
+</ul>
+<p>To determine share price, divide the pre-money valuation by the fully diluted share count. For example, if your company has a $10 million pre-money valuation and 10 million fully diluted shares, each share is worth $1.00. If an investor contributes $2 million, they receive 2 million new shares. This raises the total share count to 12 million, giving the investor about 16.7% ownership.</p>
+<p>On average, seed rounds lead to <strong>19.5% dilution</strong>, while Series A rounds result in about <strong>17.9% dilution</strong>. These effects compound over time, meaning a founder who doesn’t plan for cumulative dilution could end up owning far less than expected.</p>
+<h3 id="option-pools-and-investor-terms" tabindex="-1">Option Pools and Investor Terms</h3>
+<p>Understanding how option pools and investor terms influence ownership is essential for managing dilution effectively. The option pool, for example, can significantly impact founder ownership. Investors often require the pool to be created or expanded <em>before</em> calculating their investment, a practice known as a <strong>pre-money option pool</strong>. This approach shifts the dilution burden onto founders and early shareholders, not the new investors.</p>
+<blockquote>
+<p>&quot;A '$20M pre-money' with a 15% option pool is not really $20M for founders - it's closer to $17M. Do the math before you celebrate the headline number.&quot; - Joe Wallin, Startup Attorney </p>
+</blockquote>
+<p>This tactic, sometimes called the <strong>&quot;option pool shuffle&quot;</strong>, can dramatically lower the effective pre-money valuation for founders. For instance, if a term sheet specifies a $5 million pre-money valuation but requires a 15% post-money option pool carved out pre-money, the founder’s effective pre-money valuation drops to around $4.25 million. To minimize this impact, negotiate an option pool based on realistic, short-term hiring needs. For example:</p>
+<ul>
+<li>A CTO hired early might receive 1–5% of fully diluted shares.</li>
+<li>A senior engineer joining later might receive 0.05–0.25%.</li>
+</ul>
+<p>These benchmarks provide a solid foundation for negotiating a smaller pool.</p>
+<p>Investor clauses can also reshape the cap table, both now and in the future. One of the most critical terms to scrutinize is <strong>liquidation preferences</strong>. For instance:</p>
+<ul>
+<li>A <strong>1x non-participating preference</strong> (considered founder-friendly) allows investors to recoup their investment first in an exit, with the remaining proceeds shared among common stockholders.</li>
+<li>A <strong>2x participating preference</strong> allows investors to take a multiple of their investment <em>and</em> share in the remaining proceeds.</li>
+</ul>
+<p>The difference can be dramatic. In a $15 million exit where $5 million was raised, a 1x non-participating structure leaves founders with roughly $8 million. In contrast, a 2x participating structure reduces that amount to just $1.7 million. Carefully reviewing and negotiating these terms can make a significant difference in the outcome for founders.</p>
+<h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="the-capitalization-table-the-lifeblood-and-deathbed-of-startups" tabindex="-1" class="sb h2-sbb-cls">The Capitalization Table: The Lifeblood (and Deathbed?) of Startups</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/Hxbek1fkn-I" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h2 id="how-cap-tables-change-across-funding-rounds-1" tabindex="-1" class="sb h2-sbb-cls">How Cap Tables Change Across Funding Rounds</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a26091bde8dfabce37263d0-1780883341997.jpg" alt="Startup Cap Table: Founder Ownership & Dilution Across Funding Rounds" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Startup Cap Table: Founder Ownership &amp; Dilution Across Funding Rounds</p>
+</figcaption></figure><h3 id="from-incorporation-to-pre-seed" tabindex="-1">From Incorporation to Pre-Seed</h3>
+<p>When you first set up your company - usually as a <a href="https://en.wikipedia.org/wiki/C_corporation" target="_blank" rel="nofollow noopener noreferrer">Delaware C-Corporation</a> - your cap table starts off pretty simple. Founders typically split 10,000,000 authorized shares among themselves, with a nominal par value of $0.0001 per share. This low par value isn’t random; it’s designed to keep your tax liability minimal from the outset.</p>
+<p>One critical step: file your 83(b) election with the IRS within 30 days of receiving restricted stock. If you miss this deadline, you’ll owe taxes on the stock’s value as it vests - which could mean a significantly higher tax bill as your company grows.</p>
+<p>At this stage, advisors might receive between 0.2% and 1% equity. If you raise a friends and family round (typically between $10,000 and $250,000), you might give away 5% to 20% of the company. Keeping dilution low early on is key because every percentage point you give away now compounds through future funding rounds.</p>
+<p>Pre-seed funding often comes in through SAFEs or convertible notes. These don’t immediately dilute ownership but represent potential dilution that kicks in during a priced round.</p>
+<blockquote>
+<p>&quot;Broken spreadsheets and out-of-date documents are toxic waste that founders cannot afford to accumulate.&quot; - Melissa Withers, Managing Partner &amp; Co-Founder, RevUp Capital </p>
+</blockquote>
+<p>As you approach your seed round, these early decisions and funding mechanisms will face additional tests, especially as new investors come on board.</p>
+<h3 id="seed-round-and-first-dilution" tabindex="-1">Seed Round and First Dilution</h3>
+<p>The seed round is where your cap table starts to get more complicated. SAFEs and convertible notes convert into preferred stock, new investors buy in, and the option pool is either created or expanded - often all at once. On average, dilution at this stage is around 19% to 20%, leaving founding teams with about 56% of fully diluted equity after the round closes.</p>
+<p>One important detail: the option pool is typically carved out pre-money. This means founders absorb that dilution entirely. For example, one founder thought their ownership would remain at 67% after a seed round with a 12% post-money option pool. But because the pool was calculated from the pre-money valuation, their actual ownership dropped closer to 58%.</p>
+<blockquote>
+<p>&quot;The term sheet specified a 12% post-money option pool. The founder calculated their post-round ownership as roughly 67%... The actual math worked differently because the option pool came out of pre-money. The founder's actual post-round ownership was closer to 58%.&quot; - Aleksandar Stojanovic, CEO &amp; Founder, Fiscallion </p>
+</blockquote>
+<p>This is also when preferred stock makes its debut. Unlike the common stock held by founders and employees, seed investors receive preferred shares with liquidation preferences. These preferences ensure they get paid first in any exit scenario, which can create a gap between ownership percentage and actual proceeds during an exit.</p>
+<p>These changes set the stage for even more complex transformations to the cap table in later funding rounds.</p>
+<h3 id="series-a-and-later-rounds" tabindex="-1">Series A and Later Rounds</h3>
+<p>By the time you reach a Series A, your cap table has grown more layered. It now includes common stock for founders and employees, seed preferred stock for early investors, an option pool, and a new class of Series A Preferred Stock for institutional VCs. As with the seed round, dilution continues to chip away at founder ownership. New shares also bring governance rights like board seats, protective provisions, and anti-dilution clauses, which can reshape decision-making dynamics.</p>
+<p>Here’s a typical breakdown of founder ownership as funding progresses:</p>
+<table>
+<thead>
+<tr>
+<th>Funding Stage</th>
+<th>Typical Investor Dilution</th>
+<th>Founder Ownership (Combined)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incorporation</td>
+<td>0%</td>
+<td>85–90%</td>
+</tr>
+<tr>
+<td>Seed Round</td>
+<td>19–20%</td>
+<td>56–60%</td>
+</tr>
+<tr>
+<td>Series A</td>
+<td>20–25%</td>
+<td>36–45%</td>
+</tr>
+<tr>
+<td>Series B</td>
+<td>15–20%</td>
+<td>23–30%</td>
+</tr>
+<tr>
+<td>Series C</td>
+<td>10–15%</td>
+<td>14–20%</td>
+</tr>
+</tbody>
+</table>
+<p><em>Sources: </em></p>
+<p>Later rounds often introduce pro-rata rights, which allow existing investors to maintain their ownership percentage by participating in future rounds. While this protects early investors, it can complicate things for new lead investors who want a larger share of the round. Secondary sales may also start appearing around Series B - these allow founders or early employees to sell some of their shares directly to new investors, offering liquidity without requiring a full exit.</p>
+<blockquote>
+<p>&quot;A smaller piece of a bigger pie is usually more valuable than a bigger piece of a smaller pie. But only if you understand the math and plan for it.&quot; - Trace Cohen, 3x Founder and Investor, Value Add VC </p>
+</blockquote>
+<p>As the cap table evolves, understanding the liquidation stack becomes increasingly important. Each new class of preferred shares adds another layer to the waterfall - the order in which proceeds are distributed during an exit. Knowing where each stakeholder sits in this hierarchy is just as critical as tracking ownership percentages.</p>
+<h2 id="cap-table-management-best-practices" tabindex="-1" class="sb h2-sbb-cls">Cap Table Management Best Practices</h2>
+<h3 id="keeping-your-cap-table-clean-and-organized" tabindex="-1">Keeping Your Cap Table Clean and Organized</h3>
+<p>A disorganized cap table can quickly erode investor confidence. Studies show that <strong>73% of startups experience cap table errors before reaching Series A</strong>. These mistakes often come to light during critical moments - like when you're closing a deal - and can derail progress.</p>
+<p>The key to maintaining a clean cap table? Start with the basics: <strong>every equity grant should be backed by a written agreement and approved by the board</strong>. Verbal agreements or informal promises are major risks that can disrupt due diligence. Additionally, apply a <strong>four-year vesting schedule with a one-year cliff</strong> for all equity holders, including founders, employees, and advisors. Without this, you risk &quot;dead equity&quot;, which occurs when a departing co-founder retains a large stake, making your company less attractive to investors.</p>
+<blockquote>
+<p>&quot;If you have two co-founders and one leaves after 6 months with 50% of the company, you have a catastrophic cap table problem. No investor will touch a company where a departed co-founder holds a massive equity stake.&quot; - Value Add VC </p>
+</blockquote>
+<p>Always calculate ownership on a <strong>fully diluted basis</strong>. This means including options, SAFEs, warrants, and convertible notes as if they've already converted. It's the most accurate way to show who owns what, and it's the standard investors expect.</p>
+<p>Once your stakeholder count exceeds 10–15 or you complete your first priced round, it's time to switch to dedicated cap table software. Platforms like Carta and Pulley are popular choices. Carta offers a free tier for companies with fewer than 25 stakeholders, with paid plans starting at around $2,400 per year. Pulley also has a free tier, with paid plans ranging from $2,000 to $5,000 annually. Both tools provide essential features like audit trails and version control - exactly what institutional investors look for.</p>
+<blockquote>
+<p>&quot;Companies that can produce a clean, reconciled cap table in 24 hours signal to investors that they run a tight ship. Companies that need two weeks and three calls with their lawyer signal the opposite.&quot; - Stuart Wilson, Fractional CFO, BlackpeakCFO </p>
+</blockquote>
+<p>Once your cap table is in order, the next step is preparing for how future fundraising rounds will impact ownership.</p>
+<h3 id="modeling-dilution-and-planning-for-future-rounds" tabindex="-1">Modeling Dilution and Planning for Future Rounds</h3>
+<p>Many founders wait until they’ve signed a term sheet to think about dilution, but that’s a mistake. In fact, <strong>47% of founders don’t model dilution before raising capital</strong>. This often leads to unpleasant surprises when they see how much ownership they’ve given up after a round closes.</p>
+<p>Before you start fundraising, run three scenarios: your target valuation, a case 20–30% below target, and a bridge scenario. Also, plan your option pool to cover an 18–24 month hiring plan. This proactive approach helps you avoid unexpected dilution.</p>
+<blockquote>
+<p>&quot;The cap table is a forward-looking financial model in disguise. Every hire you make with equity, every SAFE you sign... those decisions compound.&quot; - Fiscallion LLC </p>
+</blockquote>
+<p>If you’ve issued multiple SAFEs, model their simultaneous conversion before signing additional agreements. SAFEs can stack up and take a larger share of ownership than expected when they all convert during your next priced round. Running a cumulative conversion model ahead of time can save you from costly surprises.</p>
+<h3 id="connecting-cap-tables-to-your-financial-systems" tabindex="-1">Connecting Cap Tables to Your Financial Systems</h3>
+<p>Your cap table isn’t just a legal document - it’s a critical part of your financial planning. It ties directly to your tax obligations, financial reporting, and investor readiness. Treating it as a standalone tool rather than integrating it with your broader financial systems can lead to expensive mistakes.</p>
+<p>One essential step: <strong>annual <a href="https://en.wikipedia.org/wiki/Internal_Revenue_Code_section_409A" target="_blank" rel="nofollow noopener noreferrer">409A</a> valuations</strong>. These valuations determine the fair market value (FMV) for stock option strike prices. Missing or delaying a 409A valuation could result in a <strong>20% federal tax penalty on vested options</strong> for your employees. To avoid this, get a new valuation every 12 months or after any major event like a funding round. The cost for early-stage valuations typically ranges from $2,000 to $5,000.</p>
+<p>When your cap table is synced with your financial models, you can better evaluate trade-offs between raising more capital and giving up equity. Tools like <a href="https://www.lucid.now">Lucid Financials</a> can simplify this process, offering real-time reporting and financial visibility. This makes due diligence far less stressful.</p>
+<p>To prevent costly errors, audit your cap table six months before fundraising. Reconcile every equity grant, board approval, and 83(b) filing. Mistakes in cap tables can lead to legal fees, repricing, and shareholder disputes, with an average cost of <strong>$2.3 million</strong>. Instead, adopt a quarterly review process as part of your financial planning - it’s far cheaper and ensures you’re always investor-ready.</p>
+<h2 id="key-takeaways-for-startup-founders" tabindex="-1" class="sb h2-sbb-cls">Key Takeaways for Startup Founders</h2>
+<p>Your cap table is more than just a spreadsheet - it’s the story of who owns your company. And with every funding round, that story gets more intricate. One crucial fact to remember: <strong>dilution adds up over time.</strong> A founding team that starts with 100% ownership typically holds around <strong>56% after a Seed round, 36% after Series A, and only 23% after Series B</strong>. Planning ahead for dilution is key to avoiding surprises that could lead to a loss of control.</p>
+<p>Here’s what the numbers look like: founders generally give up about <strong>20.1% at Seed, 20.5% at Series A, and 16.7% at Series B</strong>. By the time you’re negotiating a Series A, institutional investors often expect founders to hold <strong>15–25% combined ownership</strong> at closing. This ensures that founders remain motivated to drive the company forward. Running these scenarios beforehand can help you avoid tough or unfavorable negotiations later.</p>
+<blockquote>
+<p>&quot;Regular reviews and updates to your cap table ensure transparency and prepare founders for strategic decisions such as managing dilution, onboarding new investors, and planning exits effectively.&quot; - Trevor Randall, Financial Advisory Expert </p>
+</blockquote>
+<p>While these benchmarks help set expectations, there are two common traps that founders need to watch out for:</p>
+<ul>
+<li><strong>The option pool shuffle</strong>: If investors demand an increase in the option pool before their investment (pre-money), the resulting dilution hits founders the hardest - not the incoming investors.</li>
+<li><strong>Hidden dilution from SAFEs</strong>: By 2025, SAFEs were used in 90% of pre-seed deals, with 87% of them structured as post-money SAFEs. Founders often underestimate how these agreements will dilute their ownership when they convert. Comprehensive modeling of SAFEs is essential to avoid surprises.</li>
+</ul>
+<p>Another critical point: <strong>ownership percentage doesn’t equal exit proceeds.</strong> Preferred shareholders often have liquidation preferences, which means they get their money back first - before founders or other common stockholders see any returns. To truly understand your position, you need to look beyond the ownership breakdown and focus on the full liquidation stack.</p>
+<p>To stay ahead in negotiations and strategic planning, integrate your cap table with broader financial tools. Platforms like <a href="https://www.lucid.now">Lucid Financials</a> offer real-time, investor-ready reporting, which can be a game-changer during board meetings or when hammering out term sheets. Having this level of insight ensures you’re ready to handle critical decisions with confidence.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-calculate-my-ownership-on-a-fully-diluted-basis" tabindex="-1" data-faq-q>How do I calculate my ownership on a fully diluted basis?</h3>
+<p>To figure out your ownership on a <em>fully diluted basis</em>, take your total shares and divide them by the <strong>fully diluted share count</strong>. This count includes:</p>
+<ul>
+<li>All issued common and preferred shares</li>
+<li>Granted but unissued stock options</li>
+<li>Outstanding warrants</li>
+<li>SAFEs and convertible notes, assuming they are converted as of today</li>
+</ul>
+<p>With <a href="https://www.lucid.now/">Lucid Financials</a>, these calculations are automated, giving you up-to-date insights into your ownership and any equity dilution.</p>
+<h3 id="whats-the-best-way-to-model-safe-conversion-before-a-priced-round" tabindex="-1" data-faq-q>What’s the best way to model SAFE conversion before a priced round?</h3>
+<p>To effectively model a SAFE conversion, start by building a <strong>pro forma cap table</strong> that simulates the full conversion process before the round closes. This table should include every relevant financial element, such as:</p>
+<ul>
+<li><strong>SAFE principal</strong> amounts</li>
+<li><strong>Valuation caps</strong> and <strong>discount rates</strong></li>
+<li>Any <strong>accrued interest</strong></li>
+<li><strong>New investor capital</strong></li>
+<li>The <strong>target option pool refresh</strong></li>
+</ul>
+<p>By doing this, you’ll account for the intricate ripple effects that stacked SAFEs can have, particularly on founder dilution. It also helps distinguish between <strong>pre-money</strong> and <strong>post-money</strong> terms, ensuring a clear understanding of the financial structure. This approach avoids surprises and provides transparency for all stakeholders.</p>
+<h3 id="how-do-liquidation-preferences-change-founder-payouts-in-an-exit" tabindex="-1" data-faq-q>How do liquidation preferences change founder payouts in an exit?</h3>
+<p>Liquidation preferences outline how payouts are distributed during an exit, ensuring investors get paid before founders or other stakeholders. Here's how it works:</p>
+<p>In a <strong>1x non-participating structure</strong>, investors have two options. They can either reclaim their initial investment amount or convert their preferred shares into common stock - choosing whichever yields the better return. This structure often strikes a balance between protecting investors and giving founders a fair shot at profits.</p>
+<p>On the other hand, <strong>participating preferred structures</strong> allow investors to double-dip. They not only claim their liquidation preference but also share in the remaining proceeds alongside common shareholders. While this setup offers extra security for investors, it can significantly reduce the payout founders receive.</p>
+<p>Things can get even more complex with <strong>stacked seniority</strong> in multiple funding rounds. Later investors often gain higher priority, meaning they get paid first. In moderate exit scenarios, this prioritization can leave founders with little to no financial return, especially if the company hasn't achieved a high valuation.</p>
+<p>Understanding these nuances is crucial for founders negotiating terms with investors. They directly impact how much founders stand to gain - or lose - when it's time to cash out.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a26091bde8dfabce37263d0"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I calculate my ownership on a fully diluted basis?","acceptedAnswer":{"@type":"Answer","text":"To figure out your ownership on a fully diluted basis, take your total shares and divide them by the fully diluted share count. This count includes: All issued common and preferred shares. Granted but unissued stock options. Outstanding warrants. SAFEs and convertible notes, assuming they are converted as of today. With Lucid Financials, these calculations are automated, giving you up-to-date insights into your ownership and any equity dilution."}},{"@type":"Question","name":"What’s the best way to model SAFE conversion before a priced round?","acceptedAnswer":{"@type":"Answer","text":"To effectively model a SAFE conversion, start by building a pro forma cap table that simulates the full conversion process before the round closes. This table should include every relevant financial element, such as: SAFE principal amounts. Valuation caps and discount rates. Any accrued interest. New investor capital. The target option pool refresh. By doing this, you’ll account for the intricate ripple effects that stacked SAFEs can have, particularly on founder dilution. It also helps distinguish between pre-money and post-money terms, ensuring a clear understanding of the financial structure. This approach avoids surprises and provides transparency for all stakeholders."}},{"@type":"Question","name":"How do liquidation preferences change founder payouts in an exit?","acceptedAnswer":{"@type":"Answer","text":"Liquidation preferences outline how payouts are distributed during an exit, ensuring investors get paid before founders or other stakeholders. Here's how it works: In a 1x non-participating structure, investors have two options. They can either reclaim their initial investment amount or convert their preferred shares into common stock - choosing whichever yields the better return. This structure often strikes a balance between protecting investors and giving founders a fair shot at profits. On the other hand, participating preferred structures allow investors to double-dip. They not only claim their liquidation preference but also share in the remaining proceeds alongside common shareholders. While this setup offers extra security for investors, it can significantly reduce the payout founders receive. Things can get even more complex with stacked seniority in multiple funding rounds. Later investors often gain higher priority, meaning they get paid first. In moderate exit scenarios, this prioritization can leave founders with little to no financial return, especially if the company hasn't achieved a high valuation. Understanding these nuances is crucial for founders negotiating terms with investors. They directly impact how much founders stand to gain - or lose - when it's time to cash out."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

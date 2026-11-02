@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Cap Table Software vs. Spreadsheets: Key Differences - Lucid</title>
+<meta name="description" content="Compare spreadsheets and cap table software for accuracy, scalability, costs, migration, and when to switch—plus record-keeping best practices."/>
+<link rel="canonical" href="https://www.lucid.now/blog/cap-table-software-vs-spreadsheets-key-differences/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Cap Table Software vs. Spreadsheets: Key Differences"/>
+<meta property="og:description" content="Compare spreadsheets and cap table software for accuracy, scalability, costs, migration, and when to switch—plus record-keeping best practices."/>
+<meta property="og:url" content="https://www.lucid.now/blog/cap-table-software-vs-spreadsheets-key-differences/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ac58d01ef6c0279d850835f-1791333396016.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Cap Table Software vs. Spreadsheets: Key Differences"/>
+<meta name="twitter:description" content="Compare spreadsheets and cap table software for accuracy, scalability, costs, migration, and when to switch—plus record-keeping best practices."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ac58d01ef6c0279d850835f-1791333396016.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Cap Table Software vs. Spreadsheets: Key Differences", "description": "Compare spreadsheets and cap table software for accuracy, scalability, costs, migration, and when to switch\u2014plus record-keeping best practices.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ac58d01ef6c0279d850835f-1791333396016.jpg", "datePublished": "2026-10-07T00:36:36.016Z", "dateModified": "2026-10-07T00:36:36.016Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/cap-table-software-vs-spreadsheets-key-differences/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Cap Table Software vs. Spreadsheets: Key Differences</h1>
+<div class="article-meta"><time datetime="2026-10-07T00:36:36.016Z">October 7, 2026</time> &middot; 7 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ac58d01ef6c0279d850835f-1791333396016.jpg" alt="Cap Table Software vs. Spreadsheets: Key Differences" loading="eager" />
+<div class="article-body">
+<p><strong>My rule: use a spreadsheet for simple ownership with few changes; choose cap table software when equity terms, transactions, or access needs outgrow manual tracking.</strong> Before choosing, I’d compare total cost - including setup, subscriptions, and time spent checking records - not just the price.</p>
+<p>Both tools track ownership, grants, and conversions. But neither replaces signed agreements or legal and tax review. <em>For example</em>, 100 shares out of 1,000 outstanding shares equals <strong>10% ownership</strong>; options or convertible instruments can change the fully diluted percentage.</p>
+<p><strong>Quick Comparison</strong></p>
+<table>
+<thead>
+<tr>
+<th>What I’d compare</th>
+<th>Spreadsheets</th>
+<th>Cap table software</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cost and setup</td>
+<td>Low upfront cost; manual setup and updates</td>
+<td>Subscription, migration, and training costs</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>Manual entry and formula checks</td>
+<td>Automated calculations; inputs still need review</td>
+</tr>
+<tr>
+<td>Growth</td>
+<td>More transactions mean more manual work</td>
+<td>Handles more equity activity</td>
+</tr>
+<tr>
+<td>Ease of use</td>
+<td>Familiar format; someone maintains formulas</td>
+<td>Requires training; reduces recurring calculations</td>
+</tr>
+<tr>
+<td>Version control</td>
+<td>Needs one official file and a change log</td>
+<td>Central record with an audit trail</td>
+</tr>
+<tr>
+<td>Scenario modeling</td>
+<td>Custom formulas for dilution and exits</td>
+<td>Often includes built-in modeling</td>
+</tr>
+<tr>
+<td>Equity types</td>
+<td>Manual tracking of classes, vesting, and conversions</td>
+<td>Support varies by entity, instrument, and vesting rules</td>
+</tr>
+<tr>
+<td>Stakeholder access</td>
+<td>File permissions need careful control</td>
+<td>Often offers role-based views</td>
+</tr>
+</tbody>
+</table>
+<p>I’d consider switching when conflicting files, broken formulas, frequent grants, or investor diligence make updates hard to keep current. Before moving, I’d reconcile past transactions and test the software with your entity types and equity terms.</p>
+<p>&lt;u&gt;The tool is only part of the process.&lt;/u&gt; I’d assign an owner and a reviewer, keep hypothetical scenarios separate, and share approved equity transactions with accounting so ownership records and financial reports stay aligned.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6ac58d01ef6c0279d850835f-1791333004286.jpg" alt="Cap Table Software vs. Spreadsheets: Which Fits?" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Cap Table Software vs. Spreadsheets: Which Fits?</p>
+</figcaption></figure><h2 id="fundraising-101-whats-a-cap-table" tabindex="-1" class="sb h2-sbb-cls">Fundraising 101: What’s a Cap Table? 📊</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/x3LPoha53a0" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="how-spreadsheets-track-ownership" tabindex="-1" class="sb h2-sbb-cls">How Spreadsheets Track Ownership</h2>
+<p>A spreadsheet brings signed equity documents and issued securities together in one workbook. Formulas calculate each holder’s ownership percentage. <strong>Track outstanding ownership and fully diluted ownership separately</strong>, and label the assumptions behind each. This flexibility helps early on, but it also leaves room for manual errors.</p>
+<p>You can customize columns and model dilution or exit scenarios. Someone still needs to update the inputs and check the formulas.</p>
+<h3 id="when-a-spreadsheet-is-enough" tabindex="-1">When a Spreadsheet Is Enough</h3>
+<p>Spreadsheets work best when ownership is simple and changes are rare. At that small scale, the manual workload is easier to handle. Even then, <strong>assign someone to keep the workbook updated</strong>.</p>
+<h3 id="where-errors-and-version-conflicts-arise" tabindex="-1">Where Errors and Version Conflicts Arise</h3>
+<p>When multiple people edit the file, version control becomes a weak point. Duplicate files and updates made out of order can cause confusion. Accuracy slips when someone enters the wrong share count, overwrites a formula, shares a conflicting version, or leaves out a transaction.</p>
+<p>Keep one authoritative workbook, record each change, and check the spreadsheet against the signed legal records. <strong>A correct total can still hide missing records.</strong></p>
+<p>As equity gets more complex, new investors, vesting schedules, and different share classes or rights add work beyond percentage calculations. Before using the spreadsheet for fundraising or exit planning, make sure it accounts for approvals and signed source documents.</p>
+<h2 id="how-cap-table-software-organizes-equity-records" tabindex="-1" class="sb h2-sbb-cls">How Cap Table Software Organizes Equity Records</h2>
+<p>Cap table software keeps <strong>one live record</strong> instead of multiple workbook copies, reducing version conflicts. Some tools use AI to pull key data from signed equity documents, including SAFEs, stock purchase agreements, and option grants. Links to source documents let reviewers trace each entry back to the signed agreement. This setup helps improve accuracy before the platform handles calculations and access.</p>
+<h3 id="calculations-access-and-reports" tabindex="-1">Calculations, Access, and Reports</h3>
+<p>Software can track vesting and model financing scenarios. Check whether it supports time-based, milestone-based, or hybrid vesting, along with pro-rata rights modeling. Role-based portals let employees and investors view their holdings without seeing the full cap table.</p>
+<p><strong>Check support for each entity’s ownership structure.</strong> Not every tool supports LLC membership interests, multiple-entity structures, or international equity plans. Ask for a demo using your entity types and equity terms.</p>
+<h3 id="setup-costs-and-data-review" tabindex="-1">Setup Costs and Data Review</h3>
+<p>Budget for document collection, migration, training, and routine transaction entry. Before importing data, gather signed agreements and reconcile historical transactions. Confirm whether onboarding includes migration help and whether 409A valuations cost extra.</p>
+<p><strong>Automation does not replace legal or tax review.</strong> Put one person in charge of entering approved transactions, and review records after financings or major grants.</p>
+<h2 id="comparing-accuracy-scalability-ease-of-use-and-cost" tabindex="-1" class="sb h2-sbb-cls">Comparing Accuracy, Scalability, Ease of Use, and Cost</h2>
+<p>As ownership activity increases, compare tools by the manual work they require. <strong>Compare total workload, not just price.</strong> Spreadsheets may cost little up front, but grants, conversions, and financings add reconciliation work.</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Spreadsheets</th>
+<th>Cap table software</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Setup cost</td>
+<td>Low up-front cost; manual setup</td>
+<td>Subscription plus migration/configuration</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>Requires manual checks</td>
+<td>Automates calculations; still depends on clean inputs</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>More transactions require more manual updates</td>
+<td>Designed for higher equity activity</td>
+</tr>
+<tr>
+<td>Version control</td>
+<td>File versions are easy to lose track of</td>
+<td>Centralized audit trail</td>
+</tr>
+<tr>
+<td>Scenario modeling</td>
+<td>Custom formulas and separate scenarios</td>
+<td>Often includes built-in what-if modeling</td>
+</tr>
+<tr>
+<td>Complex equity types</td>
+<td>Requires manual modeling</td>
+<td>Built for more complex structures</td>
+</tr>
+<tr>
+<td>Stakeholder access</td>
+<td>File-sharing permissions need careful management</td>
+<td>Role-based, read-only stakeholder access</td>
+</tr>
+<tr>
+<td>Best fit</td>
+<td>Simple ownership with infrequent changes</td>
+<td>Frequent transactions or complex equity structures</td>
+</tr>
+</tbody>
+</table>
+<p>Before buying, check that the plan supports your entity types, vesting rules, and compliance needs.</p>
+<p><strong>Neither tool replaces governing documents or professional review.</strong> Even correct calculations can use the wrong terms.</p>
+<p>If these tradeoffs are already affecting your workflow, software is usually the next step.</p>
+<h3 id="signs-you-may-need-cap-table-software" tabindex="-1">Signs You May Need Cap Table Software</h3>
+<p>Use this checklist to assess complexity:</p>
+<ul>
+<li><strong>Conflicting versions:</strong> Ownership totals differ across files.</li>
+<li><strong>Recurring formula repairs:</strong> References or calculations keep breaking.</li>
+<li><strong>Repeated dilution modeling:</strong> You rebuild scenarios for upcoming rounds.</li>
+<li><strong>High volume of employee grants:</strong> Grants, exercises, and departures happen frequently.</li>
+<li><strong>Convertible instruments:</strong> SAFE or note terms depend on one another.</li>
+<li><strong>Upcoming investor diligence:</strong> Reconciling ownership history takes too much time.</li>
+</ul>
+<p>Assess each entity separately. Even an entity with few owners can be complex when convertible instruments are involved.</p>
+<h2 id="conclusion-match-the-tool-to-your-ownership-structure" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Match the Tool to Your Ownership Structure</h2>
+<p>Compare cost, accuracy, and the tool’s ability to grow with your needs. <strong>Use a spreadsheet for simple, stable ownership.</strong> Move to software when transaction volume, equity complexity, or access needs exceed what manual tracking can handle. Weigh the time saved against setup, subscription, and training costs - not just the monthly fee.</p>
+<h3 id="keep-ownership-records-accurate" tabindex="-1">Keep Ownership Records Accurate</h3>
+<p>How you maintain records matters as much as the tool. Assign one person to update them and another to approve changes. Reconcile records before switching systems so you start with clean data, then review them after funding rounds or large grants.</p>
+<p>Maintain <strong>one official ownership record</strong>, log approved transactions promptly, and keep hypothetical scenarios separate. Automation doesn’t replace checking the underlying agreements.</p>
+<h3 id="connect-ownership-records-with-financial-reporting" tabindex="-1">Connect Ownership Records With Financial Reporting</h3>
+<p>Keep ownership data aligned with accounting and tax workflows. Share approved transaction data with accounting so financial reports and the cap table reflect the same equity activity.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-verify-my-cap-table-after-migration" tabindex="-1" data-faq-q>How do I verify my cap table after migration?</h3>
+<p>Check every entry against <strong>signed legal documents</strong>, including stock purchase agreements, board consents or resolutions, and financing paperwork. Reconcile historical records to set a clean baseline. Then verify that vesting terms, grant details, deadlines, and 83(b) filings match the agreements.</p>
+<p>Schedule periodic audits and <strong>reconcile equity records quarterly</strong> against signed documentation and your financial close process. This keeps ownership records accurate and ready for investor review. [2][3][4]</p>
+<h3 id="how-should-i-model-safe-dilution" tabindex="-1" data-faq-q>How should I model SAFE dilution?</h3>
+<p>Build a <strong>pro forma cap table</strong> to model SAFE conversion before a priced round closes. Don’t rely on static spreadsheets alone. Include SAFE principal, valuation caps, discount rates, accrued interest where applicable, new investor capital, and your target option pool refresh.</p>
+<p>Model <strong>stacked SAFEs together</strong> to see how they dilute founder ownership. Track fully diluted ownership - including issued shares, options, warrants, and unconverted SAFEs - so your projections reflect the legal terms.</p>
+<h3 id="what-security-features-should-i-look-for" tabindex="-1" data-faq-q>What security features should I look for?</h3>
+<p>When comparing cap table software, <strong>check its security controls</strong>: SOC 2 compliance, advanced encryption for data at rest and in transit, and secure authentication such as OAuth 2.0. Look for least-privilege, role-based access controls, with view-only access for most users and editing restricted to admins [2].</p>
+<p>Also look for <strong>audit trails and version tracking</strong>. These let you trace every change during investor due diligence and compliance reviews [3][4].</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6ac58d01ef6c0279d850835f"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I verify my cap table after migration?","acceptedAnswer":{"@type":"Answer","text":"Check every entry against signed legal documents, including stock purchase agreements, board consents or resolutions, and financing paperwork. Reconcile historical records to set a clean baseline. Then verify that vesting terms, grant details, deadlines, and 83(b) filings match the agreements. Schedule periodic audits and reconcile equity records quarterly against signed documentation and your financial close process. This keeps ownership records accurate and ready for investor review. [2][3][4]"}},{"@type":"Question","name":"How should I model SAFE dilution?","acceptedAnswer":{"@type":"Answer","text":"Build a pro forma cap table to model SAFE conversion before a priced round closes. Don’t rely on static spreadsheets alone. Include SAFE principal, valuation caps, discount rates, accrued interest where applicable, new investor capital, and your target option pool refresh. Model stacked SAFEs together to see how they dilute founder ownership. Track fully diluted ownership - including issued shares, options, warrants, and unconverted SAFEs - so your projections reflect the legal terms."}},{"@type":"Question","name":"What security features should I look for?","acceptedAnswer":{"@type":"Answer","text":"When comparing cap table software, check its security controls: SOC 2 compliance, advanced encryption for data at rest and in transit, and secure authentication such as OAuth 2.0. Look for least-privilege, role-based access controls, with view-only access for most users and editing restricted to admins [2]. Also look for audit trails and version tracking. These let you trace every change during investor due diligence and compliance reviews [3][4]."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

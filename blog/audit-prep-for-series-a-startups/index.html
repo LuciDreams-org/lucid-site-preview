@@ -1,0 +1,486 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Audit Prep for Series A Startups - Lucid</title>
+<meta name="description" content="Make audit readiness a monthly routine: reconcile accounts, document ASC 606/718 treatments, and centralize PBC evidence."/>
+<link rel="canonical" href="https://www.lucid.now/blog/audit-prep-for-series-a-startups/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Audit Prep for Series A Startups"/>
+<meta property="og:description" content="Make audit readiness a monthly routine: reconcile accounts, document ASC 606/718 treatments, and centralize PBC evidence."/>
+<meta property="og:url" content="https://www.lucid.now/blog/audit-prep-for-series-a-startups/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a45abb7f6643716137b63c2-1782955304169.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Audit Prep for Series A Startups"/>
+<meta name="twitter:description" content="Make audit readiness a monthly routine: reconcile accounts, document ASC 606/718 treatments, and centralize PBC evidence."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a45abb7f6643716137b63c2-1782955304169.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Audit Prep for Series A Startups", "description": "Make audit readiness a monthly routine: reconcile accounts, document ASC 606/718 treatments, and centralize PBC evidence.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a45abb7f6643716137b63c2-1782955304169.jpg", "datePublished": "2026-07-02T01:21:44.169Z", "dateModified": "2026-07-02T01:21:44.169Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/audit-prep-for-series-a-startups/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Audit Prep for Series A Startups</h1>
+<div class="article-meta"><time datetime="2026-07-02T01:21:44.169Z">July 2, 2026</time> &middot; 13 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a45abb7f6643716137b63c2-1782955304169.jpg" alt="Audit Prep for Series A Startups" loading="eager" />
+<div class="article-body">
+<p><strong>If you wait until year-end to get ready for an audit, you're late.</strong> For most Series A startups, audit prep means doing five things every month: close the books on accrual, keep GAAP records clean, document revenue and equity decisions, save approval proof, and keep support files in one place.</p>
+<p>Here’s the short version:</p>
+<ul>
+<li><strong>Expect cost:</strong> a first audit often runs <strong>$25,000 to $50,000</strong>, and cleanup can push it to <strong>$75,000</strong></li>
+<li><strong>Expect scrutiny:</strong> auditors usually start with <strong>cash reconciliations, contracts, board minutes, cap table records, and 409A reports</strong></li>
+<li><strong>Focus areas:</strong> <strong><a href="https://en.wikipedia.org/wiki/Revenue_recognition" target="_blank" rel="nofollow noopener noreferrer">ASC 606</a> revenue</strong>, <strong><a href="https://www.sec.gov/Archives/edgar/data/919012/000156459016014422/R20.htm" target="_blank" rel="nofollow noopener noreferrer">ASC 718</a> stock comp</strong>, payroll, taxes, debt, and cut-off for expenses</li>
+<li><strong>Close target:</strong> finish the monthly close within <strong>15 business days</strong></li>
+<li><strong>Prep load:</strong> a first audit can bring an <strong>80- to 150-item PBC list</strong></li>
+<li><strong>Main goal:</strong> make your books easy to test <em>without</em> a last-minute cleanup project</li>
+</ul>
+<p>What matters most is simple: your financials should tie out, your support should be easy to pull, and your review steps should leave a record. <em>Clean books</em> are not the same as <em>audited financials</em>, but clean books make the audit move with fewer delays and lower fees.</p>
+<p>I’d boil the article down to this:</p>
+<ul>
+<li>Keep a repeatable monthly close</li>
+<li>Use a clean chart of accounts</li>
+<li>Prepare GAAP financial statements and support schedules</li>
+<li>Write short accounting memos for tricky areas</li>
+<li>Set approval and access rules</li>
+<li>Test your own process before auditors do</li>
+<li>Run the audit through one internal contact</li>
+</ul>
+<p>This guide walks through what auditors want, where startups usually slip, and how to make audit prep part of normal finance work.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a45abb7f6643716137b63c2-1782954718917.jpg" alt="Series A Audit Prep Timeline: 6 Months to Fieldwork" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Series A Audit Prep Timeline: 6 Months to Fieldwork</p>
+</figcaption></figure><h2 id="why-do-startup-audits-feel-so-painful" tabindex="-1" class="sb h2-sbb-cls">Why do startup audits feel so painful?</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/nSW1TCeC47Y" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="1-know-what-auditors-expect-at-series-a" tabindex="-1" class="sb h2-sbb-cls">1. Know What Auditors Expect at Series A</h2>
+<p>At Series A, auditors want books that are current, reconciled, and documented well enough for fieldwork to start <strong>without a cleanup project first</strong>. That starts with a simple point: know what they check first.</p>
+<h3 id="why-investors-care-about-audit-ready-financials" tabindex="-1">Why investors care about audit-ready financials</h3>
+<p>Audit-ready financials are more than a compliance box to check. They show that your finance team can handle more complexity as the company grows.</p>
+<p>There’s also a direct payoff. Keeping audit-grade financials throughout the year can shorten fundraising timelines by <strong>30 to 60 days</strong> and cut audit fees by <strong>15% to 25%</strong> because auditors spend less time fixing messy records and chasing follow-up items.</p>
+<p>It also helps to draw a clear line between two terms that people often blur together. <strong>Audit-ready books</strong> are clean, supported, and organized. <strong>Audited financials</strong> are books a CPA has already examined and issued an opinion on. That same day-to-day discipline makes the audit move with less friction once testing begins.</p>
+<h3 id="private-company-audits-vs-public-company-audits" tabindex="-1">Private-company audits vs. public-company audits</h3>
+<p>Most Series A startups deal with <strong>private-company audits</strong> under <a href="https://www.aicpa-cima.com/" target="_blank" rel="nofollow noopener noreferrer">AICPA</a> standards. <a href="https://pcaobus.org/" target="_blank" rel="nofollow noopener noreferrer">PCAOB</a> audits are for public companies and usually become a factor only when IPO readiness is on the table.</p>
+<p>So for a Series A startup, the goal is usually private-company audit discipline, not public-company reporting.</p>
+<h3 id="what-auditors-check-first" tabindex="-1">What auditors check first</h3>
+<p>Auditors usually begin with reconciliations, accounting treatment, and supporting documents. Every cash and credit account should be fully reconciled, and source records should be easy to pull, including:</p>
+<ul>
+<li>Bank statements</li>
+<li>Signed contracts</li>
+<li>Board minutes</li>
+<li>409A valuations </li>
+</ul>
+<p>They also look for proof that management reviews are happening in practice, not just in theory. That includes approval workflows, reconciliation sign-offs, and written accounting policies. If those pieces are missing, auditors often read that as a weak control setup. And that tends to mean more audit risk, more time, and a bigger bill.</p>
+<p>With that target in view, the next move is to build the close process, account setup, and documentation habits that make these expectations part of the normal routine.</p>
+<h2 id="2-build-the-foundations-for-audit-ready-reporting" tabindex="-1" class="sb h2-sbb-cls">2. Build the Foundations for Audit-Ready Reporting</h2>
+<h3 id="set-up-a-clean-close-process-and-chart-of-accounts" tabindex="-1">Set up a clean close process and chart of accounts</h3>
+<p>An inconsistent month-end close is asking for audit trouble. Small mistakes don’t stay small. They stack up and show up at year-end.</p>
+<p>A clean, repeatable close should follow the same steps every month. Reconcile each bank account, credit card, and merchant account on its own. Post payroll entries. Record accruals. Then have a finance lead review and sign off on the final package.</p>
+<p>Your chart of accounts matters just as much. If it’s messy, monthly reporting gets messy too - across periods and across teams. At a minimum, include separate accounts for <strong>Deferred Revenue</strong> (liability), <strong>Prepaid Expenses</strong> (asset), and <strong>Accrued Expenses</strong> (liability). Then use those accounts the same way from day one.</p>
+<h3 id="prepare-the-core-financial-statements-and-supporting-schedules" tabindex="-1">Prepare the core financial statements and supporting schedules</h3>
+<p>Under U.S. GAAP, your audit package should include the <strong>balance sheet</strong>, <strong>income statement</strong>, <strong>cash flow statement</strong>, and <strong>statement of stockholders' equity</strong>. Each statement should tie cleanly to the trial balance and the related sub-ledgers.</p>
+<p>Then come the supporting schedules. This is where auditors often start their testing. They’ll usually ask for:</p>
+<ul>
+<li>An <strong>accounts receivable (AR) aging report</strong></li>
+<li>An <strong>accounts payable (AP) aging report</strong></li>
+<li>A <strong>fixed asset register</strong> with depreciation</li>
+<li>A <strong>deferred revenue rollforward</strong></li>
+<li>A <strong>schedule of debt and equity activity</strong></li>
+</ul>
+<p>For SaaS companies, the deferred revenue rollforward needs to connect billings, deferrals, and monthly revenue recognition under <strong>ASC 606</strong>. If that schedule is missing - or if it doesn’t reconcile to the balance sheet - auditors will slow down and look much more closely.</p>
+<h3 id="set-documentation-standards-that-hold-up-in-an-audit" tabindex="-1">Set documentation standards that hold up in an audit</h3>
+<p>Poor file organization can add weeks to audit fieldwork. That’s not just annoying. It can throw off timelines, eat up team time, and turn simple requests into a scavenger hunt.</p>
+<p>Set up digital files in numbered folders that match what auditors are likely to request. A simple setup looks like this:</p>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>Category</th>
+<th>Key Documents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>Corporate Governance</td>
+<td>Articles of Incorporation, Bylaws, Board Minutes, Stock Purchase Agreements</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Financials</td>
+<td>Monthly Financial Statements, 409A Reports, Cap Table, Budgets</td>
+</tr>
+<tr>
+<td>03</td>
+<td>Contracts</td>
+<td>Signed MSAs, SOWs, Vendor Contracts, Lease Agreements</td>
+</tr>
+<tr>
+<td>04</td>
+<td>HR &amp; Payroll</td>
+<td>Payroll Registers, Offer Letters, Tax Filings (941, W-3), Benefits Plans</td>
+</tr>
+<tr>
+<td>05</td>
+<td>Banking</td>
+<td>Monthly Bank/Credit Card Statements, Merchant Processor Reports</td>
+</tr>
+</tbody>
+</table>
+<p>File signed documents as soon as they come in, not in a year-end rush. Also set a clear materiality threshold for routine invoice retention so the team spends time on the records that matter most.</p>
+<p>With the core package in place, the next step is to tighten the accounting areas auditors test most closely.</p>
+<h2 id="3-address-the-high-risk-areas-auditors-focus-on" tabindex="-1" class="sb h2-sbb-cls">3. Address the High-Risk Areas Auditors Focus On</h2>
+<h3 id="revenue-recognition-under-asc-606" tabindex="-1">Revenue recognition under <a href="https://en.wikipedia.org/wiki/Revenue_recognition" target="_blank" rel="nofollow noopener noreferrer">ASC 606</a></h3>
+<p>Revenue recognition errors are the <strong>top audit finding</strong> in SaaS companies. The main problem comes down to timing. Money might land in your bank account on one date, but you can only record revenue when you've earned it by delivering what the contract promises.</p>
+<p>That’s why auditors lean on the five-step ASC 606 model: identify the contract, identify the separate performance obligations, determine the transaction price, allocate that price, and recognize revenue as each obligation is satisfied. They also check deferred revenue schedules to confirm they tie back to the balance sheet.</p>
+<p>Bundled and multi-element contracts are where many startups get tripped up. If you sell software access with an implementation fee or premium support, those pieces may count as separate performance obligations. And if implementation doesn’t give the customer standalone value, you can’t book it upfront. You need to spread it across the full contract term. The same issue comes up with annual prepayments, usage-based pricing, and contract changes.</p>
+<blockquote>
+<p>&quot;The subscription revenue model introduces layers of accounting complexity that traditional businesses never encounter, and these complexities are precisely where auditors focus their attention.&quot; - Northstar Financial Advisory </p>
+</blockquote>
+<p>Before audit fieldwork starts, a recurring-revenue startup should have two things ready:</p>
+<ul>
+<li>A <strong>revenue policy memo</strong> that explains how ASC 606 applies to each contract type, including how you set standalone selling prices</li>
+<li>A <strong>contract-level deferred revenue rollforward</strong> showing beginning balances, new bookings, recognized revenue, and ending balances for every active contract</li>
+</ul>
+<blockquote>
+<p>&quot;Revenue treatment should be understandable without the salesperson, founder, or controller in the room.&quot; - Jumpstart Partners </p>
+</blockquote>
+<h3 id="equity-expenses-cash-and-taxes" tabindex="-1">Equity, expenses, cash, and taxes</h3>
+<p>Revenue gets a lot of attention, but it’s not the only area auditors test. Fast-growing startups often run into trouble in a few repeat spots. Here’s where auditors tend to dig in, what they ask for, and one control that helps.</p>
+<table>
+<thead>
+<tr>
+<th>Risk Area</th>
+<th>Key Audit Risk</th>
+<th>Required Documentation</th>
+<th>Example Control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Equity &amp; Cap Table</strong></td>
+<td>Inaccurate ownership records; missing board approvals for option grants</td>
+<td>Signed stock purchase agreements; board minutes; 409A valuation</td>
+<td>Secondary review of option grant entries against board minutes</td>
+</tr>
+<tr>
+<td><strong>Expense Accruals</strong></td>
+<td>Understated liabilities; missing cut-off for year-end invoices</td>
+<td>Accrual checklist; vendor invoices; month-end close logs</td>
+<td>Review of all invoices received in the first 10 days of the new month</td>
+</tr>
+<tr>
+<td><strong>Cash Management</strong></td>
+<td>Unrecorded transactions; undetected errors</td>
+<td>Bank statements; monthly reconciliation reports</td>
+<td>Segregation of duties between the person creating invoices and the person recording receipts</td>
+</tr>
+<tr>
+<td><strong>Payroll &amp; Taxes</strong></td>
+<td>Contractor misclassification; state tax nexus exposure</td>
+<td>Form 941 reconciliations; W-4s; contractor classification files</td>
+<td>Quarterly reconciliation of payroll registers to filed tax forms</td>
+</tr>
+<tr>
+<td><strong>Debt &amp; SAFEs</strong></td>
+<td>Incorrect classification (current vs. long-term); missing legal support</td>
+<td>Signed SAFE/convertible note docs; covenant worksheets</td>
+<td>Monthly management review of covenant compliance</td>
+</tr>
+</tbody>
+</table>
+<p>One figure matters here: misclassifying an employee as a contractor can create back-tax liabilities of <strong>20% to 40% of their wages</strong>. That kind of issue often shows up late in the audit and can drag the process out fast.</p>
+<h3 id="common-mistakes-that-cause-audit-rework" tabindex="-1">Common mistakes that cause audit rework</h3>
+<p>Most audit rework can be avoided. In many cases, the problem isn’t hard accounting. It’s missing support, weak process, or records that don’t line up.</p>
+<p>The usual trouble spots are <strong>undocumented manual journal entries</strong>, <strong>unreconciled accounts</strong>, and books that don’t tie back to payroll records, bank statements, or the cap table. Auditors see vague journal entries as a warning sign, especially anything labeled “to adjust balance” with no support, no math, and no approval behind it.</p>
+<blockquote>
+<p>&quot;If a journal entry needs a meeting to explain it, the documentation is weak.&quot; - Jumpstart Partners </p>
+</blockquote>
+<p>Equity is another area where things often go sideways. Stock option grants without signed board consents, grant dates that don’t match across records, or a cap table that doesn’t reconcile to the general ledger can all lead to findings and extra work. The fix is simple: each entry in your cap table software should tie to a board approval date and a current 409A valuation report.</p>
+<p>It’s also smart to keep a close eye on your <strong>capitalization policy</strong>. Auditors often find assets capitalized below the company’s stated threshold, or items capitalized with no invoice attached. A written policy with a set dollar threshold - say, <strong>$2,500</strong> - plus a fixed asset schedule tied to supporting invoices can help keep those items off the auditor’s list.</p>
+<h2 id="4-put-internal-controls-and-governance-in-place" tabindex="-1" class="sb h2-sbb-cls">4. Put Internal Controls and Governance in Place</h2>
+<h3 id="start-with-approval-workflows-access-controls-and-segregation-of-duties" tabindex="-1">Start with approval workflows, access controls, and segregation of duties</h3>
+<p>These controls help stop the same cleanup work auditors flag in cash, payroll, revenue, and equity. For most teams with 10 to 100 people, full segregation of duties just isn't realistic. That said, you can put <strong>compensating controls</strong> in place where gaps exist.</p>
+<p>Start with the areas that carry the most risk. Get rid of shared logins in banking, payroll, and accounting systems. Set role-based permissions so people can only see and do what their job calls for. Put dollar thresholds in writing - for example, <strong>$5,000</strong> or <strong>$25,000</strong> - so checks and wire transfers above those amounts need executive approval. Keep vendor setup separate from payment approval.</p>
+<p>One thing matters more than people think: <strong>proof</strong>. A control only helps if every approval, review, and exception is saved in a form auditors can inspect.</p>
+<h3 id="write-policies-down-and-keep-review-evidence" tabindex="-1">Write policies down and keep review evidence</h3>
+<p>If you don't save the evidence, the control doesn't count.</p>
+<p>Skip the giant manual. Short policy memos usually work better. Cover revenue recognition (<strong>ASC 606</strong>), expense capitalization, equity accounting, and your monthly close process. Each memo should explain the rule clearly, without needing a live walkthrough. It should also tie back to how your monthly close actually works, instead of sitting off to the side like a forgotten doc.</p>
+<p>Then keep the backup:</p>
+<ul>
+<li>Save approval emails as PDFs</li>
+<li>Store signed reconciliation reports in a shared drive</li>
+<li>Keep approval logs from your bill-pay system</li>
+</ul>
+<h3 id="run-pre-audit-walkthroughs-before-year-end" tabindex="-1">Run pre-audit walkthroughs before year-end</h3>
+<p>A pre-audit walkthrough connects your reporting process to audit fieldwork. Before auditors start, pull a sample of transactions from payroll, vendor payments, and revenue. Then check whether the approvals and support are there.</p>
+<p>This is one of the fastest ways to spot missing evidence before fieldwork begins.</p>
+<p>The table below gives you a starting point for an internal controls matrix.</p>
+<table>
+<thead>
+<tr>
+<th>Process Cycle</th>
+<th>Key Control Activity</th>
+<th>Owner</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Procure-to-Pay</strong></td>
+<td>Approval of new vendors and bank detail changes</td>
+<td>Head of Ops / CEO</td>
+<td>As needed</td>
+</tr>
+<tr>
+<td><strong>Procure-to-Pay</strong></td>
+<td>Approval of bills/payments over a set threshold</td>
+<td>CEO / Founder</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td><strong>Order-to-Cash</strong></td>
+<td>Reconciliation of deferred revenue to contracts</td>
+<td>Controller</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td><strong>Hire-to-Pay</strong></td>
+<td>Review of payroll register vs. offer letters</td>
+<td>HR Lead / CEO</td>
+<td>Per pay cycle</td>
+</tr>
+<tr>
+<td><strong>Financial Close</strong></td>
+<td>Review and sign-off on bank reconciliations</td>
+<td>CFO / Founder</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td><strong>Governance</strong></td>
+<td>Board approval of all equity/option grants</td>
+<td>Board of Directors</td>
+<td>Quarterly</td>
+</tr>
+</tbody>
+</table>
+<p>A disciplined monthly close - ideally finished within <strong>15 business days</strong> after month-end - is what holds the rest together. Use the gaps you find here to shape the PBC list and data room before fieldwork starts. Once controls are documented and tested, the audit shifts into more of a request-management exercise.</p>
+<h2 id="5-run-the-audit-and-stay-ready-after-it" tabindex="-1" class="sb h2-sbb-cls">5. Run the Audit and Stay Ready After It</h2>
+<p>Once your controls are in place, audit prep turns into two things: <strong>managing requests</strong> and <strong>controlling evidence</strong>.</p>
+<h3 id="build-a-pre-audit-timeline-and-pbc-list" tabindex="-1">Build a pre-audit timeline and PBC list</h3>
+<p>Audit prep should run all year, not turn into a mad dash at year-end. For Series A startups, the heaviest push usually lands in the month before fieldwork begins.</p>
+<p>A first-time audit often comes with an <strong>80 to 150 item PBC list</strong>. Give each item a clear owner and a firm due date. A workable timeline looks like this:</p>
+<table>
+<thead>
+<tr>
+<th>Timing</th>
+<th>Milestone</th>
+<th>Key Tasks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>6 months before</strong></td>
+<td>Foundation</td>
+<td>Convert to accrual-basis GAAP; write technical memos for ASC 606, ASC 718, and <a href="https://en.wikipedia.org/wiki/Accounting_for_leases_in_the_United_States" target="_blank" rel="nofollow noopener noreferrer">ASC 842</a>; build your lease list</td>
+</tr>
+<tr>
+<td><strong>3 months before</strong></td>
+<td>Mock audit</td>
+<td>Walk the PBC list with your auditor; assign owners; run a mock close to spot trial balance gaps</td>
+</tr>
+<tr>
+<td><strong>1 month before</strong></td>
+<td>Final prep</td>
+<td>Centralize PBC items in shared folders; schedule pre-read calls for technical positions</td>
+</tr>
+<tr>
+<td><strong>Audit fieldwork</strong></td>
+<td>Fieldwork</td>
+<td>Block about 50% of the controller's or accounting lead's calendar for audit support; answer sample requests in batches by category to cut interruption</td>
+</tr>
+</tbody>
+</table>
+<h3 id="manage-the-data-room-auditor-requests-and-board-communication" tabindex="-1">Manage the data room, auditor requests, and board communication</h3>
+<p>Use the same monthly package for auditors, the board, and investors.</p>
+<p>Pick one person to serve as the single point of contact for all auditor communication. That keeps mixed messages from reaching the audit team and lets you review answers before they go out. It also helps to pre-load the requests you're most likely to get before fieldwork starts. Every auditor question should flow through that one person.</p>
+<p>Audit-ready financials also help with board and investor reporting. Clean monthly closes flow straight into board decks, runway reports, and investor updates. If you keep that bar in place all year, fundraising talks start from a stronger position. It also helps to keep a remediation log for any prior-year findings so the board can track how issues were handled.</p>
+<blockquote>
+<p>&quot;Investors don't trust founders who can't answer operational questions about their own finances. They do trust founders who understand their cash position, their unit economics, and their financial close process.&quot; - Seth Girsky, Founder, Inflection CFO </p>
+</blockquote>
+<h3 id="conclusion-make-audit-readiness-part-of-your-monthly-routine" tabindex="-1">Conclusion: Make audit readiness part of your monthly routine</h3>
+<p>After fieldwork ends, keep the same rhythm going so next year's audit starts in better shape.</p>
+<blockquote>
+<p>&quot;Audit readiness is not a checkbox exercise you complete once a year before the auditors arrive. It is an ongoing operational standard that your finance function either meets or does not meet on any given day.&quot; - Northstar Finance </p>
+</blockquote>
+<p>The day-to-day habits stay the same: reconcile every balance sheet account each month, document accounting judgments in short memos, and keep your data room up to date. When those habits are part of the routine, the audit feels more like a planned checkpoint than a fire drill.</p>
+<p>For startups that want this setup without building the whole thing in-house, <a href="https://www.lucid.now">Lucid Financials</a> combines bookkeeping, tax services, tax credits, and CFO support in one platform built for exactly this.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="when-should-a-series-a-startup-start-audit-prep" tabindex="-1" data-faq-q>When should a Series A startup start audit prep?</h3>
+<p>Series A startups should start audit prep <strong>immediately</strong> and treat it as part of day-to-day operations, not a scramble at year-end.</p>
+<p>That means keeping the books clean, doing monthly reconciliations, and saving key documents as each transaction happens. When you work this way, you're far better prepared for fundraising, lender requests, or acquisition talks - and you can avoid the last-minute cleanup that usually costs time and money.</p>
+<h3 id="what-documents-do-auditors-usually-ask-for-first" tabindex="-1" data-faq-q>What documents do auditors usually ask for first?</h3>
+<p>After you hire an auditor, they’ll usually send over a <strong>Provided by Client (PBC) list</strong>. That’s the document request list they need to start the audit.</p>
+<p>The first round of requests often includes your core <strong>U.S. GAAP financial statements</strong>: the balance sheet, income statement, and cash flow statement. Auditors also tend to ask for the trial balance, general ledger, bank statements, payroll records, capitalization table, fixed asset list, key customer or vendor contracts, and corporate formation documents.</p>
+<h3 id="which-accounting-areas-create-the-most-audit-risk" tabindex="-1" data-faq-q>Which accounting areas create the most audit risk?</h3>
+<p>For Series A startups, the biggest audit risks usually show up in a few familiar places:</p>
+<ul>
+<li><strong>Revenue recognition</strong> under ASC 606</li>
+<li>Equity management, including stock-based compensation and option grants</li>
+<li>Cash and bank reconciliations</li>
+</ul>
+<p>Mistakes in these areas, along with inconsistent accrual accounting, often lead to audit delays, messy support files, or even restatements.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a45abb7f6643716137b63c2"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"When should a Series A startup start audit prep?","acceptedAnswer":{"@type":"Answer","text":"Series A startups should start audit prep immediately and treat it as part of day-to-day operations, not a scramble at year-end. That means keeping the books clean, doing monthly reconciliations, and saving key documents as each transaction happens. When you work this way, you're far better prepared for fundraising, lender requests, or acquisition talks - and you can avoid the last-minute cleanup that usually costs time and money."}},{"@type":"Question","name":"What documents do auditors usually ask for first?","acceptedAnswer":{"@type":"Answer","text":"After you hire an auditor, they’ll usually send over a Provided by Client (PBC) list. That’s the document request list they need to start the audit. The first round of requests often includes your core U.S. GAAP financial statements: the balance sheet, income statement, and cash flow statement. Auditors also tend to ask for the trial balance, general ledger, bank statements, payroll records, capitalization table, fixed asset list, key customer or vendor contracts, and corporate formation documents."}},{"@type":"Question","name":"Which accounting areas create the most audit risk?","acceptedAnswer":{"@type":"Answer","text":"For Series A startups, the biggest audit risks usually show up in a few familiar places: Revenue recognition under ASC 606. Equity management, including stock-based compensation and option grants. Cash and bank reconciliations. Mistakes in these areas, along with inconsistent accrual accounting, often lead to audit delays, messy support files, or even restatements."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

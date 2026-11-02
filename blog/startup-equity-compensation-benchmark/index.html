@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How to Benchmark Startup Equity Compensation - Lucid</title>
+<meta name="description" content="A practical 4-step method to benchmark startup equity: standardize grants, set role-based ranges, model dilution, and explain offer trade-offs."/>
+<link rel="canonical" href="https://www.lucid.now/blog/startup-equity-compensation-benchmark/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How to Benchmark Startup Equity Compensation"/>
+<meta property="og:description" content="A practical 4-step method to benchmark startup equity: standardize grants, set role-based ranges, model dilution, and explain offer trade-offs."/>
+<meta property="og:url" content="https://www.lucid.now/blog/startup-equity-compensation-benchmark/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ad40cfedf911b15a02d6566-1792283378286.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Benchmark Startup Equity Compensation"/>
+<meta name="twitter:description" content="A practical 4-step method to benchmark startup equity: standardize grants, set role-based ranges, model dilution, and explain offer trade-offs."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ad40cfedf911b15a02d6566-1792283378286.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Benchmark Startup Equity Compensation", "description": "A practical 4-step method to benchmark startup equity: standardize grants, set role-based ranges, model dilution, and explain offer trade-offs.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ad40cfedf911b15a02d6566-1792283378286.jpg", "datePublished": "2026-10-18T00:29:38.286Z", "dateModified": "2026-10-18T00:29:38.286Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/startup-equity-compensation-benchmark/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">How to Benchmark Startup Equity Compensation</h1>
+<div class="article-meta"><time datetime="2026-10-18T00:29:38.286Z">October 18, 2026</time> &middot; 10 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ad40cfedf911b15a02d6566-1792283378286.jpg" alt="How to Benchmark Startup Equity Compensation" loading="eager" />
+<div class="article-body">
+<p><strong>I start with a pay policy - not a grant percentage.</strong> To benchmark startup equity, I compare similar roles and award types, put grants on the same share-count basis, and test what the company can afford.</p>
+<p>For example, <strong>12,000 options ÷ 12,000,000 fully diluted shares = 0.10% ownership</strong>. That tells me the ownership stake - not what the employee will earn.</p>
+<p>My process covers four steps:</p>
+<ul>
+<li><strong>Check the data:</strong> Match company stage, role, location, and grant terms. Keep ownership, common-stock value, and potential proceeds separate.</li>
+<li><strong>Set grant ranges:</strong> Weigh salary and equity together, with written rules for new hires, promotions, and retention awards.</li>
+<li><strong>Model dilution and get approval:</strong> Forecast pool use over <strong>12–18 months</strong>, test financing scenarios, and complete legal, tax, and finance reviews.</li>
+<li><strong>Explain and review:</strong> Give employees a plain-language grant summary, explain costs and risks, and review hiring results and pool use quarterly.</li>
+</ul>
+<p>The rule I keep front and center: &lt;u&gt;equity is uncertain, not guaranteed pay&lt;/u&gt;. I document each decision so every offer connects to market data, the hiring budget, and approved grant terms.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6ad40cfedf911b15a02d6566-1792282915680.jpg" alt="How to Benchmark Startup Equity: 4 Steps" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">How to Benchmark Startup Equity: 4 Steps</p>
+</figcaption></figure><h2 id="step-1-collect-data-and-standardize-grant-measures" tabindex="-1" class="sb h2-sbb-cls">Step 1: Collect Data and Standardize Grant Measures</h2>
+<h3 id="choose-sources-and-comparable-companies" tabindex="-1">Choose Sources and Comparable Companies</h3>
+<p>Start with a version-controlled worksheet, using <strong>one row per observation</strong>. Match companies by stage, headcount, industry, role scope, seniority, and geography. Combine market data with your own offer and acceptance records, but keep observed data separate from modeled estimates.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Cohort and geography</th>
+<th>Recency</th>
+<th>Measure type</th>
+<th>Key limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://carta.com/compensation/" target="_blank" rel="nofollow noopener noreferrer">Carta Total Compensation</a></td>
+<td>Venture-backed startups using Carta; stage, size, and geographic filters</td>
+<td>Snapshot and report dates</td>
+<td>Percentage of fully diluted shares; available percentiles</td>
+<td>Sample bias; older reports are historical</td>
+</tr>
+<tr>
+<td><a href="https://www.pave.com/" target="_blank" rel="nofollow noopener noreferrer">Pave</a></td>
+<td>Job, level, location, industry, and stage</td>
+<td>Generally monthly; observation dates may differ</td>
+<td>New-hire and ongoing equity; selected measure and percentile</td>
+<td>Modeled estimates when observations are insufficient</td>
+</tr>
+<tr>
+<td><a href="https://www.indexventures.com/optionplan/" target="_blank" rel="nofollow noopener noreferrer">Index Ventures’ OptionPlan</a></td>
+<td>Startup planning; company and geographic assumptions</td>
+<td>Tool version or access date</td>
+<td>Modeled guidance, not observed percentiles</td>
+<td>Planning tool, not market data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="check-data-quality-and-dates" tabindex="-1">Check Data Quality and Dates</h3>
+<p>For every source, record publication and observation dates, confidence level, collection method, sample size, and exclusion rules. Sample size, participation, and job matching still affect results.</p>
+<p>Add an award type field to distinguish initial grants, refresh grants, total vested equity, and total unvested equity. If a cohort is too small, broaden one filter at a time and flag the uncertainty. <strong>Keep the original figure beside every normalized calculation.</strong></p>
+<h3 id="convert-grants-into-comparable-measures" tabindex="-1">Convert Grants Into Comparable Measures</h3>
+<p>Calculate <strong>ownership percentage = grant shares ÷ fully diluted shares outstanding × 100</strong>. Use the same definition of fully diluted shares in every row.</p>
+<p>Keep ownership, underlying-share value, option fair value, and potential proceeds in separate fields. If you annualize a multiyear grant, keep the full-grant measure too, and document the period used.</p>
+<blockquote>
+<p>Example: 12,000 options on 12,000,000 fully diluted shares equals 0.10% ownership.</p>
+</blockquote>
+<p>Do not use preferred financing prices as common-stock value.</p>
+<h3 id="record-valuation-and-grant-terms" tabindex="-1">Record Valuation and Grant Terms</h3>
+<p>Record the grant date, issuer, share count, strike price, vesting, expiration, post-termination window, repurchase rights, and ISO/NSO treatment.</p>
+<p>To support grant pricing, attach the 409A date, common-stock fair market value (FMV), provider, and report reference. Generally, update the valuation at least every 12 months - and sooner after a financing, acquisition offer, major business change, or material change in financial condition. Confirm requirements with valuation professionals and current <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="nofollow noopener noreferrer">IRS</a> guidance.</p>
+<p>Use these standardized fields as inputs for role-based grant ranges.</p>
+<h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="mucker-growth-series-compensation-benchmarks-for-early-stage-startups" tabindex="-1" class="sb h2-sbb-cls"><a href="https://mucker.com/blog/compensation-benchmarks-early-stage-startups-from-carta/" target="_blank" rel="nofollow noopener noreferrer">Mucker Growth Series</a>: Compensation Benchmarks for Early Stage Startups</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/1KzMYLMINlk" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h2 id="step-2-set-grant-ranges-by-role" tabindex="-1" class="sb h2-sbb-cls">Step 2: Set Grant Ranges by Role</h2>
+<p>Turn the standardized grant data from Step 1 into role-based ranges using market benchmarks. Build a grant matrix by <strong>function, level, responsibility, company stage, and hiring cohort</strong>. Keep founder ownership, executive awards, early-hire grants, and later-hire grants separate. Carry over the standardized source, date, share count, and vesting fields from Step 1 so each range can be traced to its source.</p>
+<h3 id="choose-target-percentiles-and-adjustment-rules" tabindex="-1">Choose Target Percentiles and Adjustment Rules</h3>
+<p>Start at the <strong>50th percentile</strong>, then set clear rules for moving up or down. Match responsibilities, not titles. Scarce skills, broader authority, mission-critical roles, or cash pay well below market may warrant more equity. Narrower scope, stronger cash pay, or a lower-cost location may warrant less.</p>
+<p>Apply your location policy consistently. Require a written reason for urgency premiums, and have finance review the cost before the CEO or compensation committee approves them.</p>
+<h3 id="compare-cash-and-equity-packages" tabindex="-1">Compare Cash and Equity Packages</h3>
+<p>Compare the full package - not equity alone. Show salary, bonus, award type, ownership percentage, vesting, exercise price if applicable, and tax treatment. <strong>Illiquid equity does not replace salary dollar for dollar</strong>. It may never produce a return.</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Hiring objective</th>
+<th>Retention use</th>
+<th>Near-term cash cost</th>
+<th>Dilution impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lower cash / higher equity</td>
+<td>Early-stage or cash-constrained hiring for candidates willing to take greater risk</td>
+<td>Can strengthen long-term alignment, but only if the candidate understands the risk and stays engaged</td>
+<td>Lowest</td>
+<td>Highest</td>
+</tr>
+<tr>
+<td>Market cash / market equity</td>
+<td>Companies seeking a balanced, repeatable compensation policy</td>
+<td>Balances near-term certainty with long-term participation</td>
+<td>Moderate</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td>Higher cash / lower equity</td>
+<td>Later-stage hiring, risk-sensitive candidates, or roles with strong cash-market benchmarks</td>
+<td>Can improve offer acceptance and reduce reliance on uncertain equity value</td>
+<td>Highest</td>
+<td>Lowest</td>
+</tr>
+</tbody>
+</table>
+<h3 id="set-rules-for-initial-and-follow-on-grants" tabindex="-1">Set Rules for Initial and Follow-On Grants</h3>
+<p>Define who qualifies for an initial grant based on role level, employment status, and expected contribution. Specify when the grant will be approved and communicated - for example, within <strong>30 days of the start date</strong>. Keep the offer date separate from the formal grant date.</p>
+<p>Set a review schedule and triggers for follow-on grants. These may include promotion, expanded responsibilities, sustained high performance, material retention risk, or a grant renewal cycle after a specified portion of the original award has vested. Benchmark promotion awards against the new role, but account for existing unvested holdings rather than automatically adding a full new-hire grant.</p>
+<p>Before approving a grant, compare it with current employees’ scope, cash pay, original awards, and remaining unvested equity. Flag <strong>compression</strong> when a new hire receives nearly as much or more equity than a similarly situated employee who joined earlier. Flag <strong>inversion</strong> when a less senior employee receives more without a defensible reason.</p>
+<p>Compare total awards and vesting schedules. Do not treat a multiyear initial grant as a follow-on award. Address gaps through targeted reviews rather than automatic matching, and assess the effect on the equity pool.</p>
+<p>Use these ranges as the input for dilution modeling and approval in Step 3.</p>
+<h2 id="step-3-model-dilution-and-approve-grants" tabindex="-1" class="sb h2-sbb-cls">Step 3: Model Dilution and Approve Grants</h2>
+<p>Once role-based ranges are set, model how each proposed grant affects the cap table before approving it.</p>
+<p>Test each grant against the latest cap table, hiring forecast, and cash budget. Use your cap-table system to track ownership and run scenarios, but <strong>check every calculation against source documents</strong>. Before using the results for approvals, reconcile them with signed agreements, board consents, financing documents, and the stock ledger.</p>
+<h3 id="model-pool-changes-and-future-financing" tabindex="-1">Model Pool Changes and Future Financing</h3>
+<p>Use the same fully diluted share count defined above. Run at least three scenarios: the proposed grant alone, the grant plus planned hiring, and the grant plus hiring and the next financing.</p>
+<p>A grant from a reserve already included in that count generally reduces the remaining pool without increasing fully diluted shares. Expanding the pool increases the count. Financing can also dilute holders by adding new investor shares.</p>
+<p>Follow the term sheet’s order for conversions and pool increases. A pre-money pool increase generally puts more dilution on existing holders; a post-financing increase dilutes investors too.</p>
+<p>Forecast initial, promotion, and retention grants over <strong>12–18 months</strong>. Factor in expected cancellations and document when the reserve would run out.</p>
+<h3 id="compare-grant-sizes-and-confirm-approvals" tabindex="-1">Compare Grant Sizes and Confirm Approvals</h3>
+<p>Larger grants give employees more potential upside and may help retention. But they also use more of the pool, leaving fewer shares for future hires.</p>
+<p>If the modeled grant fits the pool and hiring plan, move it into formal approval.</p>
+<p><strong>Approval checklist - complete before treating the grant as final:</strong></p>
+<ul>
+<li>[ ] Confirm that the equity incentive plan authorizes the award type, recipient, available shares, and administrator.</li>
+<li>[ ] Obtain board approval for the grant and any pool increase, plus shareholder approval where required by the plan, charter, financing documents, applicable law, or award type.</li>
+<li>[ ] Document fair market value (FMV) and set the exercise price using the latest valuation.</li>
+<li>[ ] Confirm vesting, cliff, acceleration, expiration, post-termination exercise, and repurchase terms.</li>
+<li>[ ] Have counsel confirm federal and state securities compliance, including applicable Rule 701 requirements.</li>
+<li>[ ] Deliver the grant notice, agreement, plan, and tax forms.</li>
+<li>[ ] Retain executed documents and reconcile the cap-table entry with the stock ledger, board minutes, and legal records.</li>
+</ul>
+<h3 id="arrange-financial-tax-and-legal-review" tabindex="-1">Arrange Financial, Tax, and Legal Review</h3>
+<p>After sizing the grant, send it through legal, tax, and finance review. <strong>Complete all reviews before issuance.</strong></p>
+<p>Counsel should review the plan documents, approvals, securities-law compliance, award documents, state requirements, and special terms. A tax adviser should check ISO versus NSO treatment, withholding, early-exercise elections, and recipient-specific issues.</p>
+<p>Finance or accounting should review compensation expense, cash requirements, exercise proceeds, payroll treatment, and effects on financial statements. The cap-table administrator should verify share availability, vesting, and records.</p>
+<p><a href="https://www.lucid.now">Lucid Financials</a> can support this work with bookkeeping, tax, cash forecasting, and investor-ready reporting. It does not provide equity benchmark data, legal advice, cap-table administration, or independent equity valuations.</p>
+<h2 id="step-4-explain-grants-and-review-benchmarks" tabindex="-1" class="sb h2-sbb-cls">Step 4: Explain Grants and Review Benchmarks</h2>
+<p>After approval, give candidates a standard grant summary and explain the tradeoffs in plain language.</p>
+<h3 id="explain-ownership-costs-and-risks" tabindex="-1">Explain Ownership, Costs, and Risks</h3>
+<p>Use the same <strong>one-page equity summary</strong> for every candidate. Include the award type, share count, ownership percentage, fully diluted share count and date, vesting, cliff, expiration, and exercise or settlement terms. Add the exercise price when it applies. Label the offer <strong>proposed and subject to approval</strong>. Show how the grant compares with your role-based range.</p>
+<p>Be clear about employee costs and risks. Exercising options requires cash and may also involve taxes and fees. Private shares may not be sellable until a tender offer, acquisition, IPO, or permitted transaction. Keep common-stock fair market value separate from the latest preferred-stock valuation. Neither represents guaranteed proceeds.</p>
+<p>Explain what happens when employment ends, including forfeiture and the deadline for exercising vested options. NSO exercise usually creates ordinary income on the spread; ISO exercise can trigger AMT. Direct candidates to a tax adviser, and don't promise after-tax value.</p>
+<p>Use candidate questions and acceptance patterns to check whether your benchmark ranges still hold.</p>
+<h3 id="schedule-reviews-and-track-policy-exceptions" tabindex="-1">Schedule Reviews and Track Policy Exceptions</h3>
+<p>Use offer results to refine the benchmark - not to override it one offer at a time.</p>
+<p><strong>Review hiring outcomes and pool usage quarterly; reset benchmarks during annual compensation planning.</strong> Recheck after financing, major valuation changes, acquisition talks, hiring-plan changes, or labor-market shifts. For each source, record its date, filters, role level, geography, award type, unit, percentile, and rationale.</p>
+<p>Keep a dated exception log that records the standard range, requested change, approved terms, business reason, approver, and pool impact. Review exceptions to see whether ranges are too high, too low, or applied inconsistently.</p>
+<p>Track acceptance, equity-related declines, refresh grants, retention, and exceptions by role and level. Treat these measures as signals, not proof that your offers compete well. Follow up on acceptance and turnover patterns with updated market data and candidate feedback.</p>
+<h2 id="conclusion-document-your-benchmarking-process" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Document Your Benchmarking Process</h2>
+<p>Once you’ve set ranges, modeled dilution, and approved grants, <strong>document the process in one dated benchmarking file</strong>. Link the worksheet, grant matrix, pool forecast, dilution model, and approval file. Include a definitions sheet covering USD, base salary versus target cash, award type, valuation date, and fully diluted share basis.</p>
+<p>Make every grant traceable - from market data and the chosen range to its expected pool impact, approval trail, and the grant terms shown to employees. Keep valuation support, board consents, and signed grant agreements together in the benchmarking file.</p>
+<p>Save earlier versions, and record who changed each assumption and why. This audit trail speeds up future benchmarking and makes the decisions easier to support.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-benchmark-equity-with-limited-market-data" tabindex="-1" data-faq-q>How do I benchmark equity with limited market data?</h3>
+<p>Start with an accurate, <strong>fully diluted cap table</strong> that includes all issued shares, options, warrants, and convertible instruments. Use modeling tools to test funding rounds and option pool sizes, then compare the scenarios with available industry benchmarks. Work backward from target ownership percentages to set acceptable dilution limits.</p>
+<p>Keep equity records in sync with payroll and legal systems to reduce errors and give you a sound basis for negotiations.</p>
+<h3 id="what-if-competitive-grants-exceed-my-equity-pool" tabindex="-1" data-faq-q>What if competitive grants exceed my equity pool?</h3>
+<p>If competitive grants exceed your equity pool, <strong>manage your cap table carefully to limit dilution</strong>. You can expand your option pool in future funding rounds based on your growth plans and valuations. Use <a href="https://www.lucid.now/">Lucid Financials</a> to model dilution scenarios before committing to new grants.</p>
+<p>If issuing shares would cause too much dilution, consider <strong>phantom equity</strong>. It tracks growth in value without issuing shares or changing your cap table.</p>
+<h3 id="how-do-liquidation-preferences-affect-employee-payouts" tabindex="-1" data-faq-q>How do liquidation preferences affect employee payouts?</h3>
+<p>Liquidation preferences set the order for dividing proceeds when a company exits. <strong>Investors with preferred stock get paid according to their preference terms first.</strong> Employees, who typically hold common stock, receive a share of whatever remains. If the exit value is low, employees may receive much less - or nothing at all.</p>
+<p>Exit waterfall analyses model these scenarios so stakeholders can see how the terms could affect their final payouts.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6ad40cfedf911b15a02d6566"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I benchmark equity with limited market data?","acceptedAnswer":{"@type":"Answer","text":"Start with an accurate, fully diluted cap table that includes all issued shares, options, warrants, and convertible instruments. Use modeling tools to test funding rounds and option pool sizes, then compare the scenarios with available industry benchmarks. Work backward from target ownership percentages to set acceptable dilution limits. Keep equity records in sync with payroll and legal systems to reduce errors and give you a sound basis for negotiations."}},{"@type":"Question","name":"What if competitive grants exceed my equity pool?","acceptedAnswer":{"@type":"Answer","text":"If competitive grants exceed your equity pool, manage your cap table carefully to limit dilution. You can expand your option pool in future funding rounds based on your growth plans and valuations. Use Lucid Financials to model dilution scenarios before committing to new grants. If issuing shares would cause too much dilution, consider phantom equity. It tracks growth in value without issuing shares or changing your cap table."}},{"@type":"Question","name":"How do liquidation preferences affect employee payouts?","acceptedAnswer":{"@type":"Answer","text":"Liquidation preferences set the order for dividing proceeds when a company exits. Investors with preferred stock get paid according to their preference terms first. Employees, who typically hold common stock, receive a share of whatever remains. If the exit value is low, employees may receive much less - or nothing at all. Exit waterfall analyses model these scenarios so stakeholders can see how the terms could affect their final payouts."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Pre-Money vs Post-Money: Investor Perspective - Lucid</title>
+<meta name="description" content="How pre- vs post-money valuation affects investor ownership, dilution, SAFEs, convertible notes, option-pool timing, and exit modeling."/>
+<link rel="canonical" href="https://www.lucid.now/blog/pre-money-vs-post-money-investor-perspective/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Pre-Money vs Post-Money: Investor Perspective"/>
+<meta property="og:description" content="How pre- vs post-money valuation affects investor ownership, dilution, SAFEs, convertible notes, option-pool timing, and exit modeling."/>
+<meta property="og:url" content="https://www.lucid.now/blog/pre-money-vs-post-money-investor-perspective/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a372b292902db05ecd78773-1782002855168.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Pre-Money vs Post-Money: Investor Perspective"/>
+<meta name="twitter:description" content="How pre- vs post-money valuation affects investor ownership, dilution, SAFEs, convertible notes, option-pool timing, and exit modeling."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a372b292902db05ecd78773-1782002855168.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Pre-Money vs Post-Money: Investor Perspective", "description": "How pre- vs post-money valuation affects investor ownership, dilution, SAFEs, convertible notes, option-pool timing, and exit modeling.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a372b292902db05ecd78773-1782002855168.jpg", "datePublished": "2026-06-21T00:47:35.168Z", "dateModified": "2026-06-21T00:47:35.168Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/pre-money-vs-post-money-investor-perspective/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Pre-Money vs Post-Money: Investor Perspective</h1>
+<div class="article-meta"><time datetime="2026-06-21T00:47:35.168Z">June 21, 2026</time> &middot; 9 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6a372b292902db05ecd78773-1782002855168.jpg" alt="Pre-Money vs Post-Money: Investor Perspective" loading="eager" />
+<div class="article-body">
+<p><strong>A valuation label can change investor ownership by several points in the same deal.</strong> If I invest <strong>$2,000,000</strong>, I get <strong>16.67%</strong> at a <strong>$10,000,000 pre-money</strong> valuation, but <strong>20.00%</strong> at a <strong>$10,000,000 post-money</strong> valuation.</p>
+<p>Here’s the short version:</p>
+<ul>
+<li><strong>Pre-money</strong> = company value <strong>before</strong> new cash goes in</li>
+<li><strong>Post-money</strong> = company value <strong>after</strong> new cash goes in</li>
+<li><strong>Investor ownership</strong> = <strong>investment ÷ post-money valuation</strong></li>
+<li><strong>Fully diluted shares</strong> matter because options, SAFEs, and notes can cut the stake I think I’m buying</li>
+<li><strong>Option pool timing</strong> changes who takes dilution</li>
+<li><strong>Post-money SAFEs</strong> lock ownership at signing; <strong>pre-money SAFEs</strong> do not</li>
+<li><strong>Convertible notes</strong> depend on caps, discounts, interest, and the priced round math</li>
+<li>Investors also model <strong>future dilution</strong>, <strong>next-round step-ups</strong>, and <strong>exit returns</strong></li>
+</ul>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6a372b292902db05ecd78773-1782002388451.jpg" alt="Pre-Money vs Post-Money Valuation: Investor Ownership Breakdown" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Pre-Money vs Post-Money Valuation: Investor Ownership Breakdown</p>
+</figcaption></figure><h2 id="venture-capital-valuation-explained-pre-money-vs-post-money" tabindex="-1" class="sb h2-sbb-cls">Venture Capital Valuation Explained: Pre-Money vs Post-Money</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/Hywr5nJzloI" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="quick-comparison" tabindex="-1" class="sb h2-sbb-cls">Quick Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Pre-Money</th>
+<th>Post-Money</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Timing</td>
+<td>Before new investment</td>
+<td>After new investment</td>
+</tr>
+<tr>
+<td>Ownership effect</td>
+<td>Final stake depends on post-round math</td>
+<td>Final stake is shown more directly</td>
+</tr>
+<tr>
+<td>Common negotiation focus</td>
+<td>Price</td>
+<td>Ownership %</td>
+</tr>
+<tr>
+<td>SAFE impact</td>
+<td>Ownership can move as more SAFEs are added</td>
+<td>Ownership is fixed at signing</td>
+</tr>
+<tr>
+<td>Founder dilution visibility</td>
+<td>Can look lighter at first</td>
+<td>Easier to see end result</td>
+</tr>
+</tbody>
+</table>
+<p>I’d sum it up like this: <em>the label matters less than the math</em>. If I don’t check the post-money value, the fully diluted share count, SAFE and note conversions, and any pre-close option pool increase, I can misread the deal from day one.</p>
+<h2 id="core-definitions-and-the-basic-math" tabindex="-1" class="sb h2-sbb-cls">Core Definitions and the Basic Math</h2>
+<p>Once the terms are clear, the next step is simple: <strong>how does valuation turn into ownership?</strong></p>
+<h3 id="pre-money-valuation-vs-post-money-valuation-what-each-term-means" tabindex="-1">Pre-Money Valuation vs Post-Money Valuation: What Each Term Means</h3>
+<p>Pre-money valuation is the company's value <strong>before</strong> new capital goes in. Post-money valuation is the company's value <strong>after</strong> the round closes, with that new capital included.</p>
+<p>That difference matters a lot. For an investor, it shapes ownership, dilution risk, and upside from the minute the check clears.</p>
+<h3 id="how-investors-calculate-ownership-from-valuation-and-check-size" tabindex="-1">How Investors Calculate Ownership from Valuation and Check Size</h3>
+<p>Most of the deal math comes down to four formulas:</p>
+<table>
+<thead>
+<tr>
+<th>Calculation Goal</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Post-Money Valuation</strong></td>
+<td>Pre-Money Valuation + Investment Amount</td>
+</tr>
+<tr>
+<td><strong>Pre-Money Valuation</strong></td>
+<td>Post-Money Valuation − Investment Amount</td>
+</tr>
+<tr>
+<td><strong>Investor Ownership %</strong></td>
+<td>Investment Amount ÷ Post-Money Valuation</td>
+</tr>
+<tr>
+<td><strong>Price Per Share</strong></td>
+<td>Pre-Money Valuation ÷ Pre-Money Fully Diluted Shares</td>
+</tr>
+</tbody>
+</table>
+<p>The key shortcut is this: <strong>investor ownership = check size ÷ post-money valuation</strong>.</p>
+<p>A simple example helps. <a href="https://en.wikipedia.org/wiki/Airbnb" target="_blank" rel="nofollow noopener noreferrer">Airbnb</a>'s 2017 Series F closed at a <strong>$30.3 billion post-money valuation</strong> after a <strong>$1 billion raise</strong> on a <strong>$29.3 billion pre-money valuation</strong>.</p>
+<p>But that ownership number only means something once you know the full share count.</p>
+<h3 id="why-fully-diluted-share-counts-matter" tabindex="-1">Why Fully Diluted Share Counts Matter</h3>
+<p>Investors don't measure ownership against only the shares already issued. They use the <strong>fully diluted share count</strong> - that means every share that could exist if all options, warrants, SAFEs, and convertible notes were exercised or converted.</p>
+<p>Why does that matter? Because more fully diluted shares mean:</p>
+<ul>
+<li>A lower price per share</li>
+<li>More shares issued for the same check</li>
+</ul>
+<p>So hidden dilution changes what the investor is <strong>actually</strong> buying. That's why the cap table needs to be complete before anyone argues about valuation. If the cap table is missing pieces, the ownership math is off.</p>
+<p>With the cap table set, the next step is to look at how that ownership moves as round terms change.</p>
+<h2 id="how-valuation-levels-affect-investor-ownership-and-founder-dilution" tabindex="-1" class="sb h2-sbb-cls">How Valuation Levels Affect Investor Ownership and Founder Dilution</h2>
+<p>Once the math is clear, the next step is simple: <strong>how much of the company does the same check actually buy?</strong> That answer changes fast when the valuation changes.</p>
+<h3 id="higher-vs-lower-pre-money-valuation-at-the-same-check-size" tabindex="-1">Higher vs Lower Pre-Money Valuation at the Same Check Size</h3>
+<p>At a fixed check size, pre-money valuation directly affects ownership. Here’s what that looks like with a <strong>$2 million</strong> investment:</p>
+<table>
+<thead>
+<tr>
+<th>Valuation Level</th>
+<th>Pre-Money Valuation</th>
+<th>Post-Money Valuation</th>
+<th>Investor Ownership %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Higher</strong></td>
+<td>$10,000,000</td>
+<td>$12,000,000</td>
+<td>16.7%</td>
+</tr>
+<tr>
+<td><strong>Lower</strong></td>
+<td>$8,000,000</td>
+<td>$10,000,000</td>
+<td>20.0%</td>
+</tr>
+</tbody>
+</table>
+<p>Same $2 million check. Different valuation. Different outcome.</p>
+<p>At a <strong>$10 million</strong> pre-money, the investor ends up with <strong>16.7%</strong>. At an <strong>$8 million</strong> pre-money, that same investor gets <strong>20.0%</strong>. Lower valuation means the investor buys more of the company, which means founders give up more.</p>
+<p>One detail people often miss is the <strong>option pool increase</strong>. If the option pool expands before closing, the dilution usually falls on founders and existing holders, which lowers the effective pre-money for them.</p>
+<p>That’s not just a technical cap table point. Even a small option pool change can shift who takes the dilution hit.</p>
+<h3 id="how-post-money-valuation-sets-the-final-ownership-outcome" tabindex="-1">How Post-Money Valuation Sets the Final Ownership Outcome</h3>
+<p>Post-money valuation shows the investor’s final ownership percentage after the round.</p>
+<p>That’s why post-money framing can feel more direct. It locks in the investor’s end stake, so term sheets are often easier to compare side by side. Instead of arguing only about price, both sides can see the ownership result in plain terms.</p>
+<h3 id="how-valuation-framing-shifts-negotiation-dynamics" tabindex="-1">How Valuation Framing Shifts Negotiation Dynamics</h3>
+<p>Because ownership is fixed in different ways under each approach, the negotiation changes too.</p>
+<p>With <strong>pre-money</strong> framing, the back-and-forth usually centers on price. With <strong>post-money</strong> framing, the focus shifts to the investor’s exact ownership percentage. That may sound like a small wording change, but it can change leverage in the room.</p>
+<p>So before debating other terms, make sure the framing is clear. If that piece is fuzzy, the rest of the discussion can drift fast.</p>
+<p>Those effects get more complicated once SAFEs, notes, and pool adjustments enter the round.</p>
+<h2 id="safes-notes-option-pools-and-other-adjustments-investors-watch" tabindex="-1" class="sb h2-sbb-cls">SAFEs, Notes, Option Pools, and Other Adjustments Investors Watch</h2>
+<h3 id="pre-money-safes-vs-post-money-safes" tabindex="-1">Pre-Money SAFEs vs Post-Money SAFEs</h3>
+<p>For investors, the big issue is simple: <strong>does this instrument lock in ownership now, or does it leave the final stake up in the air until the priced round?</strong></p>
+<p>With a <strong>post-money SAFE</strong>, the math is direct. Ownership equals the investment amount divided by the post-money cap. So a $1,000,000 investment on a $10,000,000 post-money cap locks in <strong>10% ownership</strong> at signing.</p>
+<p>A <strong>pre-money SAFE</strong> works differently. The final ownership stake floats because each new pre-money SAFE changes dilution for everyone. That makes the end result harder to predict and much harder to model cleanly.</p>
+<table>
+<thead>
+<tr>
+<th>SAFE Type</th>
+<th>Ownership Certainty</th>
+<th>Dilution Impact</th>
+<th>Modeling Ease</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pre-Money SAFE</strong></td>
+<td>Floats until the priced round </td>
+<td>Shared across founders and all SAFE holders </td>
+<td>Complex; requires a full waterfall calculation </td>
+</tr>
+<tr>
+<td><strong>Post-Money SAFE</strong></td>
+<td>Locked at signing </td>
+<td>Founders absorb all dilution from subsequent SAFEs </td>
+<td>Simple: Ownership = Investment ÷ Post-Money Cap </td>
+</tr>
+</tbody>
+</table>
+<p>That one difference changes who takes the dilution hit.</p>
+<h3 id="how-convertible-notes-affect-valuation-at-conversion" tabindex="-1">How Convertible Notes Affect Valuation at Conversion</h3>
+<p>Convertible notes add another moving part. Ownership depends on both the note terms and what happens in the priced round.</p>
+<p>Most notes carry an interest rate of about <strong>8% per year</strong> and a maturity date of <strong>12 to 24 months</strong>. They also often include a <strong>discount</strong>, usually <strong>20% off</strong> the priced round price, plus a <strong>valuation cap</strong>.</p>
+<p>At conversion, the investor gets whichever leads to the lower share price: the cap-based price or the discounted price. Because most convertible notes use a pre-money valuation cap, the investor's final ownership percentage stays unknown until the company calculates the full converting share count at the priced round.</p>
+<h3 id="option-pool-expansion-before-or-after-the-round" tabindex="-1">Option Pool Expansion Before or After the Round</h3>
+<p>Option pool timing matters because it decides <strong>who gets diluted</strong>.</p>
+<p>If the pool expands before the round closes, new investors price the deal using the larger share count. That means the extra dilution lands on existing holders. Investors usually check whether the quoted pre-money valuation already includes that pool increase, because a pre-close expansion lowers the effective pre-money valuation used to price the round.</p>
+<p>That's why pool timing is often one of the first things investors test in the cap table.</p>
+<h2 id="investor-modeling-forecasting-and-the-bottom-line" tabindex="-1" class="sb h2-sbb-cls">Investor Modeling, Forecasting, and the Bottom Line</h2>
+<h3 id="how-investors-model-future-rounds-dilution-and-exit-returns" tabindex="-1">How Investors Model Future Rounds, Dilution, and Exit Returns</h3>
+<p>After a round closes, the conversation shifts from price to dilution. Once the post-money valuation is set, investors start modeling what their stake looks like after future rounds - and what it might be worth at exit.</p>
+<p>A common approach is the VC Method. Investors estimate the company’s exit value 5–7 years down the road, discount that value by their target IRR, and then work backward to find the highest entry valuation they can justify. So a <strong>$20 million post-money</strong> seed valuation needs a clear path to a <strong>$500 million+ exit</strong> just to produce a 25x gross return.</p>
+<p>And that math doesn’t stand on its own. It also has to line up with the next fundraise. With median seed pre-money sitting around <strong>$16 million</strong> and a median Seed-to-Series A step-up of about <strong>2.8x</strong>, investors are backing a much steeper hurdle for the next round.</p>
+<p>They also run downside cases. If things don’t go to plan, anti-dilution terms can change ownership in a big way and reshape incentives across the cap table.</p>
+<h3 id="what-financial-data-makes-a-valuation-easier-to-defend" tabindex="-1">What Financial Data Makes a Valuation Easier to Defend</h3>
+<p>To support that forecast, investors want operating data - not just a good story. A valuation is only as strong as the numbers behind it. That usually means close attention to ARR growth, gross margin, burn multiple, CAC, LTV, and a reconciled cap table that accounts for every SAFE, note, warrant, and option.</p>
+<p><a href="https://www.lucid.now/">Lucid Financials</a> helps founders keep clean books, get real-time Slack answers, and maintain investor-ready reporting.</p>
+<h3 id="conclusion-the-ownership-math-matters-more-than-the-label" tabindex="-1">Conclusion: The Ownership Math Matters More Than the Label</h3>
+<p>Bottom line: investors care less about the label and more about the ownership math. They also need clean data to back it up. SAFEs, convertible notes, option pool timing, and anti-dilution provisions all sit on top of that core math, and each one can shift ownership in a material way. That’s why the cap table and the financial model matter just as much as the headline valuation.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-verify-my-true-ownership-after-dilution" tabindex="-1" data-faq-q>How do I verify my true ownership after dilution?</h3>
+<p>Look past your first check and work out your ownership on a <strong>fully diluted</strong> basis. That means tying your cap table back to <strong>all</strong> issued shares, outstanding options, warrants, and convertible securities like SAFEs.</p>
+<p>With post-money structures, the investor’s percentage is set up front. So when new shares get issued or an option pool grows, <strong>your stake usually takes the hit directly</strong>. That’s why clean, up-to-date records matter so much. In the end, your legal documents - not the pitch deck - are what decide your ownership.</p>
+<h3 id="when-does-a-pre-money-safe-become-riskier-for-investors" tabindex="-1" data-faq-q>When does a pre-money SAFE become riskier for investors?</h3>
+<p>A pre-money SAFE gets riskier when a company keeps stacking more SAFEs or other convertible instruments before a priced round.</p>
+<p>Here’s the issue: the conversion price is based on the company’s capitalization <strong>before</strong> the new money comes in. So when later SAFEs are added, they can dilute people who invested through earlier pre-money SAFEs.</p>
+<p>That means your final ownership stake - and what your return might look like - can stay unclear until the future priced round finally sets the cap table.</p>
+<h3 id="should-an-option-pool-be-added-before-or-after-a-round" tabindex="-1" data-faq-q>Should an option pool be added before or after a round?</h3>
+<p>This is a key negotiation point. People often call it the <strong>option pool shuffle</strong>.</p>
+<p>In most venture capital deals, investors want the option pool set up or expanded <strong>before</strong> the round closes, as part of the pre-money valuation.</p>
+<p>That timing matters a lot.</p>
+<p>If the pool is included pre-money, only existing stockholders take the dilution. If the pool is added after closing, the dilution is spread across all stockholders, including the new investors.</p>
+<p>A simple rule of thumb: size the pool based on a realistic <strong>12- to 18-month hiring plan</strong>. Don’t pick a number out of thin air. Tie it to the hires you expect to make and the equity you’ll likely need to offer.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6a372b292902db05ecd78773"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I verify my true ownership after dilution?","acceptedAnswer":{"@type":"Answer","text":"Look past your first check and work out your ownership on a fully diluted basis. That means tying your cap table back to all issued shares, outstanding options, warrants, and convertible securities like SAFEs. With post-money structures, the investor’s percentage is set up front. So when new shares get issued or an option pool grows, your stake usually takes the hit directly. That’s why clean, up-to-date records matter so much. In the end, your legal documents - not the pitch deck - are what decide your ownership."}},{"@type":"Question","name":"When does a pre-money SAFE become riskier for investors?","acceptedAnswer":{"@type":"Answer","text":"A pre-money SAFE gets riskier when a company keeps stacking more SAFEs or other convertible instruments before a priced round. Here’s the issue: the conversion price is based on the company’s capitalization before the new money comes in. So when later SAFEs are added, they can dilute people who invested through earlier pre-money SAFEs. That means your final ownership stake - and what your return might look like - can stay unclear until the future priced round finally sets the cap table."}},{"@type":"Question","name":"Should an option pool be added before or after a round?","acceptedAnswer":{"@type":"Answer","text":"This is a key negotiation point. People often call it the option pool shuffle. In most venture capital deals, investors want the option pool set up or expanded before the round closes, as part of the pre-money valuation. That timing matters a lot. If the pool is included pre-money, only existing stockholders take the dilution. If the pool is added after closing, the dilution is spread across all stockholders, including the new investors. A simple rule of thumb: size the pool based on a realistic 12- to 18-month hiring plan. Don’t pick a number out of thin air. Tie it to the hires you expect to make and the equity you’ll likely need to offer."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>

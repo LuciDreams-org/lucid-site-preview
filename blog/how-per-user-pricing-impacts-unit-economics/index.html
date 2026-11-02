@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How Per-User Pricing Impacts Unit Economics - Lucid</title>
+<meta name="description" content="Explore how per-user pricing affects key SaaS metrics like CAC, CLV, and churn, and learn strategies to optimize unit economics for growth."/>
+<link rel="canonical" href="https://www.lucid.now/blog/how-per-user-pricing-impacts-unit-economics/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How Per-User Pricing Impacts Unit Economics"/>
+<meta property="og:description" content="Explore how per-user pricing affects key SaaS metrics like CAC, CLV, and churn, and learn strategies to optimize unit economics for growth."/>
+<meta property="og:url" content="https://www.lucid.now/blog/how-per-user-pricing-impacts-unit-economics/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/67edd73debbb9dc806407bff-1743646055845.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How Per-User Pricing Impacts Unit Economics"/>
+<meta name="twitter:description" content="Explore how per-user pricing affects key SaaS metrics like CAC, CLV, and churn, and learn strategies to optimize unit economics for growth."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/67edd73debbb9dc806407bff-1743646055845.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021506"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How Per-User Pricing Impacts Unit Economics", "description": "Explore how per-user pricing affects key SaaS metrics like CAC, CLV, and churn, and learn strategies to optimize unit economics for growth.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/67edd73debbb9dc806407bff-1743646055845.jpg", "datePublished": "2025-04-03T02:07:35.845Z", "dateModified": "2025-04-03T02:07:35.845Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/how-per-user-pricing-impacts-unit-economics/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms.html">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security.html">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog.html">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">How Per-User Pricing Impacts Unit Economics</h1>
+<div class="article-meta"><time datetime="2025-04-03T02:07:35.845Z">April 3, 2025</time> &middot; 5 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/67edd73debbb9dc806407bff-1743646055845.jpg" alt="How Per-User Pricing Impacts Unit Economics" loading="eager" />
+<div class="article-body">
+<p><strong>Per-user pricing directly ties your revenue to the number of users, making it easier to scale as teams grow.</strong> It impacts key SaaS metrics like Customer Acquisition Cost (CAC), Customer Lifetime Value (CLV), and churn rates. Here's a quick breakdown of its effects:</p>
+<ul>
+<li><strong>Revenue Predictability</strong>: Revenue grows alongside customer team expansion, simplifying forecasting.</li>
+<li><strong>CAC</strong>: Smaller initial contracts lower upfront costs, while user growth increases revenue over time.</li>
+<li><strong>CLV</strong>: Adding users boosts lifetime value and improves renewal rates.</li>
+<li><strong>Churn</strong>: Flexible user adjustments reduce cancellations, and larger user bases increase retention.</li>
+</ul>
+<p>While this model offers predictable growth, it may limit pricing flexibility for smaller teams. To optimize unit economics, SaaS companies can use financial tools to analyze user behavior, adjust pricing tiers, and track metrics like engagement and revenue trends.</p>
+<h2 id="episode-32-leveraging-pricing-as-a-saas-growth-strategy" tabindex="-1" class="sb h2-sbb-cls">Episode 32 - Leveraging Pricing as a SaaS Growth Strategy ...</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/OT39JUcvdvM" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h2 id="per-user-pricing-impact-on-key-metrics" tabindex="-1" class="sb h2-sbb-cls">Per-User Pricing Impact on Key Metrics</h2>
+<p>Per-user pricing changes how businesses evaluate <a href="https://www.lucid.now/blog/essential-metrics/">key metrics</a> by tying revenue directly to user growth. Here's how this pricing model shapes core performance indicators.</p>
+<h3 id="customer-acquisition-cost-cac" tabindex="-1">Customer Acquisition Cost (CAC)</h3>
+<p>With per-user pricing, initial contracts tend to be smaller but grow over time. This approach can lower CAC as revenue naturally increases with user expansion. Sales teams can focus their efforts on deals that show strong growth potential, aligning acquisition efforts with long-term goals.</p>
+<p>Additionally, as the user base grows, so does customer lifetime value, creating a more sustainable revenue model.</p>
+<h3 id="customer-lifetime-value-clv" tabindex="-1">Customer Lifetime Value (CLV)</h3>
+<p>When organizations add users, CLV increases predictably, allowing for more accurate revenue forecasting. Pricing based on actual usage often helps customers feel more confident about their spending, making renewals more consistent and easier to secure.</p>
+<h3 id="impact-on-customer-churn" tabindex="-1">Impact on Customer Churn</h3>
+<p>This pricing model offers several ways to manage churn more effectively:</p>
+<ul>
+<li>Keep track of individual user engagement to address potential issues early.</li>
+<li>Allow flexible adjustments to user counts, reducing the likelihood of full cancellations.</li>
+<li>Expanding the user base increases switching costs, improving retention.</li>
+</ul>
+<p>To get the most out of per-user pricing, companies should identify opportunities for early growth, track user engagement closely, and provide proactive support as customers scale. Tools like <a href="https://www.lucid.now/">Lucid Financials</a> can help businesses monitor these metrics and model growth scenarios based on user adoption, making it easier to refine and optimize pricing strategies.</p>
+<h6 id="sbb-itb-17e8ec9" tabindex="-1" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6>
+<h2 id="per-user-pricing-benefits-and-drawbacks" tabindex="-1" class="sb h2-sbb-cls">Per-User Pricing: Benefits and Drawbacks</h2>
+<p>Per-user pricing ties revenue directly to the number of users, offering predictable income that grows as teams expand. This model makes it easy to project earnings and scale alongside user growth.</p>
+<h3 id="per-user-pricing-comparison-table" tabindex="-1">Per-User Pricing Comparison Table</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Benefits</th>
+<th>Drawbacks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revenue Predictability &amp; Growth</td>
+<td>• Revenue increases with user adoption  <br>• Simplifies forecasting  <br>• Easy to scale with growth</td>
+<td>• Less flexibility for pricing smaller teams</td>
+</tr>
+</tbody>
+</table>
+<p>This table highlights how per-user pricing impacts financial strategies. Tools like Lucid Financials can assist organizations in evaluating pricing scenarios and their effects on revenue. By modeling adjustments in per-user pricing, finance teams can make informed decisions to fine-tune their pricing approach.</p>
+<h2 id="improving-unit-economics-with-per-user-pricing" tabindex="-1" class="sb h2-sbb-cls">Improving Unit Economics with Per-User Pricing</h2>
+<h3 id="adjusting-your-pricing-strategy" tabindex="-1">Adjusting Your Pricing Strategy</h3>
+<p>Fine-tune per-user pricing by tailoring strategies to fit different customer segments and usage habits. Study how adoption varies by team size and consider offering discounts at specific user thresholds to maintain profitability.</p>
+<p>Here’s an example of a tier-based pricing model:</p>
+<ul>
+<li><strong>Small teams (1-10 users):</strong> Charge a higher per-user rate to offset fixed costs.</li>
+<li><strong>Mid-size teams (11-50 users):</strong> Introduce moderate discounts for increased affordability.</li>
+<li><strong>Large teams (50+ users):</strong> Offer custom enterprise pricing, including perks like dedicated support.</li>
+</ul>
+<p>To justify premium pricing in higher tiers, include extras such as advanced analytics, priority customer support, or custom integrations. Once this pricing structure is in place, financial planning tools can turn these adjustments into actionable forecasts.</p>
+<h3 id="leveraging-ai-in-financial-planning" tabindex="-1">Leveraging AI in Financial Planning</h3>
+<p>With pricing updates in motion, advanced financial tools can take your unit economics to the next level. Platforms like Lucid Financials provide real-time tracking and optimization by simulating pricing scenarios and predicting their effects. Using metrics like CAC, CLV, and churn, these tools refine pricing strategies for better results.</p>
+<p>Key capabilities of <a href="https://www.lucid.now/blog/ai-fueling-startup-growth/">AI-powered financial tools</a> include:</p>
+<ul>
+<li><strong>Monitoring adoption trends</strong> across pricing tiers.</li>
+<li><strong>Forecasting revenue changes</strong> based on pricing updates.</li>
+<li><strong>Tracking revenue growth</strong> from customer upsells.</li>
+<li><strong>Defining optimal discount levels</strong> for various segments.</li>
+</ul>
+<p>When rolling out pricing changes, rely on data-driven insights to:</p>
+<ul>
+<li>Assess customer usage trends.</li>
+<li>Pinpoint price-sensitive groups.</li>
+<li>Measure how demand shifts with pricing changes.</li>
+<li>Decide the best timing for adjustments.</li>
+</ul>
+<p>These steps ensure your pricing aligns with customer behavior and maximizes profitability.</p>
+<h2 id="next-steps-for-saas-companies" tabindex="-1" class="sb h2-sbb-cls">Next Steps for SaaS Companies</h2>
+<h3 id="key-effects-overview" tabindex="-1">Key Effects Overview</h3>
+<p>Switching to per-user pricing can significantly influence your business metrics. While it often boosts average revenue per user (ARPU) as teams expand, it may also make customers more sensitive to price changes. A well-thought-out rollout plan is crucial to manage these shifts effectively.</p>
+<p>This pricing model affects revenue predictability, customer acquisition costs, churn risk, and opportunities for revenue growth. To navigate these changes, follow a structured approach to refine your pricing strategy.</p>
+<h3 id="implementation-steps" tabindex="-1">Implementation Steps</h3>
+<p>Start with a gradual rollout, prioritizing new customers while preparing transition plans for your existing clients. Here’s how to proceed:</p>
+<ol>
+<li><strong>Analyze Current Usage Patterns</strong></li>
+</ol>
+<p>Take a deep dive into your customer data. Look at metrics like average team size, user growth trends, feature usage, and current revenue per user within different customer groups.</p>
+<ol start="2">
+<li><strong>Develop Pricing Tiers</strong></li>
+</ol>
+<p>Use your analysis to create pricing tiers that meet diverse customer needs. For example:</p>
+<ul>
+<li>Offer discounts for larger teams</li>
+<li>Include savings options for annual commitments</li>
+<li>Differentiate features across pricing levels</li>
+<li>Tailor custom solutions for enterprise clients</li>
+</ul>
+<ol start="3">
+<li><strong>Set Up Tracking Systems</strong></li>
+</ol>
+<p>Put systems in place to monitor key metrics and customer behavior. Tools like Lucid Financials can help with:</p>
+<ul>
+<li>Real-time revenue tracking</li>
+<li>Identifying customer expansion trends</li>
+<li>Spotting potential churn triggers</li>
+<li>Predicting growth under various scenarios</li>
+</ul>
+<ol start="4">
+<li><strong>Plan Customer Communication</strong></li>
+</ol>
+<p>Build a solid communication strategy to explain the switch to per-user pricing. Focus on clarity and benefits, and include:</p>
+<ul>
+<li>Advance notice of pricing updates</li>
+<li>Options to grandfather existing customers into current pricing</li>
+<li>Detailed explanations of added value and features</li>
+<li>Support from account management teams to ease the transition</li>
+</ul>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=67edd73debbb9dc806407bff"></script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow.html">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization.html">Categorization</a></li><li><a href="/platform-reconciliation.html">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice.html">Terms of Service</a></li><li><a href="/sla.html">Service Level Agreement</a></li><li><a href="/privacy-policy.html">Privacy Policy</a></li><li><a href="/data-processing-addendum.html">Data Processing Addendum</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021506" defer></script></body></html>
