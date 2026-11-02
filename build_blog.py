@@ -214,20 +214,84 @@ def render_article(a):
 {FOOTER}
 <script src="/script.js?v={ASSET_VER}" defer></script></body></html>"""
 
-def render_listing(articles):
-    cards = []
-    for a in articles:
-        cat = (a.get("category") or {}).get("title") if isinstance(a.get("category"), dict) else "Insights"
-        snippet = (a.get("metaDescription") or "").strip()
-        if len(snippet) > 150:
-            snippet = snippet[:147].rstrip() + "..."
-        cards.append(
-            f'<a class="blog-card" href="/blog/{esc(a["slug"])}/">'
-            f'<span class="tag">{esc(cat or "Insights")}</span>'
-            f'<h3>{esc(a.get("headline") or a["slug"])}</h3>'
-            f'<p>{esc(snippet)}</p></a>'
-        )
-    return "\n".join(cards)
+def _cat(a):
+    c = a.get("category")
+    return (c.get("title") if isinstance(c, dict) else None) or "Insights"
+
+def _excerpt(a, n=150):
+    s = (a.get("metaDescription") or "").strip()
+    return (s[:n - 3].rstrip() + "...") if len(s) > n else s
+
+def card_img(url, w, h):
+    """Rewrite a SEObot cdn-cgi/image URL to a smaller, card-sized variant
+    (their CDN resizes on the fly) so the listing loads light thumbnails."""
+    if not url:
+        return ""
+    return re.sub(r"/cdn-cgi/image/[^/]+/", f"/cdn-cgi/image/quality=68,w={w},h={h},fit=cover/", url)
+
+def _meta_row(a):
+    bits = []
+    d = fmt_date(a.get("publishedAt") or a.get("createdAt"))
+    if d:
+        bits.append(f'<time datetime="{esc(a.get("publishedAt") or "")}">{esc(d)}</time>')
+    if a.get("readingTime"):
+        bits.append(f'{int(a["readingTime"])} min read')
+    return " &middot; ".join(bits)
+
+def render_card(a):
+    img = card_img(a.get("image"), 600, 375)
+    thumb = (f'<img class="bc-img" src="{esc(img)}" alt="{esc(a.get("headline") or "")}" '
+             f'loading="lazy" width="600" height="375" />'
+             if img else '<div class="bc-img bc-img-ph" aria-hidden="true"></div>')
+    return (
+        f'<a class="blog-card" href="/blog/{esc(a["slug"])}/" '
+        f'data-cat="{esc(_cat(a).lower())}" data-title="{esc((a.get("headline") or "").lower())}">'
+        f'{thumb}<div class="bc-body">'
+        f'<span class="bc-cat">{esc(_cat(a))}</span>'
+        f'<h3>{esc(a.get("headline") or a["slug"])}</h3>'
+        f'<p>{esc(_excerpt(a))}</p>'
+        f'<div class="bc-meta">{_meta_row(a)}</div></div></a>'
+    )
+
+def render_featured(a):
+    img = card_img(a.get("image"), 900, 600)
+    style = f" style=\"background-image:url('{esc(img)}')\"" if img else ""
+    return (
+        f'<a class="blog-featured" href="/blog/{esc(a["slug"])}/">'
+        f'<div class="bf-img{"" if img else " bc-img-ph"}"{style}></div>'
+        f'<div class="bf-body"><span class="bc-cat">Featured &middot; {esc(_cat(a))}</span>'
+        f'<h2>{esc(a.get("headline") or a["slug"])}</h2>'
+        f'<p>{esc(_excerpt(a, 230))}</p>'
+        f'<div class="bf-foot"><span class="bc-meta">{_meta_row(a)}</span>'
+        f'<span class="bc-readmore">Read article &rarr;</span></div></div></a>'
+    )
+
+def render_main(articles):
+    from collections import Counter
+    featured, rest = articles[0], articles[1:]
+    top = [c for c, _ in Counter(_cat(a) for a in articles).most_common(7)]
+    tabs = ['<button type="button" class="blog-tab active" data-cat="all">All</button>']
+    tabs += [f'<button type="button" class="blog-tab" data-cat="{esc(c.lower())}">{esc(c)}</button>' for c in top]
+    cards = "\n".join(render_card(a) for a in rest)
+    return (
+        '<main id="main">\n'
+        '<section class="hero plat-hero blog-head"><div class="wrap center" style="max-width:760px;">'
+        '<span class="eyebrow">The Lucid Blog</span><h1>Financial insights for <span class="grad">medical practices</span></h1>'
+        '<p class="hero-sub" style="margin:0 auto;">Practical guidance on bookkeeping, taxes, tax credits, and growth for practice owners.</p></div></section>\n'
+        f'<section class="blog-featured-sec"><div class="wrap">{render_featured(featured)}</div></section>\n'
+        '<section class="blog-controls-sec"><div class="wrap"><div class="blog-controls">'
+        f'<div class="blog-tabs" id="blogTabs">{"".join(tabs)}</div>'
+        '<input type="search" id="blogSearch" class="blog-search" placeholder="Search articles..." aria-label="Search articles" />'
+        '</div></div></section>\n'
+        '<section style="padding-top:4px;"><div class="wrap"><h2 class="sr-only">All articles</h2>'
+        f'<div class="blog-grid" id="blogGrid">\n{cards}\n</div>'
+        '<p class="blog-noresults" id="blogNoResults" hidden>No articles match your search.</p></div></section>\n'
+        '<section class="blog-cta-sec"><div class="wrap"><div class="blog-cta">'
+        '<h2>Spend less time on the books, more on patients</h2>'
+        '<p>AI-powered bookkeeping, taxes, tax credits, and CFO services built for medical &amp; private practices.</p>'
+        '<a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div></div></section>\n'
+        '</main>'
+    )
 
 # -------------------------------------------------------------------- writers
 
@@ -243,10 +307,10 @@ def update_listing(articles):
     path = os.path.join(ROOT, "blog.html")
     with open(path, encoding="utf-8") as f:
         html_doc = f.read()
-    new_grid = f'<div class="blog-grid">\n{render_listing(articles)}\n</div>'
-    html_doc, n = re.subn(r'<div class="blog-grid">.*?</div>', new_grid, html_doc, count=1, flags=re.DOTALL)
+    new_main = render_main(articles)
+    html_doc, n = re.subn(r'<main id="main">.*?</main>', lambda m: new_main, html_doc, count=1, flags=re.DOTALL)
     if n != 1:
-        raise SystemExit("ERROR: could not locate <div class=\"blog-grid\"> in blog.html")
+        raise SystemExit("ERROR: could not locate <main id=\"main\"> in blog.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(html_doc)
 

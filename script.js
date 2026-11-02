@@ -33,6 +33,38 @@ document.documentElement.classList.add('js');
   window.addEventListener('scroll', onScroll, { passive: true });
 })();
 
+/* ---------- Blog index: category filter + search (client-side) ---------- */
+(function () {
+  var grid = document.getElementById('blogGrid');
+  if (!grid) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.blog-card'));
+  var tabs = document.getElementById('blogTabs');
+  var search = document.getElementById('blogSearch');
+  var noResults = document.getElementById('blogNoResults');
+  var cat = 'all', q = '';
+  function apply() {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var okCat = cat === 'all' || c.getAttribute('data-cat') === cat;
+      var okQ = !q || (c.getAttribute('data-title') || '').indexOf(q) !== -1;
+      var show = okCat && okQ;
+      c.style.display = show ? '' : 'none';
+      if (show) shown++;
+    });
+    if (noResults) noResults.hidden = shown !== 0;
+  }
+  if (tabs) tabs.addEventListener('click', function (e) {
+    var b = e.target.closest('.blog-tab');
+    if (!b) return;
+    cat = b.getAttribute('data-cat');
+    tabs.querySelectorAll('.blog-tab').forEach(function (t) { t.classList.toggle('active', t === b); });
+    apply();
+  });
+  if (search) search.addEventListener('input', function () {
+    q = search.value.trim().toLowerCase(); apply();
+  });
+})();
+
 /* ---------- Reveal on scroll (respects reduced-motion) ---------- */
 (function () {
   var els = document.querySelectorAll('.reveal');
