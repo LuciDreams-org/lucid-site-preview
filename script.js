@@ -450,16 +450,16 @@ function lucidTrackEvent(name, data) {
     var generatedCta = pascal(page) + sec + act;
     var qs = location.search ? location.search.replace(/^\?/, '&') : '';
     var existingHref = a.getAttribute('href') || '';
-    // CTAs that already hardcode a contact.lucid.now destination (their own ?cta= id)
-    // keep that href and label as-is - only auto-generate+rewrite for everything else.
+    // CTAs that already hardcode a contact.lucid.now destination keep their own
+    // ?cta= id; everything else gets an auto-generated one. Either way, append the
+    // visitor's query string (utm_*, fbclid, hsa_*) so campaign attribution carries
+    // through to the contact/Zellify funnel - otherwise hardcoded CTAs lose it.
     var alreadyWired = existingHref.indexOf('https://contact.lucid.now/') === 0;
-    var href = alreadyWired ? existingHref : (BASE + generatedCta + qs);
+    var href = (alreadyWired ? existingHref : (BASE + generatedCta)) + qs;
     var ctaMatch = alreadyWired && href.match(/[?&]cta=([^&]+)/);
     var cta = ctaMatch ? decodeURIComponent(ctaMatch[1]) : generatedCta;
-    if (!alreadyWired) {
-      a.setAttribute('href', href);
-      a.setAttribute('rel', 'noopener');
-    }
+    a.setAttribute('href', href);
+    a.setAttribute('rel', 'noopener');
     a.__ctaWired = true;
     a.__ctaData = { text: a.textContent.trim(), sec: sec, act: act, cta: cta, href: href };
     return a.__ctaData;
