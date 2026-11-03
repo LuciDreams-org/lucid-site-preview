@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Short-Term vs. Long-Term Equity: Vesting Schedules Explained - Lucid</title>
+<meta name="description" content="Match vesting to role and results—compare 12–24 month vs multi‑year equity schedules, cliffs, milestones, taxes, and exit terms."/>
+<link rel="canonical" href="https://www.lucid.now/blog/short-term-vs-long-term-equity-vesting-schedules/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Short-Term vs. Long-Term Equity: Vesting Schedules Explained"/>
+<meta property="og:description" content="Match vesting to role and results—compare 12–24 month vs multi‑year equity schedules, cliffs, milestones, taxes, and exit terms."/>
+<meta property="og:url" content="https://www.lucid.now/blog/short-term-vs-long-term-equity-vesting-schedules/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae924f5f0eee09effb283c1-1793665980209.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Short-Term vs. Long-Term Equity: Vesting Schedules Explained"/>
+<meta name="twitter:description" content="Match vesting to role and results—compare 12–24 month vs multi‑year equity schedules, cliffs, milestones, taxes, and exit terms."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae924f5f0eee09effb283c1-1793665980209.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611021808"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Short-Term vs. Long-Term Equity: Vesting Schedules Explained", "description": "Match vesting to role and results\u2014compare 12\u201324 month vs multi\u2011year equity schedules, cliffs, milestones, taxes, and exit terms.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae924f5f0eee09effb283c1-1793665980209.jpg", "datePublished": "2026-11-03T00:33:00.209Z", "dateModified": "2026-11-03T00:33:00.209Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/short-term-vs-long-term-equity-vesting-schedules/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Short-Term vs. Long-Term Equity: Vesting Schedules Explained</h1>
+<div class="article-meta"><time datetime="2026-11-03T00:33:00.209Z">November 3, 2026</time> &middot; 8 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6ae924f5f0eee09effb283c1-1793665980209.jpg" alt="Short-Term vs. Long-Term Equity: Vesting Schedules Explained" loading="eager" />
+<div class="article-body">
+<p><strong>I’d choose 12–24-month vesting for a short assignment and three years or more for a longer service commitment.</strong> Neither schedule guarantees results or retention - and vesting doesn’t always mean you own shares or receive cash.</p>
+<p>My starting point: decide <em>what earns the award</em>. Time-based vesting rewards service, milestone-based vesting rewards defined results, and hybrid vesting combines the two. Then check ownership eligibility, taxes, payment timing, departure terms, accounting costs, and dilution before issuing it.</p>
+<p><strong>Quick Comparison</strong></p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Short-term vesting</th>
+<th>Long-term vesting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typical duration</td>
+<td>12–24 months</td>
+<td>3–4 years</td>
+</tr>
+<tr>
+<td>Cliff</td>
+<td>None or a short cliff, such as 3–6 months</td>
+<td>Often 12 months</td>
+</tr>
+<tr>
+<td>Installments</td>
+<td>Usually monthly or quarterly</td>
+<td>Usually monthly or quarterly after the cliff</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Unvested incentive ends sooner</td>
+<td>Keeps unvested value tied to service longer</td>
+</tr>
+<tr>
+<td>Administration</td>
+<td>Shorter tracking period</td>
+<td>More years of tracking</td>
+</tr>
+<tr>
+<td>Main risk</td>
+<td>Incentive ends before lasting value develops</td>
+<td>Less appeal to employees expecting a short stay</td>
+</tr>
+</tbody>
+</table>
+<p>For perspective, a 1,200-unit award could be <strong>100% vested after two years</strong> on a two-year schedule, versus <strong>50%</strong> on a four-year schedule. &lt;u&gt;That changes when rights are earned - not necessarily when shares or cash arrive.&lt;/u&gt;</p>
+<h2 id="vesting-schedules-explained-how-startup-equity-works-or-employee-stock-options-guide" tabindex="-1" class="sb h2-sbb-cls">Vesting Schedules Explained: How Startup Equity Works | Employee Stock Options Guide</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/x4cBmmts8t4" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="short-term-vs-long-term-time-based-vesting" tabindex="-1" class="sb h2-sbb-cls">Short-Term vs. Long-Term Time-Based Vesting</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6ae924f5f0eee09effb283c1-1793665581706.jpg" alt="2-Year vs. 4-Year Vesting: 1,200 Units Compared" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">2-Year vs. 4-Year Vesting: 1,200 Units Compared</p>
+</figcaption></figure><p><strong>Time-based vesting rewards continued service, not results.</strong> Milestone and hybrid awards add performance conditions, and the agreement sets the exact terms. This distinction shapes the installment schedule, cliff, retention period, and when value is earned.</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Short-term vesting</th>
+<th>Long-term vesting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Duration</td>
+<td>Typically 12–24 months</td>
+<td>Typically 3–4 years</td>
+</tr>
+<tr>
+<td>Cliff</td>
+<td>None, or a short cliff such as 3–6 months</td>
+<td>Often 12 months</td>
+</tr>
+<tr>
+<td>Installments</td>
+<td>Monthly or quarterly; larger portions may vest earlier or later</td>
+<td>Usually monthly or quarterly after the cliff</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Employees earn value sooner, but the incentive also ends sooner</td>
+<td>Ties unvested value to continued service for longer</td>
+</tr>
+<tr>
+<td>Administration</td>
+<td>Less time to track, but installment and departure records still need to be precise</td>
+<td>Requires longer tracking of installments, departures, amendments, and expiration</td>
+</tr>
+<tr>
+<td>Main risks</td>
+<td>Weaker retention after full vesting; less time to link rewards to lasting value</td>
+<td>Less appeal for short-tenure employees; more exposure to changes in company value or role</td>
+</tr>
+</tbody>
+</table>
+<p>Longer vesting can spread issuance or exercise across more years, but <strong>it doesn't reduce total dilution</strong>. Model dilution using the instrument, share reserve, and fully diluted share count.</p>
+<p>How the schedule works in practice depends on both the grant size and the vesting period.</p>
+<h3 id="short-term-vesting-12-24-month-examples" tabindex="-1">Short-Term Vesting: 12–24-Month Examples</h3>
+<blockquote>
+<p>A shorter schedule fits an interim executive, a fixed-term assignment, or a short retention need. Monthly or quarterly vesting creates predictable earning; a short cliff delays the first vested installment.</p>
+</blockquote>
+<h3 id="long-term-vesting-multi-year-schedules" tabindex="-1">Long-Term Vesting: Multi-Year Schedules</h3>
+<blockquote>
+<p>A common startup pattern is four-year vesting with a one-year cliff, then monthly or quarterly vesting. It supports longer continuity, but may appeal less to someone expecting a short tenure.</p>
+</blockquote>
+<h3 id="example-1200-units-over-2-vs-4-years" tabindex="-1">Example: 1,200 Units Over 2 vs. 4 Years</h3>
+<blockquote>
+<p><strong>Hypothetical comparison:</strong> Assume continued service, no acceleration, and forfeiture of unvested units upon departure. The two-year award vests 50 units monthly without a cliff. The four-year award vests 300 units at month 12, then 25 monthly through month 48. These are vested units - not necessarily exercisable options, issued shares, or cash payments - and remain subject to the agreement.</p>
+<p>The shorter schedule delivers value earlier; the longer one holds more value back for retention.</p>
+<table>
+<thead>
+<tr>
+<th>Completed service</th>
+<th>Two-year award: vested units</th>
+<th>Four-year award: vested units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Month 6</td>
+<td>300</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Month 12</td>
+<td>600</td>
+<td>300</td>
+</tr>
+<tr>
+<td>Month 24</td>
+<td>1,200</td>
+<td>600</td>
+</tr>
+<tr>
+<td>Month 36</td>
+<td>1,200</td>
+<td>900</td>
+</tr>
+<tr>
+<td>Month 48</td>
+<td>1,200</td>
+<td>1,200</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Once the schedule is set, the next question is whether the award fits the entity, tax, and accounting rules.</p>
+<h2 id="time-based-vs-milestone-based-vs-hybrid-vesting" tabindex="-1" class="sb h2-sbb-cls">Time-Based vs. Milestone-Based vs. Hybrid Vesting</h2>
+<p><strong>Vesting length and vesting conditions are separate choices.</strong> A short-term grant can depend on milestones, while a long-term grant can depend on service. The same 12–24-month or multi-year schedule can use service, milestones, or both.</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Time-based</th>
+<th>Milestone-based</th>
+<th>Hybrid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Control</td>
+<td>Service is clear; company events remain outside employee control</td>
+<td>Higher for individual deliverables; lower for company-wide results</td>
+<td>Depends on the service and performance mix</td>
+</tr>
+<tr>
+<td>Tracking</td>
+<td>Low</td>
+<td>Medium to high</td>
+<td>High: tracks both service and performance</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Incentive lasts through the service period</td>
+<td>May encourage short-term results</td>
+<td>Can reward both continuity and results</td>
+</tr>
+<tr>
+<td>Administrative complexity</td>
+<td>Low</td>
+<td>High</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Best fit</td>
+<td>Predictable service requirements</td>
+<td>Objectively measurable outcomes</td>
+<td>Continuity and execution both matter</td>
+</tr>
+</tbody>
+</table>
+<p>If the employee can't control the outcome, add objective adjustment rules or a service-based fallback.</p>
+<h3 id="milestone-vesting-set-measurable-goals" tabindex="-1">Milestone Vesting: Set Measurable Goals</h3>
+<p><strong>Separate deliverables from business results.</strong> For financial milestones, spell out the baseline, target, measurement period, metric source, and accounting basis.</p>
+<p>Decide upfront how the payout works: threshold-based scaling, all-or-nothing vesting, or forfeiture if the target is missed.</p>
+<h3 id="hybrid-vesting-combine-service-and-results" tabindex="-1">Hybrid Vesting: Combine Service and Results</h3>
+<p>Make clear whether the award requires <strong>both service and performance conditions</strong> or uses <strong>separate service and performance tranches</strong>. For combined conditions, set a deadline for meeting both. For separate tranches, specify whether failure to meet one affects the other.</p>
+<p>Once you've chosen the vesting type, make sure the agreement matches the entity, tax, and accounting rules.</p>
+<h2 id="tax-legal-and-accounting-requirements" tabindex="-1" class="sb h2-sbb-cls">Tax, Legal, and Accounting Requirements</h2>
+<p>Once the vesting schedule is set, check it against tax, legal, and accounting rules. <strong>Vesting length does not determine tax treatment; the award terms, issuer, and recipient status do.</strong> Review the plan and related agreements. Confirm authorized equity, board approvals, valuation support, and securities-law compliance. Make sure award terms, ownership rights, and reporting and withholding duties line up across plan, award, tax, and payroll records.</p>
+<h3 id="check-ownership-eligibility-and-entity-rules" tabindex="-1">Check Ownership Eligibility and Entity Rules</h3>
+<p>Identify the issuing entity, then check ownership restrictions and recipient eligibility before approving the grant. <strong>Phantom equity and MSO structures still need counsel review; neither bypasses ownership rules.</strong></p>
+<h3 id="review-tax-events-and-election-deadlines" tabindex="-1">Review Tax Events and Election Deadlines</h3>
+<p>Restricted property generally creates taxable compensation at vesting unless a valid <strong>Section 83(b) election</strong> shifts taxation to the transfer date. File an eligible election <strong>within 30 days after the property transfer</strong> and keep proof of filing. This election does not apply to RSUs.</p>
+<p>Check upfront taxes and available cash before making the election: tax paid may be lost if the shares are later forfeited. Nonqualified options generally create ordinary income at exercise, while RSUs generally create ordinary income at settlement. Incentive stock options follow separate rules, including potential alternative minimum tax.</p>
+<p>Track withholding and settlement deadlines. Have deferred-payment features reviewed for <strong>Section 409A</strong> compliance, including relevant phantom-equity arrangements.</p>
+<p>Next, spell out what happens if the recipient leaves or the company is sold.</p>
+<h3 id="define-departure-and-change-in-control-terms" tabindex="-1">Define Departure and Change-in-Control Terms</h3>
+<p>Set termination, acceleration, repurchase, exercise, and payout rules for each exit event: resignation, dismissal, death, disability, retirement, employment transfer, or sale. Address forfeiture, treatment of vested awards, repurchase pricing, option exercise windows, and expiration.</p>
+<p><strong>Single-trigger acceleration</strong> depends on the transaction itself. <strong>Double-trigger acceleration</strong> generally requires both a transaction and a qualifying termination. Neither happens automatically.</p>
+<p>Define “cause,” “good reason,” and “change in control.” Specify whether awards will be assumed, replaced, paid out, or canceled. For performance awards, explain how goals will be measured, whether awards will be prorated, and what adjustments apply after departure or sale.</p>
+<h3 id="forecast-compensation-expense-cash-costs-and-dilution" tabindex="-1">Forecast Compensation Expense, Cash Costs, and Dilution</h3>
+<p>Model vesting, forfeitures, exercises or settlements, compensation expense, cash needs, and dilution separately. Under ASC 718, equity-classified awards generally use grant-date fair value, with expense recognized over the requisite service period. <strong>Expense does not always match the month of vesting.</strong> Liability-classified awards may require remeasurement, while cash-settled awards can create payment obligations without issuing shares.</p>
+<p>At each close, reconcile award, valuation, payroll, equity, and general-ledger records. Assign expense, liabilities, and ownership to the correct entity, and support consolidated reporting where applicable.</p>
+<h2 id="conclusion-choose-a-schedule-for-the-role-and-entity" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Choose a Schedule for the Role and Entity</h2>
+<p>Compare vesting length, performance conditions, and compliance limits. Then choose a schedule that fits the role and entity.</p>
+<p><strong>Match the schedule to the role and the value created - not just how long you want someone to stay.</strong> Add performance conditions only when the recipient controls the outcome and the company can verify the results.</p>
+<p>Use the table below to find the simplest schedule that fits the work.</p>
+<table>
+<thead>
+<tr>
+<th>Schedule</th>
+<th>Time horizon</th>
+<th>Result alignment</th>
+<th>Admin load</th>
+<th>Main risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shorter time-based</td>
+<td>Shorter</td>
+<td>Limited; rewards continued service</td>
+<td>Low</td>
+<td>Vesting ends before lasting value is created</td>
+</tr>
+<tr>
+<td>Longer time-based</td>
+<td>Longer</td>
+<td>Limited without performance conditions</td>
+<td>Low to moderate</td>
+<td>Continued service does not guarantee results</td>
+</tr>
+<tr>
+<td>Milestone-based</td>
+<td>Short- or long-term</td>
+<td>High with clear goals the recipient controls</td>
+<td>Moderate to high</td>
+<td>Unclear goals or goals that depend on outside factors cause disputes</td>
+</tr>
+<tr>
+<td>Hybrid</td>
+<td>Short- or long-term</td>
+<td>Balances service and results</td>
+<td>Moderate to high</td>
+<td>Overlapping conditions become hard to explain and track</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Set milestone and hybrid duration around the work, not the label.</strong> Put in writing who measures results, how partial achievement counts, and what happens if priorities change.</p>
+<p>Before issuing awards, confirm ownership eligibility and available equity pool capacity. Document the award, exit, and change-in-control terms. Model value, expense, cash, and dilution under downside, base, and upside cases. Then get legal and tax review and provide written instructions for any required elections and deadlines.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="can-i-negotiate-my-equity-vesting-schedule" tabindex="-1" data-faq-q>Can I negotiate my equity vesting schedule?</h3>
+<p>Many U.S. startups use <strong>four-year vesting with a one-year cliff</strong>, but you may be able to negotiate the terms based on your role and contribution. Senior and executive roles may offer more room to negotiate performance-based triggers or acceleration provisions.</p>
+<p>Startups often follow role-based policies to keep exceptions consistent. Make sure any agreed-upon changes appear in your <strong>formal grant agreement</strong> and match company policy.</p>
+<h3 id="can-my-company-change-my-vesting-terms-after-a-grant" tabindex="-1" data-faq-q>Can my company change my vesting terms after a grant?</h3>
+<p>Vesting terms are usually set when a grant is issued, based on your equity agreement and company plan documents. Companies may change grant sizes or issue additional grants, but they typically <strong>don’t change an existing grant’s vesting schedule</strong>.</p>
+<p>Exceptions require a formal, written business reason and <strong>board approval</strong>. Changing a grant can also trigger complex accounting and compliance reporting requirements under ASC 718.</p>
+<h3 id="how-should-i-compare-equity-offers-with-different-vesting-schedules" tabindex="-1" data-faq-q>How should I compare equity offers with different vesting schedules?</h3>
+<p>Compare each offer with the <strong>U.S. market standard</strong>: a 4-year vesting term, a 1-year cliff, and monthly vesting after that. Check whether vesting depends on milestones or puts more shares toward the end of the schedule. Also review whether the terms are fixed and whether the offer includes double-trigger acceleration clauses.</p>
+<p>Stock options require you to pay a <strong>strike price</strong> to exercise them; RSUs don’t. Tax timing also differs, so compare when each award may trigger taxes. Look beyond the grant size: the vesting schedule should fit how long you expect to stay and the performance goals you plan to meet.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6ae924f5f0eee09effb283c1"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I negotiate my equity vesting schedule?","acceptedAnswer":{"@type":"Answer","text":"Many U.S. startups use four-year vesting with a one-year cliff, but you may be able to negotiate the terms based on your role and contribution. Senior and executive roles may offer more room to negotiate performance-based triggers or acceleration provisions. Startups often follow role-based policies to keep exceptions consistent. Make sure any agreed-upon changes appear in your formal grant agreement and match company policy."}},{"@type":"Question","name":"Can my company change my vesting terms after a grant?","acceptedAnswer":{"@type":"Answer","text":"Vesting terms are usually set when a grant is issued, based on your equity agreement and company plan documents. Companies may change grant sizes or issue additional grants, but they typically don’t change an existing grant’s vesting schedule. Exceptions require a formal, written business reason and board approval. Changing a grant can also trigger complex accounting and compliance reporting requirements under ASC 718."}},{"@type":"Question","name":"How should I compare equity offers with different vesting schedules?","acceptedAnswer":{"@type":"Answer","text":"Compare each offer with the U.S. market standard: a 4-year vesting term, a 1-year cliff, and monthly vesting after that. Check whether vesting depends on milestones or puts more shares toward the end of the schedule. Also review whether the terms are fixed and whether the offer includes double-trigger acceleration clauses. Stock options require you to pay a strike price to exercise them; RSUs don’t. Tax timing also differs, so compare when each award may trigger taxes. Look beyond the grant size: the vesting schedule should fit how long you expect to stay and the performance goals you plan to meet."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611021808" defer></script></body></html>
