@@ -1,0 +1,421 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Contractual Adjustments vs. Patient Bad Debt - Lucid</title>
+<meta name="description" content="Clarifies how to classify unpaid patient balances as contractual adjustments, implicit price concessions, or bad debt and their accounting effects."/>
+<link rel="canonical" href="https://www.lucid.now/blog/contractual-adjustments-vs-patient-bad-debt/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Contractual Adjustments vs. Patient Bad Debt"/>
+<meta property="og:description" content="Clarifies how to classify unpaid patient balances as contractual adjustments, implicit price concessions, or bad debt and their accounting effects."/>
+<meta property="og:url" content="https://www.lucid.now/blog/contractual-adjustments-vs-patient-bad-debt/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aea7982f0eee09effb28f20-1793753223416.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Contractual Adjustments vs. Patient Bad Debt"/>
+<meta name="twitter:description" content="Clarifies how to classify unpaid patient balances as contractual adjustments, implicit price concessions, or bad debt and their accounting effects."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aea7982f0eee09effb28f20-1793753223416.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611031835"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Contractual Adjustments vs. Patient Bad Debt", "description": "Clarifies how to classify unpaid patient balances as contractual adjustments, implicit price concessions, or bad debt and their accounting effects.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aea7982f0eee09effb28f20-1793753223416.jpg", "datePublished": "2026-11-04T00:47:03.416Z", "dateModified": "2026-11-04T00:47:03.416Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/contractual-adjustments-vs-patient-bad-debt/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Contractual Adjustments vs. Patient Bad Debt</h1>
+<div class="article-meta"><time datetime="2026-11-04T00:47:03.416Z">November 4, 2026</time> &middot; 7 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6aea7982f0eee09effb28f20-1793753223416.jpg" alt="Contractual Adjustments vs. Patient Bad Debt" loading="eager" />
+<div class="article-body">
+<p><strong>I classify unpaid patient balances by why they won’t be collected - not simply because they’re unpaid.</strong> Under accrual accounting, payer-required reductions and expected price concessions reduce revenue. Credit losses on recorded receivables create an expense.</p>
+<p>A $30 shortfall can mean <strong>$30 less revenue or $30 in credit-loss expense</strong>. The difference is whether it reflects the price the practice expects to accept or a loss on an amount owed.</p>
+<p><strong>Quick Comparison</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>What causes it?</th>
+<th>Accounting treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contractual adjustment</td>
+<td>Payer terms limit the allowed amount</td>
+<td>Reduce patient service revenue</td>
+</tr>
+<tr>
+<td>Implicit price concession</td>
+<td>The practice expects to accept less than the remaining bill</td>
+<td>Reduce patient service revenue</td>
+</tr>
+<tr>
+<td>Patient bad debt</td>
+<td>A recorded receivable has a credit loss</td>
+<td>Record expense through a credit-loss allowance</td>
+</tr>
+</tbody>
+</table>
+<p>At month-end, I check payer terms, collection expectations, and credit-loss records, then reconcile each category by payer, location, and entity. &lt;u&gt;A write-off already covered by an allowance adds no expense.&lt;/u&gt; That check helps me avoid counting the same loss <em>twice</em>.</p>
+<h2 id="contractual-allowances-in-healthcare" tabindex="-1" class="sb h2-sbb-cls">Contractual allowances in healthcare</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/qIUZLQETMRM" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="contractual-adjustments-price-concessions-and-bad-debt" tabindex="-1" class="sb h2-sbb-cls">Contractual Adjustments, Price Concessions, and Bad Debt</h2>
+<p><strong>Classify each shortfall by its cause:</strong> payer terms, expected collections, or credit loss. The reason a balance remains unpaid determines the category - not the unpaid status alone.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Cause</th>
+<th>Entitlement to payment</th>
+<th>Recognition timing</th>
+<th>Supporting records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Contractual adjustment</strong></td>
+<td>Payer terms, including <a href="https://www.medicare.gov/" target="_blank" rel="nofollow noopener noreferrer">Medicare</a>, <a href="https://www.medicaid.gov/" target="_blank" rel="nofollow noopener noreferrer">Medicaid</a>, and commercial contracts</td>
+<td>No claim to the reduction amount</td>
+<td>At service or billing</td>
+<td>Patient management data, payer contracts, invoices</td>
+</tr>
+<tr>
+<td><strong>Implicit price concession</strong></td>
+<td>Business practices and historical collection patterns</td>
+<td>Revenue reflects what the practice expects to accept</td>
+<td>When revenue is first recognized</td>
+<td>Historical collection data, patient management records, invoices</td>
+</tr>
+<tr>
+<td><strong>Patient bad debt</strong></td>
+<td>Credit losses from a patient’s inability or unwillingness to pay</td>
+<td>Practice is legally entitled to the recorded receivable</td>
+<td>When collection risk becomes apparent</td>
+<td>Collection records, credit evaluations, invoices</td>
+</tr>
+</tbody>
+</table>
+<p>The table outlines the differences. The notes below explain how to apply each category.</p>
+<h3 id="contractual-adjustments-reductions-required-by-payer-terms" tabindex="-1">Contractual Adjustments: Reductions Required by Payer Terms</h3>
+<p><strong>Base the reduction on the payer’s allowed amount, not the cash received.</strong> Medicare and Medicaid payment rules, commercial payer contracts, and negotiated fee schedules set that amount. Because the practice has no claim to the reduction amount, match each contractual adjustment to the applicable payer terms.</p>
+<h3 id="implicit-price-concessions-amounts-the-practice-expects-to-accept" tabindex="-1">Implicit Price Concessions: Amounts the Practice Expects to Accept</h3>
+<p>Estimate expected collections by payer or patient class using historical collections, patient circumstances, and collection policies. After contractual reductions, record the gap between that estimate and the remaining billed amount as an implicit price concession. Update the estimate as the supporting evidence changes.</p>
+<h3 id="patient-bad-debt-credit-losses-on-recorded-receivables" tabindex="-1">Patient Bad Debt: Credit Losses on Recorded Receivables</h3>
+<p>Patient bad debt occurs when a recorded receivable later becomes uncollectible. <strong>Don’t use bad debt to account for a shortfall already reflected in revenue.</strong> Bad debt reduces net receivables and creates an expense; it does not reduce patient service revenue.</p>
+<p>An unpaid balance isn’t automatically bad debt. A denial for missing information or prior authorization may call for billing follow-up rather than a credit-loss entry. Before writing off the balance, confirm the denial reason and payment obligation, then link the entry to the invoice or payer record.</p>
+<h2 id="how-each-category-affects-financial-reports" tabindex="-1" class="sb h2-sbb-cls">How Each Category Affects Financial Reports</h2>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6aea7982f0eee09effb28f20-1793752803174.jpg" alt="Concession vs. Bad Debt: The Same $30, Different Accounting" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Concession vs. Bad Debt: The Same $30, Different Accounting</p>
+</figcaption></figure><h3 id="from-gross-charges-to-net-patient-service-revenue" tabindex="-1">From Gross Charges to Net Patient Service Revenue</h3>
+<p>How you classify a balance determines where it appears in the reports. <strong>Net patient service revenue equals gross charges minus contractual adjustments and implicit price concessions.</strong> Credit-loss expense appears below revenue; it doesn’t reduce revenue.</p>
+<p>Here’s how each entry affects revenue, expense, receivables, and net income.</p>
+<table>
+<thead>
+<tr>
+<th>Entry or event</th>
+<th>Patient service revenue</th>
+<th>Expense</th>
+<th>Net receivables</th>
+<th>Net income</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contractual adjustment</td>
+<td>Decreases</td>
+<td>No effect</td>
+<td>Decreases</td>
+<td>Decreases</td>
+</tr>
+<tr>
+<td>Implicit price concession</td>
+<td>Decreases</td>
+<td>No effect</td>
+<td>Decreases</td>
+<td>Decreases</td>
+</tr>
+<tr>
+<td>Estimate increase</td>
+<td>Decreases</td>
+<td>No effect</td>
+<td>Decreases</td>
+<td>Decreases</td>
+</tr>
+<tr>
+<td>Credit-loss provision</td>
+<td>No effect</td>
+<td>Increases</td>
+<td>Decreases</td>
+<td>Decreases</td>
+</tr>
+<tr>
+<td>Write-off against an existing credit-loss allowance</td>
+<td>No effect</td>
+<td>No effect</td>
+<td>No change</td>
+<td>No effect</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Classification changes the story, even when net receivables match.</strong> Recording a concession as bad debt overstates both revenue and credit-loss expense. It can also distort revenue-based margins.</p>
+<h3 id="recording-adjustments-allowances-and-write-offs" tabindex="-1">Recording Adjustments, Allowances, and Write-Offs</h3>
+<p>Under gross-charge accounting, contractual adjustments and concessions debit contra-revenue and credit receivables or an allowance account. Credit-loss provisions debit expense and credit an allowance.</p>
+<p>A write-off covered by an existing allowance debits that allowance and credits receivables. Gross receivables and the allowance both decrease, so <strong>net receivables stay the same</strong>.</p>
+<p>Review estimates at each reporting date using current evidence. Changes in the expected price affect revenue; changes in credit-loss estimates affect expense. Before recording a write-off, check the existing allowance so you don’t count the expense twice.</p>
+<h3 id="hypothetical-example-a-dollar1000-patient-charge" tabindex="-1">Hypothetical Example: A $1,000 Patient Charge</h3>
+<p>The same charge can produce different financial-statement results depending on whether the shortfall is a concession or a credit loss.</p>
+<blockquote>
+<p>A $1,000 charge has a $400 contractual adjustment, leaving a $600 allowed amount: $480 owed by the payer and $120 by the patient. The same $30 shortfall is a concession if the practice expected not to collect it at billing, or a credit loss if it expected to collect it and later could not.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>$30 expected concession</th>
+<th>$30 separate credit loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gross charge</td>
+<td>$1,000</td>
+<td>$1,000</td>
+</tr>
+<tr>
+<td>Contractual adjustment</td>
+<td>($400)</td>
+<td>($400)</td>
+</tr>
+<tr>
+<td>Implicit price concession</td>
+<td>($30)</td>
+<td>$0</td>
+</tr>
+<tr>
+<td><strong>Net patient service revenue</strong></td>
+<td><strong>$570</strong></td>
+<td><strong>$600</strong></td>
+</tr>
+<tr>
+<td>Credit-loss expense</td>
+<td>$0</td>
+<td>$30</td>
+</tr>
+<tr>
+<td>Net receivables</td>
+<td>$570</td>
+<td>$570</td>
+</tr>
+<tr>
+<td>Net income</td>
+<td>$570</td>
+<td>$570</td>
+</tr>
+</tbody>
+</table>
+<p>The final dollar result matches, but the revenue and expense measures do not. A later write-off of that reserved $30 adds no expense.</p>
+</blockquote>
+<h2 id="classifying-adjustments-during-the-monthly-close" tabindex="-1" class="sb h2-sbb-cls">Classifying Adjustments During the Monthly Close</h2>
+<h3 id="check-the-cause-before-posting-a-write-off" tabindex="-1">Check the Cause Before Posting a Write-Off</h3>
+<p>At month-end, classify each adjustment by checking <strong>payer terms first, expected collection second, and credit loss last</strong>. Base the decision on source documents - not billing codes. The classification determines whether the adjustment reduces revenue or creates credit-loss expense.</p>
+<table>
+<thead>
+<tr>
+<th>Supporting records</th>
+<th>Likely classification</th>
+<th>Posting treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Payer contracts and remittance advice (EOB/ERA)</td>
+<td>Contractual adjustment</td>
+<td>Reduce gross patient service revenue</td>
+</tr>
+<tr>
+<td>Patient quotes, billing estimates, and collection history</td>
+<td>Implicit price concession</td>
+<td>Adjust the transaction price and net revenue</td>
+</tr>
+<tr>
+<td>Collection notes and aging reports</td>
+<td>Credit loss</td>
+<td>Record credit-loss expense and an allowance</td>
+</tr>
+</tbody>
+</table>
+<p>Keep the supporting records and approvals with the close package.</p>
+<h3 id="reconcile-adjustments-by-payer-location-and-entity" tabindex="-1">Reconcile Adjustments by Payer, Location, and Entity</h3>
+<p>Once adjustments are classified, reconcile totals by payer, location, and entity. Use separate ledger accounts or mappings for each category. Each month, reconcile payer adjudications, patient balances, collections, write-offs, allowances, and aging to the general ledger.</p>
+<p><strong>Keep location and entity detail intact before consolidation</strong>, and reconcile inter-entity balances separately. This keeps revenue reductions separate from credit losses at both the location and entity levels.</p>
+<p>Review unusual adjustments and estimate changes by payer and patient class. Include the applicable contracts, collection analyses, reasons for changes, and approvals in the close package. Use the same classification rules across locations, but document any differences in payer terms or collection expectations.</p>
+<h3 id="review-accounting-policies-with-a-cpa" tabindex="-1">Review Accounting Policies With a CPA</h3>
+<p>Have a CPA review disputed classifications, estimate changes, and automated code mappings before close. <a href="https://www.lucid.now/">Lucid Financials</a> provides CPA-led bookkeeping and CFO support for medical practices with single- or multi-location reporting.</p>
+<h2 id="conclusion-keep-price-reductions-separate-from-credit-losses" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Keep Price Reductions Separate From Credit Losses</h2>
+<p>The close process follows one rule: payer terms determine contractual adjustments, and collection expectations determine implicit price concessions. Both reduce patient service revenue. Credit losses on recorded receivables, however, create a separate expense.</p>
+<p><strong>Writing off a receivable fully covered by an allowance changes only the balance sheet. It does not affect revenue or expense again.</strong></p>
+<p>Before month-end close, check code mappings and collection assumptions. Keep pricing reductions separate from credit losses so net patient service revenue, receivables, and bad-debt expense are reported accurately.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-distinguish-a-revised-price-concession-from-a-credit-loss" tabindex="-1" data-faq-q>How do I distinguish a revised price concession from a credit loss?</h3>
+<p>A revised <strong>price concession</strong> lowers the payment you expect to receive. It reduces recognized patient service revenue and adjusts receivables to the allowed amount.</p>
+<p>A <strong>credit loss (bad debt)</strong> is an amount you reasonably expect not to collect, typically after reviewing denials, aging balances, and collection efforts. You record it as a loss through an allowance or charge-off. This reduces receivables without retroactively changing the allowed rate.</p>
+<p>Keep charges, revenue, and cash separate.</p>
+<h3 id="how-should-i-record-payments-on-previously-written-off-balances" tabindex="-1" data-faq-q>How should I record payments on previously written-off balances?</h3>
+<p>Treat the payment as a <strong>cash collection, not new patient service revenue</strong>. Use the transaction and approval records to match the deposit to the original patient or claim balance.</p>
+<p>Reverse or adjust the write-off classification. Record the recovery in the receivable recovery or bad debt recovery/contra-expense account, and reduce the previously written-off balance. Reconcile the deposit to the ledger, supported by source records and reviewed journal documentation.</p>
+<h3 id="how-much-collection-history-do-i-need-to-estimate-price-concessions" tabindex="-1" data-faq-q>How much collection history do I need to estimate price concessions?</h3>
+<p>Reliable estimates use both collection history and current data. <strong>There’s no fixed data requirement:</strong> some predictive models may need at least 12 weeks of history or 50 invoices. Still, 12 to 24 months is recommended to account for seasonal changes.</p>
+<p>Lucid Financials pairs this history with current accounting, payroll, and bank activity to create real-time projections. These help you anticipate when payments will arrive and what concessions may be needed.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6aea7982f0eee09effb28f20"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I distinguish a revised price concession from a credit loss?","acceptedAnswer":{"@type":"Answer","text":"A revised price concession lowers the payment you expect to receive. It reduces recognized patient service revenue and adjusts receivables to the allowed amount. A credit loss (bad debt) is an amount you reasonably expect not to collect, typically after reviewing denials, aging balances, and collection efforts. You record it as a loss through an allowance or charge-off. This reduces receivables without retroactively changing the allowed rate. Keep charges, revenue, and cash separate."}},{"@type":"Question","name":"How should I record payments on previously written-off balances?","acceptedAnswer":{"@type":"Answer","text":"Treat the payment as a cash collection, not new patient service revenue. Use the transaction and approval records to match the deposit to the original patient or claim balance. Reverse or adjust the write-off classification. Record the recovery in the receivable recovery or bad debt recovery/contra-expense account, and reduce the previously written-off balance. Reconcile the deposit to the ledger, supported by source records and reviewed journal documentation."}},{"@type":"Question","name":"How much collection history do I need to estimate price concessions?","acceptedAnswer":{"@type":"Answer","text":"Reliable estimates use both collection history and current data. There’s no fixed data requirement: some predictive models may need at least 12 weeks of history or 50 invoices. Still, 12 to 24 months is recommended to account for seasonal changes. Lucid Financials pairs this history with current accounting, payroll, and bank activity to create real-time projections. These help you anticipate when payments will arrive and what concessions may be needed."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611031835" defer></script></body></html>
