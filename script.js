@@ -413,6 +413,7 @@ function lucidTrackEvent(name, data) {
   function pascal(s) { return (s || '').split(/[^A-Za-z0-9]+/).map(cap).join(''); }
   function action(txt) {
     var t = txt.trim().toLowerCase();
+    if (t.indexOf('book a call') > -1) return 'BookACall';
     if (t.indexOf('get a quote') > -1) return 'GetQuote';
     if (t.indexOf('get my free estimate') > -1) return 'GetEstimate';
     if (t.indexOf('get started') > -1) return 'GetStarted';
