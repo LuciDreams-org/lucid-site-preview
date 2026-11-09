@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    (function(w,d,s,l,i){
+      var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }, 3000);
+});
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+    }, 3000);
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  }, 3000);
+});
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Billing Vendor Handover: Who Collects Open Claims? - Lucid</title>
+<meta name="description" content="Assign one owner, one action, and one deadline for every open claim; confirm ownership, records, cash, fees, and access during handoff."/>
+<link rel="canonical" href="https://www.lucid.now/blog/billing-vendor-handover-open-claims-collection/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Billing Vendor Handover: Who Collects Open Claims?"/>
+<meta property="og:description" content="Assign one owner, one action, and one deadline for every open claim; confirm ownership, records, cash, fees, and access during handoff."/>
+<meta property="og:url" content="https://www.lucid.now/blog/billing-vendor-handover-open-claims-collection/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af113ccb3182d5f9f033c1e-1794186835764.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Billing Vendor Handover: Who Collects Open Claims?"/>
+<meta name="twitter:description" content="Assign one owner, one action, and one deadline for every open claim; confirm ownership, records, cash, fees, and access during handoff."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af113ccb3182d5f9f033c1e-1794186835764.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Billing Vendor Handover: Who Collects Open Claims?", "description": "Assign one owner, one action, and one deadline for every open claim; confirm ownership, records, cash, fees, and access during handoff.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af113ccb3182d5f9f033c1e-1794186835764.jpg", "datePublished": "2026-11-09T01:13:55.764Z", "dateModified": "2026-11-09T01:13:55.764Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/billing-vendor-handover-open-claims-collection/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Business Strategy</span>
+<h1 class="article-title">Billing Vendor Handover: Who Collects Open Claims?</h1>
+<div class="article-meta"><time datetime="2026-11-09T01:13:55.764Z">November 9, 2026</time> &middot; 9 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af113ccb3182d5f9f033c1e-1794186835764.jpg" alt="Billing Vendor Handover: Who Collects Open Claims?" loading="eager" />
+<div class="article-body">
+<p><strong>Open claims go to the team named in your contract and signed handoff - not automatically to the outgoing vendor.</strong> I recommend starting <strong>30–60 days before termination</strong> and giving every unpaid balance one owner, one next action, and one deadline.</p>
+<p>Whether your former vendor, new vendor, or practice staff handles collections, I’d confirm five things in writing:</p>
+<ul>
+<li><strong>Ownership:</strong> Set one cutover rule and get the receiving team’s acceptance.</li>
+<li><strong>Work assignments:</strong> Assign follow-up, appeals, payment posting, refunds, and credits separately.</li>
+<li><strong>Records and access:</strong> Transfer claim histories, payment files, and deadline lists, then test access.</li>
+<li><strong>Cash and fees:</strong> <a href="https://www.lucid.now/blog/how-ai-simplifies-real-time-bank-reconciliation/">Match payments to claims and bank deposits</a>, check vendor invoices, and keep accounting review separate from claim work.</li>
+<li><strong>Follow-through:</strong> Review open items weekly for the first <strong>30–60 days</strong> after handoff and track each until it closes.</li>
+</ul>
+<p>My rule: &lt;u&gt;a contract end date is not a completed handoff&lt;/u&gt;. <em>Named owners, usable records, and checked payment totals</em> are what let you finish the work.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6af113ccb3182d5f9f033c1e-1794186445396.jpg" alt="Billing Vendor Handover: Open-Claim Ownership Checklist" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Billing Vendor Handover: Open-Claim Ownership Checklist</p>
+</figcaption></figure><h2 id="billing-company-transition-what-you-need-to-know" tabindex="-1" class="sb h2-sbb-cls">Billing Company Transition – What You Need to Know!</h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/6IHHffrqaSk" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="check-the-contract-for-legacy-ar-duties" tabindex="-1" class="sb h2-sbb-cls">Check the Contract for Legacy A/R Duties</h2>
+<p>The contract determines who pursues payment on <strong><a href="https://www.lucid.now/blog/ai-accounts-receivable-startups-need-know/">legacy accounts receivable (A/R)</a></strong> - balances still open at the agreed cutover. Review the agreement, amendments, business associate agreement, and payer contracts. Have legal counsel settle unclear or disputed duties before you sign the transition plan. Then assign each legacy balance to one collection model.</p>
+<h3 id="confirm-end-dates-duties-and-data-access" tabindex="-1">Confirm End Dates, Duties, and Data Access</h3>
+<p>Check every owner and deadline on the open-claim register against the contract. Verify the notice period, termination date, final service date, and post-termination collection period. Confirm which duties continue after termination, what services cost, and when reports are due.</p>
+<p><strong>Collection responsibility doesn’t cover every task.</strong> Assign appeals, corrected claims, patient statements, refunds, credits, and late payments separately.</p>
+<p>Require usable data exports before the final service day. These should include claim histories, remittance advice, denial notes, appeal records, payment history, adjustment codes, patient statements, and audit logs. Keep read-only access in place through reconciliation and payer follow-up. Address PHI return and retention in the business associate agreement.</p>
+<h3 id="choose-who-collects-legacy-balances" tabindex="-1">Choose Who Collects Legacy Balances</h3>
+<p>Choose who handles collections and follow-up based on contract terms, staff capacity, claim history, and data access needs.</p>
+<table>
+<thead>
+<tr>
+<th>Ownership model</th>
+<th>Who works the claims</th>
+<th>Advantages</th>
+<th>Risks</th>
+<th>Fees to define</th>
+<th>Required handoff documents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outgoing-vendor runout</td>
+<td>Former billing vendor</td>
+<td>Keeps payer knowledge in place; limits disruption</td>
+<td>Declining incentives; early access cutoff</td>
+<td>Collection percentage, fixed or work-based fees, minimums</td>
+<td>Open-claim inventory, aging report, denial/appeal queue, payer correspondence, payment ledger</td>
+</tr>
+<tr>
+<td>Successor-vendor takeover</td>
+<td>New billing vendor</td>
+<td>One accountable team; integrated workflow</td>
+<td>Claim history may be lost</td>
+<td>Legacy claims included in monthly fee or billed separately</td>
+<td>Claim files, notes, remittances, payer enrollment details, work queues, authorizations</td>
+</tr>
+<tr>
+<td>Practice-managed collection</td>
+<td>Practice staff or internal revenue-cycle team</td>
+<td>Direct control over decisions, data, and patient communication</td>
+<td>Requires trained staff, payer expertise, systems, and management time</td>
+<td>Labor, software, clearinghouse, outside-collection costs</td>
+<td>Reconciled A/R ledger, access credentials, procedures, aging and denial reports</td>
+</tr>
+</tbody>
+</table>
+<p>Once you choose a model, define the cutover rule that controls ownership.</p>
+<h3 id="write-one-cutover-rule" tabindex="-1">Write One Cutover Rule</h3>
+<p>The cutover rule sets when responsibility for legacy claims moves from the outgoing team to the next owner. Record the final work date, start date, and exact cutover moment. Use <strong>one assignment rule</strong>, such as date of service or claim submission. Don’t mix it with charge entry or account assignment rules unless the contract resolves any conflict.</p>
+<p>Document the controlling rule in a signed transition amendment. Explain how it applies when a claim crosses the cutover, including claims already in appeal, new denials, rejected corrections, and payments awaiting posting. Attach the claim-level ownership list and require written acceptance so no claim loses its assigned owner during the handoff.</p>
+<h2 id="assign-claim-owners-and-transfer-the-work" tabindex="-1" class="sb h2-sbb-cls">Assign Claim Owners and Transfer the Work</h2>
+<p>Once the cutover rule is set, give each open item one owner and document the handoff. Name a <strong>practice transition lead</strong> who can make decisions about ownership, access, deadlines, and exceptions.</p>
+<p>Use a signed handoff certificate to name who handles post-termination follow-up, posts payments, and resolves exceptions. <strong>Accept an item only after the receiving team confirms</strong> it has the record, supporting documents, access, and responsibility for the next action.</p>
+<p>Include the effective date, legal entity, location, systems covered, and open-balance cutoff. Keep separate worklists for each legal entity, tax identification number, and location - even when practices share an EHR, payer contract, or bank account.</p>
+<h3 id="build-an-open-claim-ownership-list" tabindex="-1">Build an Open-Claim Ownership List</h3>
+<p>The ownership list should cover unbilled charges; unpaid claims marked rejected, pending, or returned; denials and appeals; underpaid and secondary claims; patient balances; refunds and credits; unapplied cash; and items waiting for authorization, records, corrections, or payer research.</p>
+<p>For each item, record:</p>
+<ul>
+<li><strong>Claim and account details:</strong> Patient or account identifier, date of service, payer, claim number, billed amount, payments received, contractual adjustments, and remaining balance.</li>
+<li><strong>Work and ownership details:</strong> Current status, next action, filing or appeal deadline, assigned owner, support contact, proof of completion, collection-fee treatment, and links to supporting records.</li>
+</ul>
+<p>Add an aging category, such as 0–30, 31–60, 61–90, or more than 90 days. Flag high-dollar, time-sensitive, and legally disputed items, and give each unresolved exception an escalation contact.</p>
+<p>Use this list to keep follow-up work separate from payment posting.</p>
+<h3 id="separate-follow-up-from-payment-posting" tabindex="-1">Separate Follow-Up From Payment Posting</h3>
+<p>Assign claim follow-up and payment posting separately. The follow-up owner needs claim notes, payer correspondence, filing and appeal deadlines, corrected-claim instructions, authorization issues, and medical-record requests. If urgent items haven't been acknowledged, escalate them to the transition lead before access ends.</p>
+<p>Assign responsibility for posting ERA/EFT payments, checks, patient payments, denials, adjustments, refunds, and unapplied cash. <strong>EFT moves the money; ERA explains how it was paid.</strong> <a href="https://www.cms.gov/" target="_blank" rel="nofollow noopener noreferrer">CMS</a> identifies the X12 835 as the national ERA standard.</p>
+<p>Preserve original 835 files, remittances, EFT trace numbers, payment batches, deposit records, adjustment codes, and posting dates. These records let the team trace each payment to its claim and bank deposit. Keep source records accessible so both posting and follow-up can be traced after the handoff.</p>
+<h3 id="keep-reporting-access-and-handoff-records" tabindex="-1">Keep Reporting Access and Handoff Records</h3>
+<p>Use the register below to document each transfer. Keep read-only access or usable exports from billing systems, EHR billing modules, clearinghouses, payer portals, lockboxes, and patient-payment systems.</p>
+<p>Confirm ERA/EFT routing and test the receiving team's access. Use encrypted transfers, individual credentials, and time-limited, role-based permissions that meet HIPAA duties and business associate agreements.</p>
+<table>
+<thead>
+<tr>
+<th>Record or workflow</th>
+<th>Outgoing-team delivery</th>
+<th>Practice oversight</th>
+<th>Receiving-team acceptance</th>
+<th>Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claim notes and denials</td>
+<td>Export worklist, claim notes, and supporting correspondence</td>
+<td>Verify completeness</td>
+<td>Confirm urgent items</td>
+<td>CSV/PDF/system export</td>
+</tr>
+<tr>
+<td>ERA files</td>
+<td>Deliver 835 files and paper-remit index</td>
+<td>Tie to claims and deposits</td>
+<td>Confirm files are usable</td>
+<td>X12 835/PDF</td>
+</tr>
+<tr>
+<td>Payment batches</td>
+<td>Provide batch reports and deposit detail</td>
+<td>Match to claim ledger and bank deposits</td>
+<td>Confirm batch access</td>
+<td>CSV/PDF</td>
+</tr>
+<tr>
+<td>Aging reports</td>
+<td>Provide entity- and location-level aging</td>
+<td>Compare totals to ledger</td>
+<td>Confirm report date</td>
+<td>XLSX/PDF</td>
+</tr>
+<tr>
+<td>Payer and clearinghouse access</td>
+<td>Transfer or reauthorize access</td>
+<td>Retain administrator control</td>
+<td>Test login and submission rights</td>
+<td>Portal/system access</td>
+</tr>
+<tr>
+<td>Appeal deadlines</td>
+<td>Provide deadline register and documents</td>
+<td>Review priority items</td>
+<td>Acknowledge due dates</td>
+<td>CSV/PDF/system notes</td>
+</tr>
+<tr>
+<td>Deposit records</td>
+<td>Provide bank, lockbox, and patient-payment detail</td>
+<td>Match to claim ledger and bank deposits</td>
+<td>Identify unmatched deposits</td>
+<td>CSV/PDF</td>
+</tr>
+</tbody>
+</table>
+<p>For each transfer, document the delivery date, acceptance status, initials, and timestamp. For access, also record the test date, expiration, and approval. For appeal deadlines, record the owner; for deposits, note unresolved exceptions.</p>
+<h2 id="reconcile-collections-fees-and-cash" tabindex="-1" class="sb h2-sbb-cls">Reconcile Collections, Fees, and Cash</h2>
+<p>Once ownership is assigned, reconcile the cash and fees tied to the handoff.</p>
+<h3 id="define-fees-for-post-termination-collections" tabindex="-1">Define Fees for Post-Termination Collections</h3>
+<p>Put the <strong>eligible claims, fee rate, collection period, and final invoice deadline</strong> in writing. State whether fees apply to payer payments, patient payments, or both. Define gross versus net collections and whether cash must clear before fees are earned. Explain how refunds, reversals, recoupments, and returned payments reduce fees or lead to later credits. Price special work, such as appeals or post-termination reporting, separately when applicable.</p>
+<p><strong>Apply the fee only once.</strong> State whether routine posting is included or billed separately. Require invoice details that link each payment to its claim, account, date of service, payer, vendor, and fee period. Use those records to recalculate the invoice. Remove unsupported items and apply agreed reversals before approval.</p>
+<h3 id="complete-the-final-cash-and-accounts-receivable-reconciliation" tabindex="-1">Complete the Final Cash and Accounts Receivable Reconciliation</h3>
+<p>Use the ownership list and payment records to close the books on transferred claims. Match deposits to EFT and check registers, remittances to posted payments, and posting batches to both the billing ledger and general ledger. Explain each timing difference, merchant fee, payer offset, recoupment, duplicate posting, unapplied cash amount, refund, and credit separately. <strong>A matching bank total does not prove that claims or vendor fees are correct.</strong> Give each difference an owner and a due date.</p>
+<p>For each entity and location, reconcile opening A/R to closing A/R using charges, payments, contractual adjustments, approved write-offs, and transferred balances. Record refunds and reversals based on their actual effect on receivables - don't automatically subtract them from A/R. Tie the result to the billing ledger and, where applicable, the general ledger.</p>
+<p>Before sign-off, require closing A/R aging, payment-posting and unapplied-cash reports, denial and appeal inventory, refund and credit-balance reports, and deposit and EFT/check registers. Include the documented fee calculation and exception log. Set a close deadline, such as <strong>30 or 60 days after the final collection period</strong>, and require management approval for unresolved items.</p>
+<h3 id="assign-cpa-oversight-for-financial-reporting" tabindex="-1">Assign CPA Oversight for Financial Reporting</h3>
+<p>Keep <strong>accounting review separate from claim processing</strong>. A CPA reviewer can reconcile cash, test vendor invoices, review the A/R bridge, and prepare <a href="https://www.lucid.now/blog/why-startups-need-multi-dimensional-reporting/">multi-dimensional financial reports</a> for management. Confirm whether the engagement includes handoff reconciliation, invoice review, and final reporting or bills for them separately. The CPA review should complete the financial review of the transfer.</p>
+<h2 id="conclusion-verify-ownership-and-resolve-handoff-gaps" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Verify Ownership and Resolve Handoff Gaps</h2>
+<p>Before signing off on the final handoff, confirm contractual duties, a single written cutover rule, accepted claim ownership, and working access to reports. Verify that invoices and payment records support fee calculations and that <a href="https://www.lucid.now/blog/ai-improve-cash-flow-monitoring/">cash has been reconciled</a>.</p>
+<p>After sign-off, <strong>review the open-claim workflow weekly for the first 30 to 60 days</strong>. Check filing and appeal deadlines, claim follow-up routing, ERA/EFT delivery, payment posting, patient balance statements, and legacy A/R balances against system records and bank activity.</p>
+<p>Log every unresolved post-termination exception, including disputed claim ownership, unidentified or unposted payments, and inaccessible accounts. Assign each exception <strong>one owner, one action, and one deadline</strong>, and record its resolution date when closed.</p>
+<p>Keep unresolved items in the legacy A/R workflow with an escalation contact until an owner accepts responsibility and a completion deadline is set. Continue tracking each item until it’s resolved.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="what-if-my-contract-doesnt-assign-unpaid-claims" tabindex="-1" data-faq-q>What if my contract doesn’t assign unpaid claims?</h3>
+<p>Don’t assume who’s responsible. Review outstanding payer and patient balances, unmatched receipts, and unapplied cash. Ask your billing lead to check balances against payment history and supporting records - <strong>not aging reports alone</strong>.</p>
+<p>Assign an owner to each item. Work with your CPA to determine the accounting treatment. Use one worksheet to document, approve, and track follow-up actions and cash reconciliation.</p>
+<h3 id="how-do-i-prevent-duplicate-collection-fees" tabindex="-1" data-faq-q>How do I prevent duplicate collection fees?</h3>
+<p>Keep <strong>gross receipts and fee expenses separate</strong> in your practice’s accounting policy. Compare payer and patient report totals with bank settlements to spot processing deductions or timing differences.</p>
+<p>Track discrepancies in a dedicated exception queue. Link records for the same transaction to a single case so amounts aren’t counted twice. Ask your CPA to confirm how to post net deposits so receipts and fees are recorded correctly, without duplication.</p>
+<h3 id="what-if-payments-arrive-after-final-reconciliation" tabindex="-1" data-faq-q>What if payments arrive after final reconciliation?</h3>
+<p>Treat payments received after final reconciliation as <strong>exceptions</strong>. The billing team must trace each remittance to a bank deposit and check the original balance to determine whether the issue involves cash or payment posting.</p>
+<p>Record verified amounts separately as <strong>recovered cash or previously received funds applied - not new revenue</strong>, in line with the practice’s accounting basis. Reconcile those amounts with the ledger and bank activity to document corrections and prevent duplicate entries.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6af113ccb3182d5f9f033c1e"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What if my contract doesn’t assign unpaid claims?","acceptedAnswer":{"@type":"Answer","text":"Don’t assume who’s responsible. Review outstanding payer and patient balances, unmatched receipts, and unapplied cash. Ask your billing lead to check balances against payment history and supporting records - not aging reports alone. Assign an owner to each item. Work with your CPA to determine the accounting treatment. Use one worksheet to document, approve, and track follow-up actions and cash reconciliation."}},{"@type":"Question","name":"How do I prevent duplicate collection fees?","acceptedAnswer":{"@type":"Answer","text":"Keep gross receipts and fee expenses separate in your practice’s accounting policy. Compare payer and patient report totals with bank settlements to spot processing deductions or timing differences. Track discrepancies in a dedicated exception queue. Link records for the same transaction to a single case so amounts aren’t counted twice. Ask your CPA to confirm how to post net deposits so receipts and fees are recorded correctly, without duplication."}},{"@type":"Question","name":"What if payments arrive after final reconciliation?","acceptedAnswer":{"@type":"Answer","text":"Treat payments received after final reconciliation as exceptions. The billing team must trace each remittance to a bank deposit and check the original balance to determine whether the issue involves cash or payment posting. Record verified amounts separately as recovered cash or previously received funds applied - not new revenue, in line with the practice’s accounting basis. Reconcile those amounts with the ledger and bank activity to document corrections and prevent duplicate entries."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
