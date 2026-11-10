@@ -29,11 +29,16 @@ window.addEventListener('load', function () {
 </script>
 <!-- End Google Tag Manager -->
 
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
 <!-- PostHog -->
 <script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
 <script>
-  window.addEventListener('load', function () {
-    setTimeout(function () {
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
       posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
         api_host: 'https://ingest.lucid.now/ingest',
         autocapture: true,
@@ -43,7 +48,6 @@ window.addEventListener('load', function () {
         disable_surveys: true,
         custom_campaign_params: ['a_aid', 'chan', 'data1'],
       });
-    }, 3000);
   });
 </script>
 
@@ -54,8 +58,7 @@ window.addEventListener('load', function () {
      Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
      - only the init/PageView piece moved here. -->
 <script>
-window.addEventListener('load', function () {
-  setTimeout(function () {
+(function () {
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -66,8 +69,7 @@ window.addEventListener('load', function () {
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1012371517060574');
     fbq('track', 'PageView');
-  }, 3000);
-});
+  })();
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
