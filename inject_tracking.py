@@ -27,14 +27,14 @@ for path in sorted(p for p in glob.glob("**/*.html", recursive=True) if not p.st
     original = html
 
     if HEAD_START in html:
-        html = head_region_re.sub(lambda m: head_block, html)
+        html = head_region_re.sub(head_block, html)
     else:
-        html = re.sub(r"(<head>)", lambda m: m.group(1) + "\n" + head_block, html, count=1)
+        html = re.sub(r"(<head>)", r"\1\n" + head_block, html, count=1)
 
     if BODY_START in html:
-        html = body_region_re.sub(lambda m: body_block, html)
+        html = body_region_re.sub(body_block, html)
     else:
-        html = re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + body_block, html, count=1)
+        html = re.sub(r"(<body[^>]*>)", r"\1\n" + body_block, html, count=1)
 
     if html != original:
         with open(path, "w") as f:
