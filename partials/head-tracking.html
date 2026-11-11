@@ -1,3 +1,17 @@
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container itself stays deferred (load+3s). -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  function go(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+})();
+</script>
 <!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
      same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
      Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
