@@ -24,10 +24,10 @@
 </script>
 <style>
   /* booking page — native chrome, high-intent layout: calendar near the top, no exits, one trust cue */
-  header.nav{position:static}
-  /* logo stays in the landing-page position (left) so it reads as the same site; just not clickable */
+  /* nav sits ABOVE the hero; hero gradient flows up behind the transparent nav (no seam), like the landing pages */
+  header.nav{position:relative;z-index:60;background:transparent}
   .brand-logo{height:30px}
-  #main .hero{margin-top:0;padding:12px 0 14px}
+  #main .hero{margin-top:calc(-1 * var(--nav-h));padding:calc(var(--nav-h) + 10px) 0 14px}
 
   .bk-rating{display:flex;justify-content:center;margin:0 0 3px}
   .bk-hero{color:var(--ink);font-weight:800;letter-spacing:-.015em;line-height:1.16;
@@ -52,13 +52,13 @@
   .bk-testi .nm{color:var(--ink);font-weight:700}
 
   @media (max-width:640px){
-    #main .hero{padding:8px 0 10px}
+    #main .hero{padding:calc(var(--nav-h) + 6px) 0 10px}
     .bk-calsec{padding:10px 0 8px}
     .bk-cal iframe{height:1180px}
     .bk-proof{padding:4px 0 28px}
   }
   @media (min-width:880px){
-    #main .hero{padding:18px 0 14px}
+    #main .hero{padding:calc(var(--nav-h) + 14px) 0 14px}
     .bk-cal iframe{height:900px}
   }
 </style>
