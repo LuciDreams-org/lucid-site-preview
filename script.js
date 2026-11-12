@@ -223,7 +223,7 @@ document.documentElement.classList.add('js');
               '<li>Dedicated Account Manager</li>' +
             '</ul>' +
             '<div class="price"><span class="plan-was">$200/mo</span> $150<small>/mo</small></div>' +
-            '<a href="https://contact.lucid.now/zc/382?cta=PricingTaxEssentialsTalkToExpert" rel="noopener" class="btn btn-primary">Talk to Experts</a>' +
+            '<a href="' + (window.__CTA_BASE__ || 'https://contact.lucid.now/zc/382?cta=') + 'PricingTaxEssentialsTalkToExpert" rel="noopener" class="btn btn-primary">Talk to Experts</a>' +
           '</div>' +
           '<div class="plan featured">' +
             '<span class="pop">Most popular</span>' +
@@ -235,7 +235,7 @@ document.documentElement.classList.add('js');
               '<li><span class="addon-name">Additional State Filings</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $25/state</b></li>' +
               '<li><span class="addon-name">Foreign Subsidiaries - 5471</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $125/subsidiary</b></li>' +
             '</ul>' +
-            '<a href="https://contact.lucid.now/zc/382?cta=PricingTaxAddonsGetStarted" rel="noopener" class="btn btn-primary">Get Started</a>' +
+            '<a href="' + (window.__CTA_BASE__ || 'https://contact.lucid.now/zc/382?cta=') + 'PricingTaxAddonsGetStarted" rel="noopener" class="btn btn-primary">Get Started</a>' +
           '</div>' +
         '</div>' +
         '<p class="tax-foot">*Displayed figures are the yearly cost apportioned over 12 months.</p>';
