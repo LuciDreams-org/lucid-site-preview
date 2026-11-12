@@ -455,7 +455,10 @@ function lucidTrackEvent(name, data) {
     // ?cta= id; everything else gets an auto-generated one. Either way, append the
     // visitor's query string (utm_*, fbclid, hsa_*) so campaign attribution carries
     // through to the contact/Zellify funnel - otherwise hardcoded CTAs lose it.
-    var alreadyWired = existingHref.indexOf('https://contact.lucid.now/') === 0 || existingHref.indexOf('/book') === 0 || existingHref.indexOf('lucid.now/book') > -1;
+    // Only genuinely-final external destinations keep their own id; /book links get the UNIQUE
+    // generatedCta (Page+Section+Action) regenerated so each button is individually identifiable,
+    // while the raw /book?cta=GetStarted|TalkToExpert in the HTML is the pre-JS fallback (right page + action).
+    var alreadyWired = existingHref.indexOf('https://contact.lucid.now/') === 0;
     var href = (alreadyWired ? existingHref : (BASE + generatedCta)) + qs;
     var ctaMatch = alreadyWired && href.match(/[?&]cta=([^&]+)/);
     var cta = ctaMatch ? decodeURIComponent(ctaMatch[1]) : generatedCta;
