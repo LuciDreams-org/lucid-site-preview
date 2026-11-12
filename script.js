@@ -223,7 +223,7 @@ document.documentElement.classList.add('js');
               '<li>Dedicated Account Manager</li>' +
             '</ul>' +
             '<div class="price"><span class="plan-was">$200/mo</span> $150<small>/mo</small></div>' +
-            '<a href="' + (window.__CTA_BASE__ || 'https://contact.lucid.now/zc/382?cta=') + 'PricingTaxEssentialsTalkToExpert" rel="noopener" class="btn btn-primary">Talk to Experts</a>' +
+            '<a href="' + (window.__CTA_BASE__ || '/book?cta=') + 'PricingTaxEssentialsTalkToExpert" rel="noopener" class="btn btn-primary">Talk to Experts</a>' +
           '</div>' +
           '<div class="plan featured">' +
             '<span class="pop">Most popular</span>' +
@@ -235,7 +235,7 @@ document.documentElement.classList.add('js');
               '<li><span class="addon-name">Additional State Filings</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $25/state</b></li>' +
               '<li><span class="addon-name">Foreign Subsidiaries - 5471</span><b class="addon-price"><span class="ck-mini" aria-hidden="true">✓</span> $125/subsidiary</b></li>' +
             '</ul>' +
-            '<a href="' + (window.__CTA_BASE__ || 'https://contact.lucid.now/zc/382?cta=') + 'PricingTaxAddonsGetStarted" rel="noopener" class="btn btn-primary">Get Started</a>' +
+            '<a href="' + (window.__CTA_BASE__ || '/book?cta=') + 'PricingTaxAddonsGetStarted" rel="noopener" class="btn btn-primary">Get Started</a>' +
           '</div>' +
         '</div>' +
         '<p class="tax-foot">*Displayed figures are the yearly cost apportioned over 12 months.</p>';
@@ -407,7 +407,7 @@ function lucidTrackEvent(name, data) {
    preserves the visitor's original query params (utm_*, hsa_*, etc.) through
    the redirect, and logs a cta_click event to GTM/PostHog on every click. ---------- */
 (function () {
-  var BASE = (typeof window !== 'undefined' && window.__CTA_BASE__) || 'https://contact.lucid.now/zc/382?cta=';
+  var BASE = (typeof window !== 'undefined' && window.__CTA_BASE__) || '/book?cta=';
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
   // "specialty-ophthalmology" / "Primary Care" -> "SpecialtyOphthalmology" / "PrimaryCare"
   function pascal(s) { return (s || '').split(/[^A-Za-z0-9]+/).map(cap).join(''); }
