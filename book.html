@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book a call with Lucid</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="/assets/img/logo-mark.webp" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400..800&display=swap" rel="stylesheet" />
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true, capture_pageview: true, capture_pageleave: true,
+        disable_session_recording: true, disable_surveys: true
+      });
+      posthog.capture('z:page_view', { step: 'book', funnel: 'book-page-native' });
+    } catch (e) {}
+  });
+</script>
+<style>
+  :root{
+    --bg:#f3f4f6;--card:#fff;--ink:#171a2e;--muted:#6b7280;
+    --purple1:#8B5CF6;--purple2:#7C3AED;
+    --green-bg:#eaf6ef;--green-br:#cfe9d8;--green-tx:#1f9d57;--gold:#f5a623;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--ink);font-family:"Lato",system-ui,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .ws{font-family:"Work Sans","Lato",sans-serif}
+  h1,h2,h3{font-family:"Work Sans","Lato",sans-serif}
+  a{color:inherit}
+
+  /* header */
+  .topbar{background:var(--bg);border-bottom:1px solid #e7e9ee;text-align:center;padding:18px 16px}
+  .topbar img{height:30px;width:auto}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:22px 18px 48px}
+  .grid{display:grid;grid-template-columns:1fr;gap:18px}
+
+  /* cards */
+  .pick{display:flex;gap:14px;align-items:flex-start;background:var(--card);border-radius:16px;padding:18px 20px;box-shadow:0 6px 18px rgba(30,25,70,.06)}
+  .pick .ic{flex:none;width:46px;height:46px;border-radius:12px;background:#ede9ff;display:flex;align-items:center;justify-content:center}
+  .pick .ic svg{width:23px;height:23px;color:#7C3AED}
+  .pick p{font-family:"Work Sans",sans-serif;font-weight:700;font-size:19px;line-height:1.35;color:#1b2030}
+
+  .testi{background:var(--green-bg);border:1.5px solid var(--green-br);border-radius:16px;padding:5px}
+  .testi .inner{background:#fff;border-radius:12px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+  .testi .av{flex:none;width:46px;height:46px;border-radius:50%;object-fit:cover}
+  .testi .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:6px;color:var(--green-tx);font-weight:800;font-size:12.5px;letter-spacing:.4px;font-family:"Work Sans",sans-serif}
+  .badge svg{width:15px;height:15px}
+  .stars{color:var(--gold);font-size:14px;letter-spacing:1.5px}
+  .quote{font-size:15.5px;line-height:1.45;color:#2b3040;font-family:"Work Sans",sans-serif;font-weight:500}
+
+  .host{display:flex;align-items:center;gap:12px;margin:6px 2px 0}
+  .host img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+  .host .n{font-size:18px}
+  .mtitle{font-family:"Work Sans",sans-serif;font-weight:700;font-size:25px;margin:16px 2px 16px}
+  .mrow{display:flex;align-items:flex-start;gap:12px;color:#3a4050;font-size:16px;margin-bottom:12px;padding:0 2px}
+  .mrow svg{width:22px;height:22px;flex:none;color:#4b5563;margin-top:1px}
+
+  /* calendar panel */
+  .calpanel{background:var(--card);border:1px solid #e6e8ee;border-radius:16px;padding:18px 18px 10px;box-shadow:0 6px 18px rgba(30,25,70,.05)}
+  .calpanel h2{font-family:"Work Sans",sans-serif;font-weight:700;font-size:23px;margin-bottom:12px}
+  .calframe{width:100%;border:0;border-radius:10px;min-height:640px;height:72vh;background:#fff}
+
+  /* desktop: two columns */
+  @media (min-width:880px){
+    .grid{grid-template-columns:minmax(360px,420px) 1fr;gap:28px;align-items:start}
+    .col-info{display:flex;flex-direction:column;gap:18px;position:sticky;top:22px}
+    .calframe{height:760px}
+    .topbar img{height:34px}
+  }
+  @media (max-width:879px){
+    .col-info{display:flex;flex-direction:column;gap:16px}
+    .calframe{height:660px}
+  }
+</style>
+</head>
+<body>
+  <header class="topbar"><img src="/assets/lucid-logo.webp" alt="Lucid" /></header>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <!-- LEFT: info -->
+      <div class="col-info">
+        <div class="pick">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg></span>
+          <p>Pick a time to secure your spot and see Lucid in action.</p>
+        </div>
+
+        <div class="testi">
+          <div class="inner">
+            <img class="av" src="/assets/img/avatar-45.webp" alt="" />
+            <div>
+              <div class="top">
+                <span class="badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.3 1.9-.8 2.9.8 2.9-2.3 1.9-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.3 15.3l.8-2.9-.8-2.9L5.6 7.6l1-2.8 3-.1z"/><path d="M10.6 14.6l-2-2L7.2 14l3.4 3.4L17 11l-1.4-1.4z" fill="#fff"/></svg> FROM A LUCID CLIENT</span>
+                <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <p class="quote">&ldquo;Lucid got our books current and our taxes filed on time. Now I know exactly what we make and where every dollar goes.&rdquo;</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="host">
+          <img src="/assets/img/hero-man-400.webp" alt="" />
+          <span class="n ws">Erez Lankri</span>
+        </div>
+        <div class="mtitle">Meeting CEO Erez Lankri</div>
+        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 30 min appointments</div>
+        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg> Google Meet video conference info added after booking</div>
+      </div>
+
+      <!-- RIGHT: calendar -->
+      <div class="calpanel">
+        <h2>Select an appointment time</h2>
+        <iframe id="gcal" class="calframe" title="Select an appointment time"
+          src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1zVh3EHPEEEGWyIYWys3UsrPawYKTI-4Gp5NTmmbQXnJi8vJxpqP4GpMTSaxMwqOl2MNKIDaCn?gv=true"
+          loading="lazy"></iframe>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // carry utm/fbclid into the booking embed for attribution continuity
+  (function(){
+    try{
+      var qs = location.search.replace(/^\?/,'');
+      if(qs){ var f=document.getElementById('gcal'); f.src = f.src + '&' + qs; }
+    }catch(e){}
+  })();
+</script>
+</body>
+</html>
