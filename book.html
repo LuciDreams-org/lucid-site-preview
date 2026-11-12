@@ -23,38 +23,42 @@
   });
 </script>
 <style>
-  /* booking page — uses the site's .nav header + .hero background for a seamless hand-off from the landing pages */
+  /* booking page — native chrome, high-intent layout: calendar near the top, no exits, one trust cue */
   header.nav{position:static}
-  #main .hero{margin-top:0;padding:14px 0 16px}
+  .nav-inner{justify-content:center}            /* lone logo, centered, no CTA exits */
+  .brand-logo{height:28px}
+  #main .hero{margin-top:0;padding:12px 0 14px}
+
+  .bk-rating{display:flex;justify-content:center;margin:0 0 9px}
   .bk-hero{color:var(--ink);font-weight:800;letter-spacing:-.015em;line-height:1.16;
-    font-size:clamp(1.3rem,4.3vw,2.3rem);text-align:center;margin:0 0 10px;
-    text-wrap:balance;max-width:28ch;margin-left:auto;margin-right:auto}
-  .bk-sub{color:var(--muted);text-align:center;font-size:clamp(1rem,2.4vw,1.12rem);line-height:1.45;margin:0 auto 20px;max-width:540px}
+    font-size:clamp(1.3rem,4.3vw,2.25rem);text-align:center;margin:0 auto;
+    text-wrap:balance;max-width:28ch}
 
-  .bk-testi{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);
-    border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px 16px;max-width:620px;margin:0 auto}
-  .bk-testi .av{flex:none;width:44px;height:44px;border-radius:50%;object-fit:cover}
-  .bk-testi .row1{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-  .bk-testi .tag{display:inline-flex;align-items:center;gap:5px;color:#1f9d57;font-weight:800;font-size:11.5px;letter-spacing:.3px}
-  .bk-testi .tag svg{width:14px;height:14px}
-  .bk-testi .stars{color:#8B5CF6;font-size:13px;letter-spacing:1px}
-  .bk-testi .q{color:var(--ink-soft);font-size:14.5px;line-height:1.42}
-  .bk-testi .nm{color:var(--ink);font-weight:700}
-
-  .bk-calsec{padding:0 0 44px}
+  /* calendar */
+  .bk-calsec{padding:14px 0 10px}
   .bk-cal{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;padding:6px;max-width:900px;margin:0 auto}
   .bk-cal iframe{width:100%;border:0;display:block;border-radius:16px;background:#fff;height:1000px}
 
+  /* proof, BELOW the calendar (scroll reassurance, not above-fold cost) */
+  .bk-proof{padding:4px 0 40px}
+  .bk-testi{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px 16px;max-width:600px;margin:0 auto}
+  .bk-testi .av{flex:none;width:42px;height:42px;border-radius:50%;object-fit:cover}
+  .bk-testi .row1{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .bk-testi .tag{display:inline-flex;align-items:center;gap:5px;color:#1f9d57;font-weight:800;font-size:11px;letter-spacing:.3px}
+  .bk-testi .tag svg{width:14px;height:14px}
+  .bk-testi .stars{color:#8B5CF6;font-size:12.5px;letter-spacing:1px}
+  .bk-testi .q{color:var(--ink-soft);font-size:14px;line-height:1.42}
+  .bk-testi .nm{color:var(--ink);font-weight:700}
+
   @media (max-width:640px){
-    #main .hero{padding:8px 0 12px}
-    .bk-hero{margin-bottom:8px}
-    .bk-sub{margin-bottom:14px}
-    .bk-testi{padding:12px 13px}
-    .bk-calsec{padding:0 0 26px}
+    #main .hero{padding:8px 0 10px}
+    .bk-calsec{padding:10px 0 8px}
     .bk-cal iframe{height:1180px}
+    .bk-proof{padding:4px 0 28px}
   }
   @media (min-width:880px){
-    #main .hero{padding:20px 0 20px}
+    #main .hero{padding:18px 0 14px}
     .bk-cal iframe{height:900px}
   }
 </style>
@@ -62,29 +66,15 @@
 <body>
   <header class="nav">
     <div class="wrap nav-inner">
-      <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
-      <div class="nav-cta">
-        <a href="#cal" class="btn btn-ghost">Talk to an Expert</a>
-      </div>
+      <span class="brand" aria-label="Lucid"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></span>
     </div>
   </header>
 
   <main id="main">
     <section class="hero">
       <div class="wrap" style="max-width:820px">
-        <div style="display:flex;justify-content:center;margin:0 0 8px"><div class="hero-rating"><span class="g2-badge" aria-label="Rated 5 out of 5 on G2"><img class="g2-mark" src="/assets/img/g2-logo.svg?v=2" alt="G2" width="28" height="28" decoding="async" /><span class="g2-word" aria-hidden="true">G2</span><span class="g2-score">5/5</span><span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span></div></div>
+        <div class="bk-rating"><div class="hero-rating"><span class="g2-badge" aria-label="Rated 5 out of 5 on G2"><img class="g2-mark" src="/assets/img/g2-logo.svg?v=2" alt="G2" width="28" height="28" decoding="async" /><span class="g2-word" aria-hidden="true">G2</span><span class="g2-score">5/5</span><span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span></div></div>
         <h1 class="bk-hero">Pick a time to secure your spot and see <span class="grad">Lucid</span> in action.</h1>
-        <p class="bk-sub">A 30-minute call with our CEO — we'll look at where your books stand and the tax credits you're likely missing.</p>
-        <div class="bk-testi">
-          <img class="av" src="/assets/img/avatar-45.webp" alt="" />
-          <div>
-            <div class="row1">
-              <span class="tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.3 1.9-.8 2.9.8 2.9-2.3 1.9-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.3 15.3l.8-2.9-.8-2.9L5.6 7.6l1-2.8 3-.1z"/><path d="M10.6 14.6l-2-2L7.2 14l3.4 3.4L17 11l-1.4-1.4z" fill="#fff"/></svg> FROM A LUCID CLIENT</span>
-              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            </div>
-            <div class="q">&ldquo;Lucid got our books current and our taxes filed on time. Now I know exactly what we make and where every dollar goes.&rdquo; &nbsp;<span class="nm">Dr. Claire Bennett</span>, Owner at Sterling Ortho</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -94,6 +84,21 @@
           <iframe id="gcal" title="Select an appointment time"
             src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1zVh3EHPEEEGWyIYWys3UsrPawYKTI-4Gp5NTmmbQXnJi8vJxpqP4GpMTSaxMwqOl2MNKIDaCn?gv=true"
             loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="bk-proof">
+      <div class="wrap">
+        <div class="bk-testi">
+          <img class="av" src="/assets/img/avatar-45.webp" alt="" />
+          <div>
+            <div class="row1">
+              <span class="tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.3 1.9-.8 2.9.8 2.9-2.3 1.9-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.3 15.3l.8-2.9-.8-2.9L5.6 7.6l1-2.8 3-.1z"/><path d="M10.6 14.6l-2-2L7.2 14l3.4 3.4L17 11l-1.4-1.4z" fill="#fff"/></svg> FROM A LUCID CLIENT</span>
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            </div>
+            <div class="q">&ldquo;Lucid got our books current and our taxes filed on time. Now I know exactly what we make and where every dollar goes.&rdquo; &nbsp;<span class="nm">Dr. Claire Bennett</span>, Owner at Sterling Ortho</div>
+          </div>
         </div>
       </div>
     </section>
