@@ -48,6 +48,14 @@
   .bk-host .hdot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block}
   @media (max-width:420px){.bk-host .hlbl{display:none}.bk-host .havail{font-size:10px;padding:5px 8px}}
 
+  /* animated loading line under the host card, until the calendar iframe loads */
+  .bk-loader{max-width:560px;margin:14px auto 2px;text-align:center}
+  .bk-loader>i{display:block;height:3px;border-radius:99px;background:#e6e8ee;overflow:hidden;position:relative}
+  .bk-loader>i::before{content:"";position:absolute;top:0;left:-40%;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,var(--purple1,#8B5CF6),var(--purple2,#7C3AED));animation:bkload 1.05s ease-in-out infinite}
+  @keyframes bkload{0%{left:-40%}100%{left:100%}}
+  .bk-loadtxt{display:inline-block;margin-top:7px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .bk-loader.done{display:none}
+
   /* calendar */
   .bk-calsec{padding:14px 0 10px}
   .bk-cal{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;padding:6px;max-width:900px;margin:0 auto}
@@ -98,6 +106,7 @@
           </div>
           <span class="havail"><span class="hdot"></span> Available this week</span>
         </div>
+        <div class="bk-loader" id="bk-loader" role="status" aria-label="Loading available times"><i></i><span class="bk-loadtxt">Loading your available times…</span></div>
       </div>
     </section>
 
@@ -136,7 +145,12 @@
   </footer>
 
 <script>
-  (function(){ try{ var qs=location.search.replace(/^\?/,''); if(qs){ var f=document.getElementById('gcal'); f.src=f.src+'&'+qs; } }catch(e){} })();
+  (function(){
+    var cal=document.getElementById('gcal'), ld=document.getElementById('bk-loader');
+    function hide(){ if(ld) ld.classList.add('done'); }
+    if(cal){ cal.addEventListener('load', hide); }
+    setTimeout(hide, 12000); // safety fallback so the line never sticks
+  })();
 </script>
 </body>
 </html>
