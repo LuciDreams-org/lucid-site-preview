@@ -455,13 +455,15 @@ function lucidTrackEvent(name, data) {
     // ?cta= id; everything else gets an auto-generated one. Either way, append the
     // visitor's query string (utm_*, fbclid, hsa_*) so campaign attribution carries
     // through to the contact/Zellify funnel - otherwise hardcoded CTAs lose it.
-    // Only genuinely-final external destinations keep their own id; /book links get the UNIQUE
-    // generatedCta (Page+Section+Action) regenerated so each button is individually identifiable,
-    // while the raw /book?cta=GetStarted|TalkToExpert in the HTML is the pre-JS fallback (right page + action).
-    var alreadyWired = existingHref.indexOf('https://contact.lucid.now/') === 0;
-    var href = (alreadyWired ? existingHref : (BASE + generatedCta)) + qs;
-    var ctaMatch = alreadyWired && href.match(/[?&]cta=([^&]+)/);
-    var cta = ctaMatch ? decodeURIComponent(ctaMatch[1]) : generatedCta;
+    // Everything funnels to /book. Keep the URL to the ACTION only — 2 stable URLs
+    // (/book?cta=GetStarted | /book?cta=TalkToExpert) — so /book is PRERENDERABLE (fast calendar)
+    // and the title can adapt. No utm appended → URL stays stable; FB attribution carries via the
+    // same-domain PostHog session. The UNIQUE per-button id (Page+Section+Action) is emitted on the
+    // cta_click EVENT below (cta_id), so analytics still knows exactly which button was clicked.
+    var isExternal = existingHref.indexOf('https://contact.lucid.now/') === 0;
+    var href = isExternal ? (existingHref + qs)
+             : (existingHref.indexOf('/book') === 0 ? existingHref : ('/book?cta=' + act));
+    var cta = generatedCta;
     a.setAttribute('href', href);
     a.setAttribute('rel', 'noopener');
     a.__ctaWired = true;
