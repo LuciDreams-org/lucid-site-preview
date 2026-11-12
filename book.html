@@ -6,9 +6,9 @@
 <title>Book a call with Lucid</title>
 <meta name="robots" content="noindex" />
 <link rel="icon" href="/assets/img/logo-mark.webp" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400..800&display=swap" rel="stylesheet" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611061309" />
+<link rel="preconnect" href="https://calendar.google.com" />
 <script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -23,118 +23,81 @@
   });
 </script>
 <style>
-  :root{
-    --bg:#f3f4f6;--card:#fff;--ink:#171a2e;--muted:#6b7280;
-    --purple1:#8B5CF6;--purple2:#7C3AED;
-    --green-bg:#eaf6ef;--green-br:#cfe9d8;--green-tx:#1f9d57;--gold:#f5a623;
+  /* ---- booking page, native to lucid.now (uses site tokens from styles.css) ---- */
+  .bk-head{display:flex;align-items:center;justify-content:center;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .bk-head img{height:26px;width:auto}
+  .bk-wrap{max-width:820px;margin:0 auto;padding:22px 18px 40px}
+  .bk-hero{font-family:var(--font);color:var(--ink);font-weight:800;letter-spacing:-.01em;line-height:1.14;
+    font-size:clamp(1.5rem,5.2vw,2.25rem);text-align:center;margin:4px 0 6px}
+  .bk-sub{color:var(--muted);text-align:center;font-size:clamp(1rem,2.6vw,1.1rem);line-height:1.45;margin:0 auto 20px;max-width:520px}
+
+  /* compact testimonial, site-styled */
+  .bk-testi{display:flex;gap:13px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px 16px;margin-bottom:18px}
+  .bk-testi .av{flex:none;width:44px;height:44px;border-radius:50%;object-fit:cover}
+  .bk-testi .row1{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .bk-testi .tag{display:inline-flex;align-items:center;gap:5px;color:#1f9d57;font-weight:800;font-size:11.5px;letter-spacing:.3px}
+  .bk-testi .tag svg{width:14px;height:14px}
+  .bk-testi .stars{color:#8B5CF6;font-size:13px;letter-spacing:1px}
+  .bk-testi .q{color:var(--ink-soft);font-size:14.5px;line-height:1.42}
+  .bk-testi .nm{color:var(--ink);font-weight:700}
+
+  /* calendar card */
+  .bk-cal{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+    overflow:hidden;padding:6px}
+  .bk-cal iframe{width:100%;border:0;display:block;border-radius:14px;background:var(--bg);height:74vh;min-height:600px}
+
+  /* mobile: maximize vertical space for the calendar */
+  @media (max-width:640px){
+    .bk-wrap{padding:14px 12px 26px}
+    .bk-hero{margin:2px 0 4px}
+    .bk-sub{margin-bottom:14px}
+    .bk-testi{margin-bottom:12px;padding:12px 13px}
+    .bk-cal iframe{height:82vh;min-height:560px}
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{background:var(--bg);color:var(--ink);font-family:"Lato",system-ui,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  .ws{font-family:"Work Sans","Lato",sans-serif}
-  h1,h2,h3{font-family:"Work Sans","Lato",sans-serif}
-  a{color:inherit}
-
-  /* header */
-  .topbar{background:var(--bg);border-bottom:1px solid #e7e9ee;text-align:center;padding:18px 16px}
-  .topbar img{height:30px;width:auto}
-
-  .wrap{max-width:1060px;margin:0 auto;padding:22px 18px 48px}
-  .grid{display:grid;grid-template-columns:1fr;gap:18px}
-
-  /* cards */
-  .pick{display:flex;gap:14px;align-items:flex-start;background:var(--card);border-radius:16px;padding:18px 20px;box-shadow:0 6px 18px rgba(30,25,70,.06)}
-  .pick .ic{flex:none;width:46px;height:46px;border-radius:12px;background:#ede9ff;display:flex;align-items:center;justify-content:center}
-  .pick .ic svg{width:23px;height:23px;color:#7C3AED}
-  .pick p{font-family:"Work Sans",sans-serif;font-weight:700;font-size:19px;line-height:1.35;color:#1b2030}
-
-  .testi{background:var(--green-bg);border:1.5px solid var(--green-br);border-radius:16px;padding:5px}
-  .testi .inner{background:#fff;border-radius:12px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
-  .testi .av{flex:none;width:46px;height:46px;border-radius:50%;object-fit:cover}
-  .testi .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-  .badge{display:inline-flex;align-items:center;gap:6px;color:var(--green-tx);font-weight:800;font-size:12.5px;letter-spacing:.4px;font-family:"Work Sans",sans-serif}
-  .badge svg{width:15px;height:15px}
-  .stars{color:var(--gold);font-size:14px;letter-spacing:1.5px}
-  .quote{font-size:15.5px;line-height:1.45;color:#2b3040;font-family:"Work Sans",sans-serif;font-weight:500}
-
-  .host{display:flex;align-items:center;gap:12px;margin:6px 2px 0}
-  .host img{width:40px;height:40px;border-radius:50%;object-fit:cover}
-  .host .n{font-size:18px}
-  .mtitle{font-family:"Work Sans",sans-serif;font-weight:700;font-size:25px;margin:16px 2px 16px}
-  .mrow{display:flex;align-items:flex-start;gap:12px;color:#3a4050;font-size:16px;margin-bottom:12px;padding:0 2px}
-  .mrow svg{width:22px;height:22px;flex:none;color:#4b5563;margin-top:1px}
-
-  /* calendar panel */
-  .calpanel{background:var(--card);border:1px solid #e6e8ee;border-radius:16px;padding:18px 18px 10px;box-shadow:0 6px 18px rgba(30,25,70,.05)}
-  .calpanel h2{font-family:"Work Sans",sans-serif;font-weight:700;font-size:23px;margin-bottom:12px}
-  .calframe{width:100%;border:0;border-radius:10px;min-height:640px;height:72vh;background:#fff}
-
-  /* desktop: two columns */
+  /* desktop: give the calendar room, keep it centered + designed */
   @media (min-width:880px){
-    .grid{grid-template-columns:minmax(360px,420px) 1fr;gap:28px;align-items:start}
-    .col-info{display:flex;flex-direction:column;gap:18px;position:sticky;top:22px}
-    .calframe{height:760px}
-    .topbar img{height:34px}
+    .bk-wrap{max-width:900px;padding:34px 18px 56px}
+    .bk-cal iframe{height:780px}
   }
-  @media (max-width:879px){
-    .col-info{display:flex;flex-direction:column;gap:16px}
-    .calframe{height:660px}
-  }
+  footer{margin-top:10px}
 </style>
 </head>
 <body>
-  <header class="topbar"><img src="/assets/lucid-logo.webp" alt="Lucid" /></header>
+  <header class="bk-head"><a href="/" aria-label="Lucid home"><img src="/assets/lucid-logo.webp" alt="Lucid" /></a></header>
 
-  <div class="wrap">
-    <div class="grid">
+  <main class="bk-wrap">
+    <h1 class="bk-hero">Pick a time to secure your spot<br>and see <span class="grad">Lucid</span> in action.</h1>
+    <p class="bk-sub">A 30-minute call with our CEO. We'll look at where your books stand and the tax credits you're likely missing.</p>
 
-      <!-- LEFT: info -->
-      <div class="col-info">
-        <div class="pick">
-          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg></span>
-          <p>Pick a time to secure your spot and see Lucid in action.</p>
+    <div class="bk-testi">
+      <img class="av" src="/assets/img/avatar-45.webp" alt="" />
+      <div>
+        <div class="row1">
+          <span class="tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.3 1.9-.8 2.9.8 2.9-2.3 1.9-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.3 15.3l.8-2.9-.8-2.9L5.6 7.6l1-2.8 3-.1z"/><path d="M10.6 14.6l-2-2L7.2 14l3.4 3.4L17 11l-1.4-1.4z" fill="#fff"/></svg> FROM A LUCID CLIENT</span>
+          <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
         </div>
-
-        <div class="testi">
-          <div class="inner">
-            <img class="av" src="/assets/img/avatar-45.webp" alt="" />
-            <div>
-              <div class="top">
-                <span class="badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.3 1.9-.8 2.9.8 2.9-2.3 1.9-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.3 15.3l.8-2.9-.8-2.9L5.6 7.6l1-2.8 3-.1z"/><path d="M10.6 14.6l-2-2L7.2 14l3.4 3.4L17 11l-1.4-1.4z" fill="#fff"/></svg> FROM A LUCID CLIENT</span>
-                <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-              </div>
-              <p class="quote">&ldquo;Lucid got our books current and our taxes filed on time. Now I know exactly what we make and where every dollar goes.&rdquo;</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="host">
-          <img src="/assets/img/hero-man-400.webp" alt="" />
-          <span class="n ws">Erez Lankri</span>
-        </div>
-        <div class="mtitle">Meeting CEO Erez Lankri</div>
-        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 30 min appointments</div>
-        <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg> Google Meet video conference info added after booking</div>
+        <div class="q">&ldquo;Lucid got our books current and our taxes filed on time. Now I know exactly what we make and where every dollar goes.&rdquo; &nbsp;<span class="nm">Dr. Claire Bennett</span>, Owner at Sterling Ortho</div>
       </div>
-
-      <!-- RIGHT: calendar -->
-      <div class="calpanel">
-        <h2>Select an appointment time</h2>
-        <iframe id="gcal" class="calframe" title="Select an appointment time"
-          src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1zVh3EHPEEEGWyIYWys3UsrPawYKTI-4Gp5NTmmbQXnJi8vJxpqP4GpMTSaxMwqOl2MNKIDaCn?gv=true"
-          loading="lazy"></iframe>
-      </div>
-
     </div>
-  </div>
+
+    <div class="bk-cal">
+      <iframe id="gcal" title="Select an appointment time"
+        src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1zVh3EHPEEEGWyIYWys3UsrPawYKTI-4Gp5NTmmbQXnJi8vJxpqP4GpMTSaxMwqOl2MNKIDaCn?gv=true"
+        loading="lazy"></iframe>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-bottom" style="justify-content:center;text-align:center">
+        <span>© 2026 Lucid. All rights reserved. · <a href="/termsofservice">Terms of Service</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/privacy-policy">Privacy Policy</a></span>
+      </div>
+    </div>
+  </footer>
 
 <script>
-  // carry utm/fbclid into the booking embed for attribution continuity
-  (function(){
-    try{
-      var qs = location.search.replace(/^\?/,'');
-      if(qs){ var f=document.getElementById('gcal'); f.src = f.src + '&' + qs; }
-    }catch(e){}
-  })();
+  (function(){ try{ var qs=location.search.replace(/^\?/,''); if(qs){ var f=document.getElementById('gcal'); f.src=f.src+'&'+qs; } }catch(e){} })();
 </script>
 </body>
 </html>
