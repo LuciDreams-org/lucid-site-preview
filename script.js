@@ -407,7 +407,7 @@ function lucidTrackEvent(name, data) {
    preserves the visitor's original query params (utm_*, hsa_*, etc.) through
    the redirect, and logs a cta_click event to GTM/PostHog on every click. ---------- */
 (function () {
-  var BASE = 'https://contact.lucid.now/zc/382?cta=';
+  var BASE = (typeof window !== 'undefined' && window.__CTA_BASE__) || 'https://contact.lucid.now/zc/382?cta=';
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
   // "specialty-ophthalmology" / "Primary Care" -> "SpecialtyOphthalmology" / "PrimaryCare"
   function pascal(s) { return (s || '').split(/[^A-Za-z0-9]+/).map(cap).join(''); }
