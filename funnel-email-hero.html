@@ -1,6 +1,240 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+6s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,6000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>See Lucid in action</title>
@@ -112,6 +346,68 @@
 </style>
 </head>
 <body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
 <div class="app">
 
   <!-- ============ SCREEN 1: EMAIL HERO ============ -->
