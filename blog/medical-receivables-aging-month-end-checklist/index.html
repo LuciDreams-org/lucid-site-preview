@@ -1,0 +1,532 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+6s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,6000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Medical Receivables Aging: Month-End Checklist - Lucid</title>
+<meta name="description" content="Month-end checklist for medical receivables: verify aging, trace payments, resolve credits, reconcile ledgers, and assign owners."/>
+<link rel="canonical" href="https://www.lucid.now/blog/medical-receivables-aging-month-end-checklist/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Medical Receivables Aging: Month-End Checklist"/>
+<meta property="og:description" content="Month-end checklist for medical receivables: verify aging, trace payments, resolve credits, reconcile ledgers, and assign owners."/>
+<meta property="og:url" content="https://www.lucid.now/blog/medical-receivables-aging-month-end-checklist/"/>
+<meta property="og:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af8f80ab3182d5f9f036f43-1794702815809.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Medical Receivables Aging: Month-End Checklist"/>
+<meta name="twitter:description" content="Month-end checklist for medical receivables: verify aging, trace payments, resolve credits, reconcile ledgers, and assign owners."/>
+<meta name="twitter:image" content="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af8f80ab3182d5f9f036f43-1794702815809.jpg"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Medical Receivables Aging: Month-End Checklist", "description": "Month-end checklist for medical receivables: verify aging, trace payments, resolve credits, reconcile ledgers, and assign owners.", "image": "https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af8f80ab3182d5f9f036f43-1794702815809.jpg", "datePublished": "2026-11-15T00:33:35.809Z", "dateModified": "2026-11-15T00:33:35.809Z", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.lucid.now/blog/medical-receivables-aging-month-end-checklist/"}, "author": {"@type": "Organization", "name": "Lucid"}, "publisher": {"@type": "Organization", "name": "Lucid", "logo": {"@type": "ImageObject", "url": "https://www.lucid.now/assets/lucid-logo.webp"}}}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Medical Receivables Aging: Month-End Checklist</h1>
+<div class="article-meta"><time datetime="2026-11-15T00:33:35.809Z">November 15, 2026</time> &middot; 9 min read</div>
+<img class="article-hero" src="https://assets.seobotai.com/cdn-cgi/image/quality=75,w=1536,h=1024/lucid.now/6af8f80ab3182d5f9f036f43-1794702815809.jpg" alt="Medical Receivables Aging: Month-End Checklist" loading="eager" />
+<div class="article-body">
+<p><strong>Before closing the month, check <a href="https://www.lucid.now/blog/ai-accounts-receivable-startups-need-know/">aging balances and trace payments</a>, and give every unresolved item an owner and due date.</strong> Set one reporting cutoff, keep collections aging separate from book A/R, and define review limits - for example, a 10% increase in an aging bucket or a $5,000 rise in balances over 90 days.</p>
+<p>The month-end review covers:</p>
+<ul>
+<li><strong>Aging and collections:</strong> Check totals, explain monthly changes, and prioritize claims nearing filing or appeal deadlines.</li>
+<li><strong>Payments and cash:</strong> <a href="https://www.lucid.now/blog/how-ai-simplifies-real-time-bank-reconciliation/">Match remittances, billing batches, deposits, and ledger entries</a>. Track missing payments, unapplied cash, and timing differences separately.</li>
+<li><strong>Credits and corrections:</strong> Review refunds, duplicate charges, write-offs, and posting errors, with records and approvals for each correction.</li>
+<li><strong>Ledger reconciliation:</strong> Reconcile A/R by legal entity and accounting basis without forcing balances to agree.</li>
+<li><strong>Close approval:</strong> Obtain separate billing and accounting sign-offs, carry unresolved items forward, lock the period, and save the supporting records.</li>
+</ul>
+<p><strong>Approval does not mean an issue is resolved.</strong> Open items stay on the next month’s log until the work is complete.</p>
+<figure>
+        <img src="https://assets.seobotai.com/undefined/6af8f80ab3182d5f9f036f43-1794702379547.jpg" alt="Medical Receivables Aging: Month-End Close Checklist" >
+        <figcaption style="font-size: 0.85em; text-align: center; margin: 8px; padding: 0;"><p style="margin: 0; padding: 4px;">Medical Receivables Aging: Month-End Close Checklist</p>
+</figcaption></figure><h2 id="aging-buckets-metrics-and-more-or-medical-billers-network-live" tabindex="-1" class="sb h2-sbb-cls">Aging Buckets, Metrics, and MORE | <a href="https://www.youtube.com/playlist?list=PLgzxQ8JwGid-zL0-LnSb7g-A1AoF7mau9" target="_blank" rel="nofollow noopener noreferrer">Medical Billers Network Live</a></h2>
+<iframe class="sb-iframe" src="https://www.youtube.com/embed/nQSNZCC6KeY" frameborder="0" loading="lazy" allowfullscreen style="width: 100%; height: auto; aspect-ratio: 16/9;"></iframe><h6 id="sbb-itb-17e8ec9" class="sb-banner" style="display: none;color:transparent;">sbb-itb-17e8ec9</h6><h2 id="verify-aging-totals-and-collection-priorities" tabindex="-1" class="sb h2-sbb-cls">Verify Aging Totals and Collection Priorities</h2>
+<p>Once the cutoff is set, check that the aging report matches month-end activity and shows which accounts need collection follow-up.</p>
+<p>Reconcile the report to the month-end cutoff. Save the <strong>original system export - not an edited copy</strong> - with the report date, export date, user, location, legal entity, payer filter, and patient-versus-insurance filter.</p>
+<p>Confirm that the 0–30, 31–60, 61–90, 91–120, and over-120-day buckets add up to the report balance. Show credits and negative amounts separately.</p>
+<h3 id="compare-aging-buckets-and-monthly-changes" tabindex="-1">Compare Aging Buckets and Monthly Changes</h3>
+<p>Compare each aging bucket with the prior month, showing its balance, dollar change, and percentage change. Break out results using <a href="https://www.lucid.now/blog/why-startups-need-multi-dimensional-reporting/">multi-dimensional financial reporting</a> by payer, location, provider, and legal entity. Consolidated totals can hide local problems.</p>
+<p>Set written thresholds for both dollar and percentage changes:</p>
+<blockquote>
+<p>For example, investigate a 10% bucket increase or a $5,000 rise in over-90-day A/R.</p>
+</blockquote>
+<p>Billing staff should explain material changes and separate payment delays and denials from posting backlogs or reporting changes.</p>
+<p>Before accepting the report, accounting should check the bucket math and how credits are shown. Use the variances to build an account-level follow-up list.</p>
+<h3 id="assign-follow-up-for-high-risk-accounts" tabindex="-1">Assign Follow-Up for High-Risk Accounts</h3>
+<p>Identify accounts most likely to affect collections or miss a deadline.</p>
+<p>Build a worklist covering high-dollar balances, denied or disputed claims, uncollectible accounts, and filing or appeal deadlines. Sort it by balance, age, status, reason, deadline, and collectability. Include these fields:</p>
+<ul>
+<li>Patient or account ID, payer, claim number, and date of service</li>
+<li>Balance, aging bucket, claim status, and denial or dispute reason</li>
+<li>Last action, deadline, required documents, next action, owner, and due date</li>
+</ul>
+<p><strong>Put deadline risk ahead of account age.</strong> Review every denied claim with a deadline within 30 days alongside the largest older balances.</p>
+<p>Keep recovery tasks separate from write-off requests. Billing staff should document claim corrections, appeals, and patient follow-up. An authorized reviewer must approve any write-off under practice policy.</p>
+<p>Save the worklist and variance explanations with the aging export. Accounting should flag unresolved completeness or presentation issues for the later ledger reconciliation.  This ensures accurate <a href="https://www.lucid.now/blog/ai-improves-stakeholder-financial-insights/">financial reporting for medical practice owners</a> when making expansion decisions.</p>
+<p>Flag unresolved posting gaps and unapplied amounts for the cash-tracing review that follows.</p>
+<h2 id="trace-missing-payments-and-unapplied-cash" tabindex="-1" class="sb h2-sbb-cls">Trace Missing Payments and Unapplied Cash</h2>
+<p>Billing staff investigate claim-level posting exceptions. Accounting separately checks bank activity, clearing accounts, and ledger entries through the cutoff. <strong>Keep missing cash, unapplied cash, and timing differences in separate workstreams.</strong></p>
+<h3 id="match-remittances-payment-batches-and-deposits" tabindex="-1">Match Remittances, Payment Batches, and Deposits</h3>
+<p>Trace each ERA or paper remittance to its EFT or check, then to the billing batch, bank deposit, and ledger entry. For patient payments, start with the receipt and batch, then check merchant settlement and deposit records. <strong>Match by check number and EFT trace number - not amount alone.</strong> <a href="https://www.cms.gov/priorities/key-initiatives/burden-reduction/administrative-simplification/transactions/health-care-payment-remittance-advice-electronic-funds-transfer" target="_blank" rel="nofollow noopener noreferrer">CMS</a> states that the TRN in the EFT addenda should match the associated ERA’s TRN.</p>
+<p>For each remittance, reconcile billed charges, payments, contractual adjustments, denials, and patient responsibility at the claim or service-line level. Include provider adjustments, refunds, recoupments, and payer settlements. Check for duplicate imports and payments assigned to the wrong patient, payer, provider, or location. Correct errors with auditable reversals and repostings, and route unresolved items to the unapplied cash worklist.</p>
+<p>Distinguish missing entries from timing differences. Post a confirmed bank deposit that has no billing entry. Keep a remittance without a matching EFT or check on payer follow-up. Use “deposit in transit” only when supporting evidence exists, and label pending merchant settlements separately.</p>
+<h3 id="reconcile-unapplied-cash-and-payment-differences" tabindex="-1">Reconcile Unapplied Cash and Payment Differences</h3>
+<p>Review unapplied and suspense cash by payer, deposit date, amount, and age: <strong>0–7, 8–30, 31–60, and 60+ days</strong>. Assign each item to a named staff member who will obtain missing details and apply the payment. Escalate older or material items to the billing manager and accountant.</p>
+<p>Once remittances are matched, isolate cash that still cannot be applied. Use the table to distinguish monthly activity from ending balances, including opening unapplied cash and deposits in transit.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Period or balance date</th>
+<th>Amount</th>
+<th>Reconciling difference</th>
+<th>Explanation</th>
+<th>Owner</th>
+<th>Resolution date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Billing-system payment activity</td>
+<td>Close-month date range</td>
+<td>Posted payments</td>
+<td>Difference from matched payments</td>
+<td>Missing postings or prior-period cash applied</td>
+<td>Billing supervisor</td>
+<td>Assigned posting deadline</td>
+</tr>
+<tr>
+<td>ERA and paper remittance totals</td>
+<td>Close-month date range</td>
+<td>Remittance total</td>
+<td>Difference from matched payments</td>
+<td>Pending EFTs or provider-level adjustments</td>
+<td>Billing specialist</td>
+<td>Payer follow-up deadline</td>
+</tr>
+<tr>
+<td>Bank and merchant deposits</td>
+<td>Close-month date range</td>
+<td>Settled deposits</td>
+<td>Difference from gross receipts</td>
+<td>Fees, refunds, recoupments, or settlement timing</td>
+<td>Accountant</td>
+<td>Reconciliation deadline</td>
+</tr>
+<tr>
+<td>Unapplied cash</td>
+<td>Month-end balance date</td>
+<td>Ending balance</td>
+<td>Opening balance + receipts − applications</td>
+<td>Unidentified payments awaiting application</td>
+<td>Cash poster</td>
+<td>Item-specific deadline</td>
+</tr>
+<tr>
+<td>General-ledger cash activity</td>
+<td>Close-month date range</td>
+<td>Recorded cash movement</td>
+<td>Difference from bank activity</td>
+<td>Deposits in transit, merchant settlement timing, bank fees, refunds, recoupments, or missing entries</td>
+<td>Accountant</td>
+<td>Correction deadline</td>
+</tr>
+</tbody>
+</table>
+<p>Move unresolved credits, duplicate charges, ledger variances, and all remaining exceptions into the credit and ledger review that follows.</p>
+<h2 id="resolve-credits-duplicate-charges-and-ledger-differences" tabindex="-1" class="sb h2-sbb-cls">Resolve Credits, Duplicate Charges, and Ledger Differences</h2>
+<h3 id="review-credit-balances-and-refunds" tabindex="-1">Review Credit Balances and Refunds</h3>
+<p>Start with unresolved credit balances and refund exceptions from the cash review.</p>
+<p>Billing staff should:</p>
+<ul>
+<li>Review credit-balance reports by patient, payer, provider, location, and entity. Include age, amount, status, source, codes, refund status, and original transactions.</li>
+<li>Prioritize older, high-dollar, repeated, and government-program credits, along with possible duplicate payments or excess contractual adjustments.</li>
+<li>Trace each negative balance through the original charge, claim, remittance advice, payment batch, adjustment, refund, and account history. Determine whether it stems from an overpayment, duplicate payment, excess adjustment, recoupment, reversed charge, misapplied payment, or incorrect patient or payer assignment.</li>
+<li>Keep a credit-resolution log with the account number, source, amount, cause, owner, required action, approval, and resolution date.</li>
+</ul>
+<p><strong>Approve refunds in writing.</strong> Document the recipient, amount, method, reviewer, and approval date. Keep payment evidence, correspondence, and claim-adjustment records in an <a href="https://www.lucid.now/blog/how-ai-generates-investor-ready-reports/">investor-ready close package</a>.</p>
+<p>Follow payer contracts, state unclaimed-property rules, refund deadlines, and segregation-of-duties controls. <a href="https://www.cms.gov/newsroom/fact-sheets/medicare-reporting-and-returning-self-identified-overpayments" target="_blank" rel="nofollow noopener noreferrer">Medicare Parts A and B</a> overpayments generally must be reported and returned by the later of 60 days after identification or the applicable cost-report due date. Do not offset unrelated accounts without a documented legal basis and notice.</p>
+<p>Use the same exception log to resolve duplicate charges and open balances left by reversals.</p>
+<h3 id="correct-duplicate-charges-and-posting-periods" tabindex="-1">Correct Duplicate Charges and Posting Periods</h3>
+<p>To find duplicate charges and open balances after voids or reversals, billing staff should compare the patient, date of service, code, provider, location, payer, amount, claim number, and encounter ID. <strong>Treat a corrected claim as a duplicate only when claim history and remittance advice confirm it.</strong></p>
+<p>Check account assignments and posting periods for late charges, reversals, transfers, refunds, and write-offs. Review write-offs by employee, payer, provider, location, account, amount, and reason code. Keep them separate from contractual adjustments and administrative corrections.</p>
+<p>Retain the transaction audit trail, reason code, supporting remittance or claim record, user, reviewer approval, and final account balance.</p>
+<p>Once posting errors are cleared, tie practice-management A/R to the ledger.</p>
+<h3 id="reconcile-practice-management-ar-to-the-ledger" tabindex="-1">Reconcile Practice-Management A/R to the Ledger</h3>
+<p>Accounting should <a href="https://www.lucid.now/specialty/medical-group">reconcile each legal entity separately</a>. Use the same cutoff, the entity’s accounting basis, and a consistent gross or net A/R presentation.</p>
+<p>Where the ledger recognizes A/R, compare the practice-management ending A/R with the ledger balance. Investigate interface failures, manual journal entries, timing differences, unapplied cash, refunds, contractual adjustments, allowances, and write-offs.</p>
+<table>
+<thead>
+<tr>
+<th>Comparison</th>
+<th>Practice-management balance</th>
+<th>Ledger balance</th>
+<th>Reconciling items</th>
+<th>Remaining variance</th>
+<th>Corrective entry or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ending A/R</td>
+<td>Entity ending A/R</td>
+<td>Ledger A/R</td>
+<td>Interface, timing, or manual-entry differences</td>
+<td>Zero or explicitly explained</td>
+<td>Correct source entry or approve supported adjustment</td>
+</tr>
+<tr>
+<td>Gross vs. net</td>
+<td>Agreed-basis balance</td>
+<td>Same-basis balance</td>
+<td>Allowance presentation differences</td>
+<td>Zero or explicitly explained</td>
+<td>Document basis and approve adjustment</td>
+</tr>
+<tr>
+<td>Rollforward</td>
+<td>Signed activity report</td>
+<td>Ledger activity</td>
+<td>Supported items counted once</td>
+<td>Zero or explicitly explained</td>
+<td>Retain approval and unresolved exceptions</td>
+</tr>
+</tbody>
+</table>
+<p>Use one sign convention throughout the reconciliation. For gross A/R:</p>
+<p>[ \text{Beginning A/R} + \text{Charges} - \text{Payments} - \text{Contractual Adjustments} - \text{Other Adjustments} - \text{Refunds Affecting A/R} - \text{Write-offs} = \text{Ending A/R} ]</p>
+<p>Tie every rollforward line to a system report or approved journal entry. Then reconcile the calculated ending balance to the practice-management balance. Give every unresolved difference an owner and resolution date. <strong>Do not use an unsupported adjustment to force agreement.</strong></p>
+<h2 id="conclusion-approve-exceptions-and-close-the-month" tabindex="-1" class="sb h2-sbb-cls">Conclusion: Approve Exceptions and Close the Month</h2>
+<h3 id="obtain-billing-and-accounting-sign-offs" tabindex="-1">Obtain Billing and Accounting Sign-Offs</h3>
+<p>Once every exception has an owner or is documented, collect <strong>separate billing and accounting approvals</strong>. Billing reviews posted charges, claim status, payment posting, unapplied cash, credits, and support for refunds or write-offs. Accounting reviews aging totals, deposit matching, cutoff, ledger ties, and supporting records for entries.</p>
+<p>Each approval should name the reviewer and include the review date, reporting period, systems covered, and unresolved items carried forward.</p>
+<p>Before sign-off, check that each exception log entry includes the account or transaction reference, dollar amount, issue, owner, corrective action, due date, and approval status. Require manager approval for material refunds, write-offs, unusual adjustments, duplicate-charge reversals, and carried-forward variances. <strong>An approved carryforward is not resolved.</strong> Keep it on next month’s log.</p>
+<h3 id="lock-the-period-and-save-close-records" tabindex="-1">Lock the Period and Save Close Records</h3>
+<p>After sign-off, restrict access and archive the month-end package. Lock the period and block backdated postings in both systems. Give override rights only to authorized managers, and record who locked the period and when.</p>
+<p>Post later corrections in the next open period unless policy allows a controlled reopening. Document the original transaction, reason for the correction, correction made, approver, and posting date.</p>
+<p>Store the close package in restricted storage. Include final aging reports, reconciliations, payment support, exception logs, approvals, and correction records. Keep final reports as read-only files and follow the practice’s retention schedule.</p>
+<h2 id="faqs" tabindex="-1" class="sb h2-sbb-cls">FAQs</h2>
+<h3 id="how-do-i-tell-missing-payments-from-posting-delays" tabindex="-1" data-faq-q>How do I tell missing payments from posting delays?</h3>
+<p>Reconcile bank deposits, payment summaries, and clearing accounts together. <strong>A difference doesn’t always mean a billing problem.</strong> Compare remittance totals with bank activity to see whether a payment is waiting to post or is actually missing.</p>
+<p>Check for documented processing deductions, settlement timing differences, and deposits in transit. Require bank references or deposit logs to back up the explanation.</p>
+<h3 id="why-does-my-aging-report-differ-from-ledger-ar" tabindex="-1" data-faq-q>Why does my aging report differ from ledger A/R?</h3>
+<p>Differences often come down to <strong>timing or definitions</strong>. You might be comparing today’s aging report with last month’s closed books. Or the systems may define aging, responsibility, or balances differently. Accrual-based books may also include supported valuation entries or cutoff adjustments that aren’t in the billing system.</p>
+<p>Instead of forcing the numbers to match, billing and accounting teams should <strong>document the differences in a reconciliation schedule</strong> and bring both systems onto the same reporting basis.</p>
+<h3 id="which-unresolved-issues-should-delay-month-end-close" tabindex="-1" data-faq-q>Which unresolved issues should delay month-end close?</h3>
+<p><strong>Delay month-end close</strong> when unresolved material differences, missing source records, or unverified exceptions keep records from agreeing. Examples include unverified balances, billing accounts receivable that exceed the general ledger control balance, or missing required equipment financing statements.</p>
+<p>Also hold the close if shared administrative payroll remains unallocated or collectibility estimates await CPA review - unless a provisional reporting agreement is explicitly documented.</p>
+<script async type="text/javascript" src="https://app.seobotai.com/banner/banner.js?id=6af8f80ab3182d5f9f036f43"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I tell missing payments from posting delays?","acceptedAnswer":{"@type":"Answer","text":"Reconcile bank deposits, payment summaries, and clearing accounts together. A difference doesn’t always mean a billing problem. Compare remittance totals with bank activity to see whether a payment is waiting to post or is actually missing. Check for documented processing deductions, settlement timing differences, and deposits in transit. Require bank references or deposit logs to back up the explanation."}},{"@type":"Question","name":"Why does my aging report differ from ledger A/R?","acceptedAnswer":{"@type":"Answer","text":"Differences often come down to timing or definitions. You might be comparing today’s aging report with last month’s closed books. Or the systems may define aging, responsibility, or balances differently. Accrual-based books may also include supported valuation entries or cutoff adjustments that aren’t in the billing system. Instead of forcing the numbers to match, billing and accounting teams should document the differences in a reconciliation schedule and bring both systems onto the same reporting basis."}},{"@type":"Question","name":"Which unresolved issues should delay month-end close?","acceptedAnswer":{"@type":"Answer","text":"Delay month-end close when unresolved material differences, missing source records, or unverified exceptions keep records from agreeing. Examples include unverified balances, billing accounts receivable that exceed the general ledger control balance, or missing required equipment financing statements. Also hold the close if shared administrative payroll remains unallocated or collectibility estimates await CPA review - unless a provisional reporting agreement is explicitly documented."}}]}</script>
+</div>
+<div class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/pricing" class="btn btn-primary btn-lg">Get Started</a></div>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
