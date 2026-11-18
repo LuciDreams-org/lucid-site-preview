@@ -677,6 +677,232 @@ window.addEventListener('load', function () {
 
 </div>
 
+<!-- LUCID-INTRO-TRACKING:START v1 (2026-11-18) - /intro native funnel: every step, answer, click, email event, calendar event and exit
+     goes to (a) zellify-ingest funnel 9001 (same /events route, flat event shape and event_types as Zellify funnels), (b) PostHog z:* events,
+     (c) GA4 funnel_* events (send_to G-C7R39B4QSW, beacon), (d) Meta STANDARD events only (ViewContent per step, Lead on email capture; custom names are
+     dropped by the pixel unless approved), (e) dataLayer. Called from track() below plus a few DOM listeners. Honors ?tracking_off and ?test=1.
+     Does NOT touch LUCID-CLICK-TRACKER (Button_Link_Click / ButtonClick / CTAClick stay as they are). -->
+<script>
+(function(){
+  if (window.__intro) return;
+  var FUNNEL_ID='9001', FUNNEL_NAME='email-hero-native', GA4_ID='G-C7R39B4QSW';
+  var ENDPOINT='https://zellify-ingest.49-13-173-94.sslip.io/events', KEY='Hk2qD9M1DpgyTQSKnEkrG9IECCTcqba3SgFrym3RzYs';
+  // Google Ads "Book appointment (1)" conversion label (already used on get /thank-you/confirmation/). Fires ONLY on a CONFIRMED booking
+  // (calendar_booked), which Google's scheduler iframe does not expose today, so it is never sent from this page yet.
+  var ADS_BOOKED_LABEL='AW-17424075651/C9baCNvsnYobEIOXufRA';
+  var SLUG={entity_type:'specialty',service:'service',situation:'situation',welcome:'email',evaluating:'meeting-ready',book:'book'};
+  var ORDER=['entity_type','service','situation','welcome','evaluating','book'];
+  var ps=new URLSearchParams(location.search||'');
+  var OFF=ps.has('tracking_off')||ps.get('test')==='1';
+  var I={off:OFF}; window.__intro=I;
+  function now(){return new Date().toISOString();}
+  function uuid(){
+    try{ if(crypto&&crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+    var b=new Uint8Array(16); try{crypto.getRandomValues(b);}catch(e){for(var i=0;i<16;i++)b[i]=Math.random()*256|0;}
+    b[6]=(b[6]&15)|64; b[8]=(b[8]&63)|128; var h=[].map.call(b,function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
+    return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+  }
+  function ls(k,v){try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;}}
+  function ss(k,v){try{ if(v===undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k,v);}catch(e){return null;}}
+  function cookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
+  // ---- identity: visitor (localStorage), visit (sessionStorage), visit_number, first touch ----
+  var visitorId=ls('lz9001_vid'), firstSeen=ls('lz9001_first_seen'), visitNo=parseInt(ls('lz9001_visits')||'0',10)||0, visitId=ss('lz9001_visit');
+  var returning=!!visitorId;
+  if(!visitorId){visitorId=uuid(); ls('lz9001_vid',visitorId);}
+  if(!firstSeen){firstSeen=now(); ls('lz9001_first_seen',firstSeen);}
+  if(!visitId){visitId=uuid(); ss('lz9001_visit',visitId); visitNo+=1; ls('lz9001_visits',String(visitNo));} else if(!visitNo){visitNo=1;}
+  var params={}; try{ ps.forEach(function(v,k){ if(Object.keys(params).length<40) params[k]=String(v).slice(0,300); }); }catch(e){}
+  var ft=null; try{ft=JSON.parse(ls('lz9001_ft')||'null');}catch(e){}
+  var fbclid=params.fbclid||'';
+  var fbcBuilt=fbclid?('fb.1.'+Date.now()+'.'+fbclid):'';
+  var CLICKIDS=['fbclid','gclid','ttclid','msclkid'], UTMS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'];
+  if(!ft){
+    ft={at:now(),landing:location.href.slice(0,1000),referrer:(document.referrer||'').slice(0,500),params:params,fbc:cookie('_fbc')||fbcBuilt,fbp:cookie('_fbp')};
+    ls('lz9001_ft',JSON.stringify(ft));
+  }
+  var entryReferrer=(document.referrer||'').slice(0,500);
+  var email='', emailAttempts=0, emailStarted=false, bookedFired=false, completed=false, exitSeq=0;
+  var answersRef=null;
+  var curStep='', stepStart=Date.now(), pageStart=Date.now(), prevStep='', maxIdx=-1, clickN=0, msgN=0, ifaceN=0, scrollSeen={};
+
+  function dev(){
+    var n=navigator, s=window.screen||{}, tz='';
+    try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+    return {screen:(s.width||0)+'x'+(s.height||0),viewport:(window.innerWidth||0)+'x'+(window.innerHeight||0),timezone:tz,
+      timezone_offset_minutes:-(new Date().getTimezoneOffset()),language:n.language||'',languages:(n.languages||[]).join(','),
+      platform:n.platform||'',cpu_cores:n.hardwareConcurrency||0,device_memory_gb:n.deviceMemory||0,touch_points:n.maxTouchPoints||0,
+      pixel_ratio:window.devicePixelRatio||1,user_agent:n.userAgent||''};
+  }
+  function base(type,extra){
+    var d=dev(), L=location, fb=ft||{}, fp=fb.params||{};
+    var e={schema_version:1,contract_version:2,event_id:uuid(),event_type:type,occurred_at:now(),funnel_id:FUNNEL_ID,website_id:FUNNEL_ID,
+      page_slug:SLUG[curStep]||curStep,url:L.href.slice(0,1000),url_path:L.pathname,url_query:(L.search||'').slice(0,800),
+      visitor_id:visitorId,visit_id:visitId,visit_number:visitNo,is_returning_visitor:returning||visitNo>1,first_seen_at:firstSeen,
+      attribution_schema_version:3,referrer:entryReferrer,entry_page:'specialty',landing_url:L.href.slice(0,1000),
+      entry_url_path:L.pathname,entry_url_query:(L.search||'').slice(0,800),entry_url_params_json:JSON.stringify(params),
+      url_params:params,fbp:cookie('_fbp')||fb.fbp||'',fbc:cookie('_fbc')||fbcBuilt||fb.fbc||'',cta:params.cta||'',
+      first_touch_landing_url:fb.landing||'',first_touch_entry_referrer:fb.referrer||'',first_touch_entry_page:'specialty',first_touch_entry_at:fb.at||'',
+      first_touch_entry_url_params_json:JSON.stringify(fp),first_touch_cta:fp.cta||'',
+      site:L.hostname,funnel_variant:FUNNEL_NAME};
+    CLICKIDS.concat(UTMS).forEach(function(k){e[k]=params[k]||'';e['first_touch_'+k]=fp[k]||'';});
+    for(var k in d) e[k]=d[k];
+    if(email){ e.email=email; e.data={email:email}; }
+    var a=answersRef||{};
+    var ans={entry_source:'native'}; ['entity_type','service','situation'].forEach(function(k){ if(a[k]){e[k]=a[k];ans[k]=a[k];} }); if(email) ans.email=email;
+    e.answers=ans;
+    if(extra) for(var x in extra) e[x]=extra[x];
+    if(e.element_tag!==undefined){ e.data=Object.assign(e.data||{},{cta_label:e.cta_label,cta_href:e.cta_href,element_tag:e.element_tag,element_id:e.element_id,element_name:e.element_name,element_type:e.element_type,element_role:e.element_role}); }
+    return e;
+  }
+  // ---- ingest queue: batched, deduped by event_id, flushed on pagehide via sendBeacon ----
+  var Q=[], seen={}, timer=null, DBG=window.__introDebug={posts:[],events:[]};
+  function enqueue(e){
+    if(OFF||seen[e.event_id]) return; seen[e.event_id]=1;
+    try{DBG.events.push(e.event_type);}catch(x){}
+    e._a=0; Q.push(e);
+    if(Q.length>=10) flush(false); else if(!timer) timer=setTimeout(function(){flush(false);},1200);
+  }
+  function clean(b){return b.map(function(e){var c={};for(var k in e) if(k!=='_a') c[k]=e[k];return c;});}
+  function flush(unload){
+    if(timer){clearTimeout(timer);timer=null;}
+    if(!Q.length) return;
+    var batch=Q.splice(0,Q.length), body=JSON.stringify({events:clean(batch)}), url=ENDPOINT+'?key='+encodeURIComponent(KEY);
+    try{
+      if(unload&&navigator.sendBeacon){
+        if(navigator.sendBeacon(url,new Blob([body],{type:'text/plain;charset=UTF-8'}))){DBG.posts.push({beacon:batch.length});return;}
+      }
+      fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:body,keepalive:body.length<60000,mode:'cors',credentials:'omit'})
+        .then(function(r){return r.json().then(function(j){
+          var res=(j&&j.results)||[], sum={};
+          res.forEach(function(x){sum[x.status]=(sum[x.status]||0)+1;});
+          DBG.posts.push({n:batch.length,http:r.status,sum:sum});
+        });}).catch(function(){retry(batch);});
+    }catch(e){retry(batch);}
+  }
+  function retry(batch){ batch.forEach(function(e){ if(e._a<2){e._a++; Q.push(e);} }); if(Q.length&&!timer) timer=setTimeout(function(){flush(false);},4000); }
+  // ---- platform helpers ----
+  function ga(name,p){ try{ if(OFF||typeof window.gtag!=='function')return; gtag('event',name,Object.assign({send_to:GA4_ID,transport_type:'beacon',funnel_id:FUNNEL_ID,funnel:FUNNEL_NAME,site:location.hostname},p||{})); }catch(e){} }
+  function ph(name,p,opts){ try{ if(OFF||!(window.posthog&&posthog.capture))return; var q=Object.assign({funnel:FUNNEL_NAME,funnel_id:FUNNEL_ID,site:location.hostname,visitor_id:visitorId,visit_id:visitId},p||{}); opts?posthog.capture(name,q,opts):posthog.capture(name,q); }catch(e){} }
+  function dl(name,p){ try{ if(OFF)return; window.dataLayer=window.dataLayer||[]; window.dataLayer.push(Object.assign({event:name,funnel:FUNNEL_NAME,funnel_id:FUNNEL_ID,site:location.hostname},p||{})); }catch(e){} }
+  function fb(evName,p,id){ try{ if(OFF||typeof window.fbq!=='function')return; window.fbq('track',evName,p||{},id?{eventID:id}:undefined); }catch(e){} }
+  // ---- decorate: extra props on the existing PostHog z:* events ----
+  I.decorate=function(p){ p.site=location.hostname; p.funnel_id=FUNNEL_ID; p.visitor_id=visitorId; p.visit_id=visitId; return p; };
+  // ---- called from track(): maps the existing z:* events onto ingest / GA4 / Meta ----
+  I.onTrack=function(name,p){
+    answersRef=p; if(p&&p.email&&!email) email=p.email;
+    var e;
+    if(name==='z:page_view'){
+      var step=p.step, t=Date.now(), dwell=curStep?(t-stepStart):0, from=curStep, idx=ORDER.indexOf(step);
+      if(from){ enqueue(base('page_completed',{page_slug:SLUG[from],from_page_slug:SLUG[from],to_page_slug:SLUG[step],time_on_page_ms:dwell,exit_kind:'navigated'})); }
+      prevStep=from; curStep=step; stepStart=t; if(idx>maxIdx) maxIdx=idx; scrollSeen={};
+      e=base('page_view',{page_slug:SLUG[step],from_page_slug:from?SLUG[from]:'',to_page_slug:SLUG[step],time_on_page_ms:dwell}); enqueue(e);
+      ga('funnel_step_view',{step:step,step_index:idx+1,from_step:from||'',time_on_prev_ms:dwell});
+      fb('ViewContent',{content_name:step,content_category:FUNNEL_NAME,content_type:'funnel_step',funnel_id:FUNNEL_ID,site:location.hostname},e.event_id);
+      ph('z:step_dwell',from?{step:from,to_step:step,time_on_page_ms:dwell}:{step:'landing',to_step:step,time_on_page_ms:0});
+    } else if(name==='z:answer'){
+      enqueue(base('answer',{action:'answer',intent:p.step,detail:p.value,cta_label:p.label||'',dataset:{slot:'answer',step:p.step,value:p.value}}));
+      ga('funnel_answer',{step:p.step,value:p.value,label:p.label||''});
+    } else if(name==='z:email_captured'){
+      email=p.email||email; e=base('email_captured',{email:email,email_capture_event_id:'',email_attempts:emailAttempts+1}); e.email_capture_event_id=e.event_id; enqueue(e);
+      ga('generate_lead',{step:'email',method:FUNNEL_NAME,service:(p.service||''),situation:(p.situation||''),attempts:emailAttempts+1});
+      fb('Lead',{content_name:FUNNEL_NAME,content_category:p.service||'',funnel_id:FUNNEL_ID,site:location.hostname},e.event_id);
+    } else if(name==='z:calendar_view'){
+      enqueue(base('calendar_view',{page_slug:'book'})); completed=true;
+      enqueue(base('funnel_complete',{page_slug:'book',total_time_ms:Date.now()-pageStart,funnel_result:'reached_book'}));
+      ga('funnel_calendar_view',{step:'book'}); ga('funnel_complete',{step:'book',total_time_ms:Date.now()-pageStart});
+      ph('z:funnel_complete',{step:'book',total_time_ms:Date.now()-pageStart});
+    } else if(name==='z:booked_heuristic_fired'){
+      bookedFired=true;
+      e=base('booked_heuristic_fired',{page_slug:'book',action:'booking_intent',booked_event_id:'',booked_dwell_ms:8000,booked_pixel_available:typeof window.fbq==='function',booking_confirmed:false});
+      e.booked_event_id=e.event_id; enqueue(e);
+      ga('funnel_booked_heuristic',{step:'book',dwell_ms:8000,confirmed:false});
+    }
+  };
+  // ---- every click, anywhere (capture phase: runs before page handlers, survives stopPropagation) ----
+  var CSEL='button,a,[role=button],[role=tab],input,select,textarea,label,summary,.opt,.cta,iframe,[onclick]';
+  function txt(el){
+    var t=''; try{ t=el.tagName==='INPUT'?(el.type==='email'||el.type==='text'?'':el.value):(el.innerText||el.textContent||''); }catch(e){}
+    t=String(t||'').replace(/\s+/g,' ').trim();
+    if(!t) t=String(el.getAttribute&&(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'))||'').trim();
+    return t.slice(0,100);
+  }
+  document.addEventListener('click',function(ev){
+    try{
+      if(OFF||clickN>=80) return; clickN++;
+      var t=ev.target; if(!t||t.nodeType!==1) t=t&&t.parentElement; if(!t) return;
+      var el=t.closest?(t.closest(CSEL)||t):t, sec=el.closest?el.closest('.screen'):null, loader=el.closest&&el.closest('#bk-loader');
+      var tag=(el.tagName||'').toLowerCase(), label=txt(el)||(loader?'calendar_loader':'');
+      var ds={}; try{ for(var k in el.dataset) ds[k]=String(el.dataset[k]).slice(0,100); }catch(e){}
+      ds.section=sec?sec.id:''; ds.step=curStep; ds.loader=loader?'1':''; ds.classes=String(el.className&&el.className.baseVal!==undefined?el.className.baseVal:el.className||'').slice(0,100);
+      ds.x=Math.round(ev.clientX||0); ds.y=Math.round(ev.clientY||0);
+      enqueue(base('cta_clicked',{cta_label:label,cta_href:(el.href||el.getAttribute&&el.getAttribute('href')||'').toString().slice(0,300),element_tag:tag,element_id:el.id||'',
+        element_name:(el.getAttribute&&el.getAttribute('name'))||'',element_type:(el.getAttribute&&el.getAttribute('type'))||(tag==='button'?'button':''),
+        element_role:(el.getAttribute&&el.getAttribute('role'))||'',dataset:ds}));
+      ph('z:click',{step:curStep,element_tag:tag,element_id:el.id||'',element_text:label,section:ds.section,classes:ds.classes});
+    }catch(e){}
+  },true);
+  // ---- email field: started / invalid attempts ----
+  var emailEl=document.getElementById('email');
+  function validEmail(v){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);}
+  if(emailEl){
+    var started=function(){ if(emailStarted) return; emailStarted=true; enqueue(base('email_started',{page_slug:'email'})); ga('funnel_email_started',{step:'welcome'}); ph('z:email_started',{step:'welcome'}); };
+    emailEl.addEventListener('focus',function(){ if(!emailEl.__fz){emailEl.__fz=1; enqueue(base('email_focus',{page_slug:'email'})); ph('z:email_focus',{step:'welcome'});} });
+    emailEl.addEventListener('input',started);
+    var chk=function(){ var v=(emailEl.value||'').trim(); if(!validEmail(v)){ emailAttempts++; enqueue(base('email_invalid',{page_slug:'email',email_attempts:emailAttempts,email_len:v.length,email_has_at:v.indexOf('@')>-1})); ga('funnel_email_invalid',{step:'welcome',attempt:emailAttempts}); ph('z:email_invalid',{step:'welcome',attempt:emailAttempts}); } };
+    var btn=document.getElementById('email-continue');
+    if(btn) btn.addEventListener('click',chk,true);
+    emailEl.addEventListener('keydown',function(e){ if(e.key==='Enter') chk(); },true);
+  }
+  // ---- calendar iframe: loaded, interaction, postMessage probe ----
+  var cal=document.getElementById('gcal'), srcSetAt=0;
+  if(cal){
+    try{ new MutationObserver(function(){ var s=cal.getAttribute('src'); if(s&&s!=='about:blank'&&!srcSetAt){srcSetAt=Date.now();} }).observe(cal,{attributes:true,attributeFilter:['src']}); }catch(e){}
+    cal.addEventListener('load',function(){
+      var s=cal.getAttribute('src'); if(!s||s==='about:blank') return;
+      var ms=srcSetAt?Date.now()-srcSetAt:0;
+      enqueue(base('calendar_loaded',{page_slug:curStep==='book'?'book':'meeting-ready',load_ms:ms,calendar_visible:curStep==='book'}));
+      ga('funnel_calendar_loaded',{step:curStep,load_ms:ms}); ph('z:calendar_loaded',{step:curStep,load_ms:ms});
+    });
+    window.addEventListener('blur',function(){
+      setTimeout(function(){ try{ if(document.activeElement===cal&&ifaceN<3){ ifaceN++; enqueue(base('calendar_iframe_interaction',{page_slug:'book',n:ifaceN})); ga('funnel_calendar_interaction',{step:'book',n:ifaceN}); ph('z:calendar_iframe_interaction',{step:'book',n:ifaceN}); } }catch(e){} },0);
+    });
+  }
+  window.addEventListener('message',function(ev){
+    try{
+      if(OFF||msgN>=10||!/(^|\.)google\.com$/.test((ev.origin||'').replace(/^https?:\/\//,''))) return; msgN++;
+      var d=ev.data, s=typeof d==='string'?d.slice(0,200):(d&&typeof d==='object'?('keys:'+Object.keys(d).slice(0,10).join(',')):typeof d);
+      enqueue(base('calendar_message',{page_slug:'book',message_origin:ev.origin,message_shape:s}));
+      ph('z:calendar_message',{origin:ev.origin,shape:s});
+    }catch(e){}
+  });
+  // ---- scroll depth per screen (only when the screen actually scrolls) ----
+  window.addEventListener('scroll',function(){
+    try{
+      var de=document.documentElement, h=de.scrollHeight, vh=window.innerHeight||0; if(h<=vh+40) return;
+      var pct=Math.round(((window.scrollY||de.scrollTop||0)+vh)/h*100);
+      [25,50,75,100].forEach(function(m){ var k=curStep+':'+m; if(pct>=m&&!scrollSeen[k]){ scrollSeen[k]=1; enqueue(base('scroll_depth',{percent:m,page_slug:SLUG[curStep]||curStep})); ga('funnel_scroll',{step:curStep,percent:m}); ph('z:scroll_depth',{step:curStep,percent:m}); } });
+    }catch(e){}
+  },{passive:true});
+  // ---- exit: pagehide + tab hidden, flushed with sendBeacon ----
+  var lastExit=0;
+  function exit(kind){
+    try{
+      var t=Date.now(); if(OFF||t-lastExit<800) return; lastExit=t; exitSeq++;
+      var x={page_slug:SLUG[curStep]||curStep,last_step:curStep,total_time_ms:t-pageStart,time_on_page_ms:t-stepStart,exit_kind:kind,exit_seq:exitSeq,
+        max_step_index:maxIdx+1,email_captured:!!email,reached_book:completed,booked_heuristic_fired:bookedFired};
+      enqueue(base('page_exit',x));
+      ga('funnel_exit',{last_step:curStep,total_time_ms:t-pageStart,exit_kind:kind,max_step_index:maxIdx+1});
+      ph('z:page_exit',{last_step:curStep,total_time_ms:t-pageStart,exit_kind:kind,max_step_index:maxIdx+1},{transport:'sendBeacon',send_instantly:true});
+      flush(true);
+    }catch(e){}
+  }
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') exit('hidden'); });
+  window.addEventListener('pagehide',function(){ exit('pagehide'); });
+  I.flush=function(){flush(false);}; I.ads_booked_label=ADS_BOOKED_LABEL;
+})();
+</script>
+<!-- LUCID-INTRO-TRACKING:END -->
+
 <script>
 (function(){
   var qs = location.search || '';
@@ -711,8 +937,10 @@ window.addEventListener('load', function () {
   function track(name, props){
     props = Object.assign({}, answers, props || {});
     props.funnel = 'email-hero-native';
+    try { if (window.__intro) { if (window.__intro.off) return; window.__intro.decorate(props); } } catch(e){}
     try { if (window.posthog && posthog.capture) posthog.capture(name, props); } catch(e){}
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({event:name}, props)); } catch(e){}
+    try { if (window.__intro) window.__intro.onTrack(name, props); } catch(e){}
   }
   function show(id, step){
     var cur = document.querySelector('.screen.active');
