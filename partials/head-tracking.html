@@ -328,19 +328,19 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
           window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
         });
       }
-      // CTA event: GA4 + PostHog cta_click, Meta CTAClick. Deferred one tick so page code (www script.js) can attach richer
-      // params to the click event as e.__lucidCtaExtra (unique cta_id, cta_action...). Fires once per click.
-      if(cta){
-        setTimeout(function(){
-          var q=Object.assign({},p,e.__lucidCtaExtra||{});
-          whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
-            window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q));
-          });
-          gtag('event','cta_click',Object.assign({send_to:GA4_ID},q));
-          whenReady(function(){return typeof window.fbq==='function';},function(){
-            window.fbq('trackCustom','CTAClick',q);
-          });
-        },0);
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClick. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q));}catch(x){}
+        }); }catch(x){}
       }
     }catch(err){}
   },true);

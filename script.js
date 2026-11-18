@@ -476,6 +476,14 @@ function lucidTrackEvent(name, data) {
   // Capturing-phase delegation: fires before the browser's own navigation, so
   // wiring a never-before-seen button here (first click on dynamically added
   // content) still rewrites its href in time for the click to follow it.
+  // Read by LUCID-CLICK-TRACKER synchronously on click: richer CTA params for the 3-platform cta_click event.
+  window.__lucidCtaExtraFor = function (el) {
+    var a = el && el.closest ? el.closest('a.btn, .nav-links a') : null;
+    if (!a) return null;
+    var d = wire(a); if (!d) return null;
+    return { cta_text: d.text, cta_section: d.sec, cta_action: d.act, cta_id: d.cta, cta_destination: d.href };
+  };
+
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a.btn, .nav-links a');
     if (!a) return;
@@ -489,8 +497,7 @@ function lucidTrackEvent(name, data) {
       cta_destination: data.href
     };
     if (window.__lucidClickTracker) {
-      // LUCID-CLICK-TRACKER (head) sends cta_click to PostHog + GA4 + Meta (CTAClick) once, merging these richer params.
-      e.__lucidCtaExtra = ctaData;
+      // LUCID-CLICK-TRACKER (head) already sent cta_click to PostHog + GA4 + Meta (CTAClick) using window.__lucidCtaExtraFor below.
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push(Object.assign({ event: 'cta_click' }, ctaData));
     } else {
