@@ -154,7 +154,7 @@ gtag('config', 'AW-17424075651');
       gtag('event','Button_Link_Click',{
         cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
         cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
-        send_to:'G-C7R39B4QSW'
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
       });
     }catch(err){}
   },true);
@@ -329,7 +329,7 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
       var direct=(GA_META_MODE==='always')||!gtmLoaded();
       if(direct){
         // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
-        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID},p));
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
         whenReady(function(){return typeof window.fbq==='function';},function(){
           window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
         });
@@ -343,7 +343,7 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         try{ whenReady(function(){return typeof window.fbq==='function';},function(){
           try{window.fbq('trackCustom','CtaClicked',q);}catch(x){}
         }); }catch(x){}
-        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID},q)); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
         try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
           try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
         }); }catch(x){}
