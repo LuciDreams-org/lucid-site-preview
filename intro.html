@@ -476,6 +476,14 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
   .calwrap{margin-top:8px;border-radius:16px;overflow:hidden;border:1px solid #e6e8ee;background:#fff;min-height:1800px}
   .calwrap iframe{width:100%;height:1800px;border:0;display:block}
 
+  /* animated loading line under the speaking-with card, until the calendar iframe loads (same as book.html) */
+  .bk-loader{max-width:560px;margin:14px auto 2px;text-align:center}
+  .bk-loader>i{display:block;height:3px;border-radius:99px;background:#e6e8ee;overflow:hidden;position:relative}
+  .bk-loader>i::before{content:"";position:absolute;top:0;left:-40%;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,var(--purple1,#8B5CF6),var(--purple2,#7C3AED));animation:bkload 1.05s ease-in-out infinite}
+  @keyframes bkload{0%{left:-40%}100%{left:100%}}
+  .bk-loadtxt{display:inline-block;margin-top:7px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .bk-loader.done{display:none}
+
   /* ---- segment title (screen 4/email): URL ?segment= becomes the title, 2 rows max, 2nd row gradient ---- */
   .seg-head{font-family:"Work Sans",sans-serif;font-weight:800;font-size:27px;line-height:1.2;text-align:center;margin:4px 0 16px}
   .seg-head .g{background:linear-gradient(135deg,var(--purple1),var(--purple2));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -657,6 +665,7 @@ window.addEventListener('load', function () {
       </div>
       <span class="spw-badge"><i class="spw-dot"></i>Available this week</span>
     </div>
+    <div class="bk-loader" id="bk-loader" role="status" aria-label="Loading available times"><i></i><span class="bk-loadtxt">Loading your available times&hellip;</span></div>
     <div class="calwrap">
       <iframe id="gcal" title="Select an appointment time" src="about:blank" data-src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3UtR10qOKHKVsKGZ0KHoHals6kJncyOATW6yWoPu2_aCXCTZYW1J5UrDKORQ64XkFlpqNxNg3Z?gv=true"></iframe>
     </div>
@@ -780,6 +789,11 @@ window.addEventListener('load', function () {
       var f = document.getElementById('gcal');
       var src = f.getAttribute('data-src');
       if (qs) src += (src.indexOf('?')>-1?'&':'?') + qs.replace(/^\?/,'');
+      // calendar loader: hidden once the real calendar (not the initial about:blank) fires 'load', same pattern as book.html
+      var ld = document.getElementById('bk-loader');
+      function hideLoader(){ if (ld) ld.classList.add('done'); }
+      f.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, 12000);
       f.src = src;
     } catch(e){}
     var bar = document.getElementById('eval-bar'), pct = document.getElementById('eval-pct');
