@@ -460,6 +460,10 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
   .mrow svg{width:22px;height:22px;flex:none;color:#4b5563}
   .calwrap{margin-top:14px;border-radius:16px;overflow:hidden;border:1px solid #e6e8ee;background:#fff;min-height:620px}
   .calwrap iframe{width:100%;height:640px;border:0;display:block}
+
+  /* ---- segment title (screen 4/email): URL ?segment= becomes the title, 2 rows max, 2nd row gradient ---- */
+  .seg-head{font-family:"Work Sans",sans-serif;font-weight:800;font-size:27px;line-height:1.2;text-align:center;margin:4px 0 16px}
+  .seg-head .g{background:linear-gradient(135deg,var(--purple1),var(--purple2));-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
 <body>
@@ -527,8 +531,48 @@ window.addEventListener('load', function () {
 <!-- TRACKING:BODY:END -->
 <div class="app">
 
-  <!-- ============ SCREEN 1: EMAIL HERO ============ -->
-  <section class="screen active" id="s-welcome">
+  <!-- ============ SCREEN 1: ENTITY TYPE ============ -->
+  <section class="screen active" id="s-entity">
+    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <div class="bar"><i style="width:25%"></i></div>
+    <h2 class="q">What's your entity type?</h2>
+    <div class="opts" id="opts-entity" data-step="entity_type">
+      <button class="opt" data-k="delaware_c_corp">Delaware C Corp</button>
+      <button class="opt" data-k="partnership">Partnership</button>
+      <button class="opt" data-k="llc">LLC</button>
+      <button class="opt" data-k="s_corp">S Corp</button>
+      <button class="opt" data-k="c_corp_not_delaware">C Corp (not Delaware)</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: SERVICE ============ -->
+  <section class="screen" id="s-service">
+    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <div class="bar"><i style="width:50%"></i></div>
+    <h2 class="q">What can we help you with?</h2>
+    <p class="qsub">Lucid does all of it. Your answer shapes the consultation, not a sales script.</p>
+    <div class="opts" id="opts-service" data-step="service">
+      <button class="opt" data-k="bookkeeping">Bookkeeping</button>
+      <button class="opt" data-k="taxes">Taxes</button>
+      <button class="opt" data-k="rd_credits">R&amp;D Tax Credits</button>
+      <button class="opt" data-k="cfo">CFO Services</button>
+      <button class="opt" data-k="everything">Everything</button>
+      <button class="opt" data-k="not_sure">Something else</button>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: SITUATION (one of 6 versions, set by service answer) ============ -->
+  <section class="screen" id="s-situation">
+    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <div class="bar"><i style="width:75%"></i></div>
+    <h2 class="q" id="sit-q"></h2>
+    <p class="qsub" id="sit-sub"></p>
+    <div class="opts" id="opts-situation" data-step="situation"></div>
+  </section>
+
+  <!-- ============ SCREEN 4: EMAIL ============ -->
+  <section class="screen" id="s-welcome">
+    <div id="seg-head-wrap"></div>
     <div class="herohead">
       <img class="face" src="/assets/img/hero-woman-400.webp" alt="" />
       <span class="arrow">&#9656;</span>
@@ -557,37 +601,7 @@ window.addEventListener('load', function () {
     <button class="cta" id="email-continue">Continue <span>&#8594;</span></button>
   </section>
 
-  <!-- ============ SCREEN 2: SERVICE ============ -->
-  <section class="screen" id="s-service">
-    <div class="kicker">ABOUT YOUR BUSINESS</div>
-    <div class="bar"><i style="width:42%"></i></div>
-    <h2 class="q">What can we help you with?</h2>
-    <p class="qsub">Lucid does all of it. Your answer shapes the consultation, not a sales script.</p>
-    <div class="opts" data-step="service">
-      <button class="opt">Bookkeeping</button>
-      <button class="opt">Taxes</button>
-      <button class="opt">R&amp;D Tax Credits</button>
-      <button class="opt">CFO Services</button>
-      <button class="opt">Everything</button>
-      <button class="opt">Not sure yet</button>
-    </div>
-  </section>
-
-  <!-- ============ SCREEN 3: PAIN ============ -->
-  <section class="screen" id="s-pain">
-    <div class="kicker">ABOUT YOUR BUSINESS</div>
-    <div class="bar"><i style="width:92%"></i></div>
-    <h2 class="q">What's your biggest financial pain point right now?</h2>
-    <p class="qsub">We'll map what should happen first, then how the pieces connect.</p>
-    <div class="opts" data-step="pain">
-      <button class="opt">The books are a mess</button>
-      <button class="opt">Tax surprises</button>
-      <button class="opt">No clear picture of the numbers</button>
-      <button class="opt">Growing faster than our systems</button>
-    </div>
-  </section>
-
-  <!-- ============ SCREEN 4: EVALUATING ============ -->
+  <!-- ============ SCREEN 5: MEETING-READY (evaluating) ============ -->
   <section class="screen center" id="s-eval">
     <img class="logo-top" src="/assets/lucid-logo.webp" alt="Lucid" />
     <div class="evalwrap">
@@ -601,14 +615,14 @@ window.addEventListener('load', function () {
     </div>
   </section>
 
-  <!-- ============ SCREEN 5: BOOKING ============ -->
+  <!-- ============ SCREEN 6: BOOK ============ -->
   <section class="screen" id="s-book">
     <div class="bk-top"><img class="logo-c" src="/assets/lucid-logo.webp" alt="Lucid" /></div>
     <h1 class="bk-h1">You're a strong fit.</h1>
     <p class="bk-sub">Pick a time below to secure your spot.</p>
     <div class="focus">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg></span>
-      <p>Your meeting will focus on <strong>building visibility across books, tax, and reporting</strong>.</p>
+      <p>Your meeting will focus on <strong id="focus-text">building visibility across books, tax, and reporting</strong>.</p>
     </div>
     <div class="testi">
       <div class="inner">
@@ -631,7 +645,7 @@ window.addEventListener('load', function () {
     <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 30 min appointments</div>
     <div class="mrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg> Google Meet video conference info added after booking</div>
     <div class="calwrap">
-      <iframe id="gcal" title="Select an appointment time" src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3UtR10qOKHKVsKGZ0KHoHals6kJncyOATW6yWoPu2_aCXCTZYW1J5UrDKORQ64XkFlpqNxNg3Z?gv=true" loading="lazy"></iframe>
+      <iframe id="gcal" title="Select an appointment time" src="about:blank" data-src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3UtR10qOKHKVsKGZ0KHoHals6kJncyOATW6yWoPu2_aCXCTZYW1J5UrDKORQ64XkFlpqNxNg3Z?gv=true"></iframe>
     </div>
   </section>
 
@@ -639,10 +653,37 @@ window.addEventListener('load', function () {
 
 <script>
 (function(){
-  var answers = {};
   var qs = location.search || '';
+  var answers = {};
+
+  // ---- situation screens: one of 6 versions, keyed by the service answer ----
+  var SITUATIONS = {
+    bookkeeping: { title:"How are you handling bookkeeping today?", sub:"So the call starts from where your books actually are.",
+      opts:[['Spreadsheets, mostly me','myself'],['An outside firm handles it','outside_firm'],['An in-house bookkeeper','in_house'],["We're behind, it needs cleanup",'behind']] },
+    taxes: { title:"What's your current tax situation?", sub:"Filing, planning, or catching up: each starts differently.",
+      opts:[['I need this year filed','filing'],['I want proactive planning','planning'],["We're behind on filings",'behind'],['Multiple entities or states','multi_entity']] },
+    rd_credits: { title:"Have you claimed R&D credits before?", sub:"Clinical and technical work your practice already performs may qualify.",
+      opts:[['Never','never'],['Once or twice','once_or_twice'],['Every year','every_year'],['Not sure if we qualify','unsure']] },
+    cfo: { title:"What's driving the need for CFO support?", sub:"So the call focuses on the decision in front of you.",
+      opts:[['Planning an expansion or big purchase','expansion'],['Clearer cash flow visibility','cash_flow'],['Reliable reporting for partners or lenders','reporting'],['The practice is growing fast','growing']] },
+    everything: { title:"What's your biggest financial pain point right now?", sub:"",
+      opts:[['The books are a mess','messy_books'],['Tax surprises','tax_surprises'],['No clear picture of the numbers','no_visibility'],['Growing faster than our systems','growing_fast'],['Something else','something_else']] },
+    not_sure: { title:"What would you most like to improve?", sub:"No problem. This points the call at the right starting place.",
+      opts:[['Spend less time managing the finances','less_time'],['Feel more confident in the monthly numbers','confident_numbers'],['Avoid tax surprises','tax_surprises'],['Bring everything under one team','one_team']] }
+  };
+
+  // ---- booking-card focus text: "Your meeting will focus on ..." by service + situation answer ----
+  var FOCUS = {
+    bookkeeping:{myself:"turning manual books into a reliable monthly close",outside_firm:"reviewing your current firm's output and where the books can improve",in_house:"adding review, controls, and reporting around your in-house bookkeeping",behind:"cleanup first, then reliable monthly bookkeeping"},
+    taxes:{filing:"getting this year filed cleanly and on time",planning:"tax planning opportunities before they become deadline problems",behind:"catching up on filings and reducing deadline risk",multi_entity:"mapping entity and state complexity and reducing filing risk"},
+    rd_credits:{never:"first-time R&D credit eligibility and potential recovery",once_or_twice:"reviewing prior R&D credit claims and improvement areas",every_year:"making the annual R&D credit process cleaner and better supported",unsure:"checking R&D eligibility from the work your practice already does"},
+    cfo:{expansion:"the numbers you need to plan an expansion or major purchase with confidence",cash_flow:"clear cash flow visibility for the practice",reporting:"reporting your partners and lenders can rely on, every month",growing:"finance operations that keep up as the practice grows"},
+    everything:{messy_books:"cleaning up the books before layering tax and CFO support",tax_surprises:"connecting books and tax planning to avoid surprises",no_visibility:"building visibility across books, tax, and reporting",growing_fast:"building a finance system that can support fast growth",something_else:"building visibility across books, tax, and reporting"},
+    not_sure:{less_time:"taking the most time-consuming financial work off your plate first",confident_numbers:"getting the monthly numbers reliable enough to act on",tax_surprises:"connecting books and tax planning so year-end stops surprising you",one_team:"bringing bookkeeping, taxes, and reporting under one coordinated team"}
+  };
+
   function track(name, props){
-    props = props || {};
+    props = Object.assign({}, answers, props || {});
     props.funnel = 'email-hero-native';
     try { if (window.posthog && posthog.capture) posthog.capture(name, props); } catch(e){}
     try { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({event:name}, props)); } catch(e){}
@@ -650,12 +691,61 @@ window.addEventListener('load', function () {
   function show(id, step){
     var cur = document.querySelector('.screen.active');
     if (cur) cur.classList.remove('active');
-    var el = document.getElementById(id);
-    el.classList.add('active');
+    document.getElementById(id).classList.add('active');
     window.scrollTo(0,0);
     track('z:page_view', { step: step });
   }
-  // --- email step ---
+  function bindOpts(containerId, picks, onPick){
+    var grp = document.getElementById(containerId);
+    grp.querySelectorAll('.opt').forEach(function(btn){
+      btn.onclick = function(){
+        grp.querySelectorAll('.opt').forEach(function(b){b.classList.remove('sel');});
+        btn.classList.add('sel');
+        onPick(btn.getAttribute('data-k'), btn.textContent.trim());
+      };
+    });
+  }
+
+  // --- screen 1: entity type ---
+  bindOpts('opts-entity', null, function(k, label){
+    answers.entity_type = k;
+    track('z:answer', { step:'entity_type', value:k, label:label });
+    setTimeout(function(){ show('s-service','service'); }, 180);
+  });
+
+  // --- screen 2: service -> renders screen 3's situation ---
+  bindOpts('opts-service', null, function(k, label){
+    answers.service = k;
+    track('z:answer', { step:'service', value:k, label:label });
+    renderSituation(k);
+    setTimeout(function(){ show('s-situation','situation'); }, 180);
+  });
+
+  // --- screen 3: situation (dynamic per service) ---
+  function renderSituation(serviceKey){
+    var def = SITUATIONS[serviceKey];
+    document.getElementById('sit-q').textContent = def.title;
+    var subEl = document.getElementById('sit-sub');
+    subEl.textContent = def.sub; subEl.style.display = def.sub ? '' : 'none';
+    var wrap = document.getElementById('opts-situation');
+    wrap.innerHTML = def.opts.map(function(o){ return '<button class="opt" data-k="'+o[1]+'">'+o[0]+'</button>'; }).join('');
+    bindOpts('opts-situation', null, function(k, label){
+      answers.situation = k;
+      track('z:answer', { step:'situation', value:k, label:label });
+      setTimeout(function(){ show('s-welcome','welcome'); }, 180);
+    });
+  }
+
+  // --- screen 4: email (segment title from ?segment=, max 2 rows, "|" forces the break) ---
+  (function(){
+    var seg = new URLSearchParams(qs).get('segment');
+    if (seg) {
+      var rows = seg.split('|').slice(0,2).map(function(s,i){
+        var t = s.trim(); return i===1 ? '<span class="g">'+t+'</span>' : t;
+      });
+      document.getElementById('seg-head-wrap').innerHTML = '<h1 class="seg-head">'+rows.join('<br>')+'</h1>';
+    }
+  })();
   var emailInput = document.getElementById('email');
   var emailErr = document.getElementById('email-err');
   function submitEmail(){
@@ -665,50 +755,39 @@ window.addEventListener('load', function () {
     answers.email = v;
     try { if (window.posthog) posthog.identify(v, { email: v }); } catch(e){}
     track('z:email_captured', { email: v });
-    show('s-service','service');
+    runEval();
   }
   document.getElementById('email-continue').addEventListener('click', submitEmail);
   emailInput.addEventListener('keydown', function(e){ if(e.key==='Enter') submitEmail(); });
 
-  // --- option steps ---
-  document.querySelectorAll('.opts').forEach(function(grp){
-    var step = grp.getAttribute('data-step');
-    grp.querySelectorAll('.opt').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        grp.querySelectorAll('.opt').forEach(function(b){b.classList.remove('sel');});
-        btn.classList.add('sel');
-        answers[step] = btn.textContent.trim();
-        track('z:answer', { step: step, value: answers[step] });
-        setTimeout(function(){
-          if (step === 'service') show('s-pain','pain');
-          else if (step === 'pain') runEval();
-        }, 180);
-      });
-    });
-  });
-
-  // --- evaluating animation ---
+  // --- screen 5: meeting-ready (3s bar + 1.5s hold, then auto-advance; preload the booking calendar in the background) ---
   function runEval(){
     show('s-eval','evaluating');
+    try {
+      var f = document.getElementById('gcal');
+      var src = f.getAttribute('data-src');
+      if (qs) src += (src.indexOf('?')>-1?'&':'?') + qs.replace(/^\?/,'');
+      f.src = src;
+    } catch(e){}
     var bar = document.getElementById('eval-bar'), pct = document.getElementById('eval-pct');
     var p = 0;
     var t = setInterval(function(){
       p += Math.max(2, Math.round((100-p)*0.12));
-      if (p >= 100) { p = 100; clearInterval(t); setTimeout(gotoBook, 500); }
+      if (p >= 100) { p = 100; clearInterval(t); setTimeout(gotoBook, 1500); }
       bar.style.width = p+'%'; pct.textContent = p+'%';
-    }, 110);
-  }
-  function gotoBook(){
-    show('s-book','book');
-    track('z:reached_booking', { email: answers.email || null, service: answers.service || null, pain: answers.pain || null });
-    // carry utm/fbclid into the calendar embed
-    try {
-      var f = document.getElementById('gcal');
-      if (qs) { f.src = f.src + (f.src.indexOf('?')>-1?'&':'?') + qs.replace(/^\?/,''); }
-    } catch(e){}
+    }, 90); // ~3s to 100%, then a 1.5s hold per the spec
   }
 
-  track('z:page_view', { step: 'welcome' });
+  // --- screen 6: book ---
+  function gotoBook(){
+    var focus = (FOCUS[answers.service] && FOCUS[answers.service][answers.situation]) || 'building visibility across books, tax, and reporting';
+    document.getElementById('focus-text').textContent = focus;
+    show('s-book','book');
+    track('z:calendar_view', {});
+    setTimeout(function(){ track('z:booked_heuristic_fired', {}); }, 8000); // once per visit, dwell-based, NOT a confirmed booking
+  }
+
+  show('s-entity','entity_type');
 })();
 </script>
 </body>
