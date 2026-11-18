@@ -234,7 +234,7 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
 <!-- End Meta Pixel -->
 <!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
      Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
-     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CallToActionClicked (this pixel's Meta event-validation list silently drops CTAClick and CTAClicked; verified names only).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
      GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
      cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
      Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
@@ -339,7 +339,7 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         var q=Object.assign({},p,extra||{});
         // each platform in its own try/catch so one failing SDK never blocks the others
         try{ whenReady(function(){return typeof window.fbq==='function';},function(){
-          try{window.fbq('trackCustom','CallToActionClicked',q);}catch(x){}
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
         }); }catch(x){}
         try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
         try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
