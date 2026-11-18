@@ -230,8 +230,11 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
     src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Meta Pixel -->
-<!-- LUCID-CLICK-TRACKER:START v1 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
      Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick.
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
      Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
      Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
      Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
@@ -289,6 +292,16 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
     return f?String(f.action||''):'';
   }
   function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/get started|book a|book now|talk to|get a quote|free estimate|get my free|schedule|demo|sign up|start free|contact us|log in/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
   function whenReady(test,fn){
     if(test()){fn();return;}
     var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
@@ -301,6 +314,7 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
         cta_position:positionOf(el),cta_element:elType(el)
       };
+      var cta=isCta(el,p);
       // PostHog: always
       whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
         window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p));
@@ -313,6 +327,20 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         whenReady(function(){return typeof window.fbq==='function';},function(){
           window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
         });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClick. Deferred one tick so page code (www script.js) can attach richer
+      // params to the click event as e.__lucidCtaExtra (unique cta_id, cta_action...). Fires once per click.
+      if(cta){
+        setTimeout(function(){
+          var q=Object.assign({},p,e.__lucidCtaExtra||{});
+          whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+            window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q));
+          });
+          gtag('event','cta_click',Object.assign({send_to:GA4_ID},q));
+          whenReady(function(){return typeof window.fbq==='function';},function(){
+            window.fbq('trackCustom','CTAClick',q);
+          });
+        },0);
       }
     }catch(err){}
   },true);

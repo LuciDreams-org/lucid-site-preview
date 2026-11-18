@@ -481,13 +481,21 @@ function lucidTrackEvent(name, data) {
     if (!a) return;
     var data = wire(a);
     if (!data) return;
-    lucidTrackEvent('cta_click', {
+    var ctaData = {
       cta_text: data.text,
       cta_section: data.sec,
       cta_action: data.act,
       cta_id: data.cta,
       cta_destination: data.href
-    });
+    };
+    if (window.__lucidClickTracker) {
+      // LUCID-CLICK-TRACKER (head) sends cta_click to PostHog + GA4 + Meta (CTAClick) once, merging these richer params.
+      e.__lucidCtaExtra = ctaData;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(Object.assign({ event: 'cta_click' }, ctaData));
+    } else {
+      lucidTrackEvent('cta_click', ctaData);
+    }
   }, true);
 })();
 
