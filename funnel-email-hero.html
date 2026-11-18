@@ -419,14 +419,16 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
 
   /* ---- CTA ---- */
   .spacer{flex:1}
-  .cta{width:100%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--purple1),var(--purple2));color:#fff;font-family:"Work Sans",sans-serif;font-weight:800;font-size:19px;padding:20px;border-radius:20px;box-shadow:0 14px 30px rgba(124,58,237,.34);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;transition:transform .12s}
+  .cta{width:100%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--purple1),var(--purple2));color:#fff;font-family:"Work Sans",sans-serif;font-weight:800;font-size:19px;padding:20px;border-radius:20px;box-shadow:0 14px 30px rgba(124,58,237,.34);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;margin-bottom:64px;transition:transform .12s}
   .cta:active{transform:translateY(1px)}
 
   /* ---- question screens ---- */
   .kicker{text-align:center;font-family:"Work Sans",sans-serif;font-weight:700;font-size:13px;letter-spacing:1.6px;color:#4b5563;margin:4px 0 14px}
+  .kicker-logo{display:block;height:28px;margin:2px auto 16px}
   .bar{height:7px;background:#e3e5ea;border-radius:99px;overflow:hidden;margin-bottom:26px}
   .bar>i{display:block;height:100%;background:linear-gradient(90deg,#6d5efc,#8B5CF6);border-radius:99px;transition:width .5s ease}
   .q{font-family:"Work Sans",sans-serif;font-weight:800;font-size:27px;line-height:1.2;color:var(--ink);margin-bottom:10px}
+  .q .hl{color:#7C3AED}
   .qsub{font-size:16px;line-height:1.45;color:#8b92a0;margin-bottom:22px}
   .opts{display:flex;flex-direction:column;gap:14px}
   .opt{width:100%;text-align:left;background:#fff;border:1.5px solid #eceef2;border-radius:18px;padding:22px 22px;font-family:"Work Sans",sans-serif;font-weight:700;font-size:18px;color:#272c3a;cursor:pointer;box-shadow:0 6px 16px rgba(30,25,70,.05);transition:transform .12s,border-color .12s,box-shadow .12s}
@@ -535,9 +537,9 @@ window.addEventListener('load', function () {
 
   <!-- ============ SCREEN 1: ENTITY TYPE ============ -->
   <section class="screen active" id="s-entity">
-    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <img class="kicker-logo" src="/assets/lucid-logo.webp" alt="Lucid" />
     <div class="bar"><i style="width:25%"></i></div>
-    <h2 class="q">What's your entity type?</h2>
+    <h2 class="q">What's your <span class="hl">entity type</span>?</h2>
     <div class="opts" id="opts-entity" data-step="entity_type">
       <button class="opt" data-k="delaware_c_corp">Delaware C Corp</button>
       <button class="opt" data-k="partnership">Partnership</button>
@@ -549,9 +551,9 @@ window.addEventListener('load', function () {
 
   <!-- ============ SCREEN 2: SERVICE ============ -->
   <section class="screen" id="s-service">
-    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <img class="kicker-logo" src="/assets/lucid-logo.webp" alt="Lucid" />
     <div class="bar"><i style="width:50%"></i></div>
-    <h2 class="q">What can we help you with?</h2>
+    <h2 class="q">What can we <span class="hl">help you with</span>?</h2>
     <p class="qsub">Lucid does all of it. Your answer shapes the consultation, not a sales script.</p>
     <div class="opts" id="opts-service" data-step="service">
       <button class="opt" data-k="bookkeeping">Bookkeeping</button>
@@ -565,7 +567,7 @@ window.addEventListener('load', function () {
 
   <!-- ============ SCREEN 3: SITUATION (one of 6 versions, set by service answer) ============ -->
   <section class="screen" id="s-situation">
-    <div class="kicker">ABOUT YOUR BUSINESS</div>
+    <img class="kicker-logo" src="/assets/lucid-logo.webp" alt="Lucid" />
     <div class="bar"><i style="width:75%"></i></div>
     <h2 class="q" id="sit-q"></h2>
     <p class="qsub" id="sit-sub"></p>
@@ -660,17 +662,17 @@ window.addEventListener('load', function () {
 
   // ---- situation screens: one of 6 versions, keyed by the service answer ----
   var SITUATIONS = {
-    bookkeeping: { title:"How are you handling bookkeeping today?", sub:"So the call starts from where your books actually are.",
+    bookkeeping: { title:'How are you handling <span class="hl">bookkeeping</span> today?', sub:"So the call starts from where your books actually are.",
       opts:[['Spreadsheets, mostly me','myself'],['An outside firm handles it','outside_firm'],['An in-house bookkeeper','in_house'],["We're behind, it needs cleanup",'behind']] },
-    taxes: { title:"What's your current tax situation?", sub:"Filing, planning, or catching up: each starts differently.",
+    taxes: { title:'What\'s your current <span class="hl">tax situation</span>?', sub:"Filing, planning, or catching up: each starts differently.",
       opts:[['I need this year filed','filing'],['I want proactive planning','planning'],["We're behind on filings",'behind'],['Multiple entities or states','multi_entity']] },
-    rd_credits: { title:"Have you claimed R&D credits before?", sub:"Clinical and technical work your practice already performs may qualify.",
+    rd_credits: { title:'Have you claimed <span class="hl">R&amp;D credits</span> before?', sub:"Clinical and technical work your practice already performs may qualify.",
       opts:[['Never','never'],['Once or twice','once_or_twice'],['Every year','every_year'],['Not sure if we qualify','unsure']] },
-    cfo: { title:"What's driving the need for CFO support?", sub:"So the call focuses on the decision in front of you.",
+    cfo: { title:'What\'s driving the need for <span class="hl">CFO support</span>?', sub:"So the call focuses on the decision in front of you.",
       opts:[['Planning an expansion or big purchase','expansion'],['Clearer cash flow visibility','cash_flow'],['Reliable reporting for partners or lenders','reporting'],['The practice is growing fast','growing']] },
-    everything: { title:"What's your biggest financial pain point right now?", sub:"",
+    everything: { title:'What\'s your biggest <span class="hl">financial pain point</span> right now?', sub:"",
       opts:[['The books are a mess','messy_books'],['Tax surprises','tax_surprises'],['No clear picture of the numbers','no_visibility'],['Growing faster than our systems','growing_fast'],['Something else','something_else']] },
-    not_sure: { title:"What would you most like to improve?", sub:"No problem. This points the call at the right starting place.",
+    not_sure: { title:'What would you most like to <span class="hl">improve</span>?', sub:"No problem. This points the call at the right starting place.",
       opts:[['Spend less time managing the finances','less_time'],['Feel more confident in the monthly numbers','confident_numbers'],['Avoid tax surprises','tax_surprises'],['Bring everything under one team','one_team']] }
   };
 
@@ -726,7 +728,7 @@ window.addEventListener('load', function () {
   // --- screen 3: situation (dynamic per service) ---
   function renderSituation(serviceKey){
     var def = SITUATIONS[serviceKey];
-    document.getElementById('sit-q').textContent = def.title;
+    document.getElementById('sit-q').innerHTML = def.title;
     var subEl = document.getElementById('sit-sub');
     subEl.textContent = def.sub; subEl.style.display = def.sub ? '' : 'none';
     var wrap = document.getElementById('opts-situation');
