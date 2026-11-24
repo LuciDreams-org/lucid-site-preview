@@ -517,10 +517,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 window.addEventListener('load', function () {
   setTimeout(function () {
-    // Crisp
-    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
-    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
-
     // Reddit Pixel
     !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
 
@@ -537,38 +533,6 @@ window.addEventListener('load', function () {
 });
 </script>
 
-<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
-<script>
-(function() {
-  'use strict';
-  var STORAGE_KEY = 'crispLeadFired';
-  function trackEvent(name, data) {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({event: name}, data));
-    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
-  }
-  function trackLeadOnce() {
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
-    sessionStorage.setItem(STORAGE_KEY, '1');
-    trackEvent('crisp_lead', { source: 'crisp_chat' });
-  }
-  function waitForCrisp() {
-    if (window.$crisp && window.$crisp.push) {
-      window.$crisp.push(['on', 'session:loaded', function() {
-        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
-        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
-      }]);
-    } else {
-      setTimeout(waitForCrisp, 100);
-    }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitForCrisp);
-  } else {
-    waitForCrisp();
-  }
-})();
-</script>
 <!-- TRACKING:BODY:END -->
 <div class="app">
 
