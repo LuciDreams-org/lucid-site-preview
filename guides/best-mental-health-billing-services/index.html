@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Best Mental Health Billing Services for Groups?</title>
+<meta name="description" content="Compare 8 mental health billing services for therapy and psychiatry groups: published rates, minimums and fit. Lucid books start from $130 a month." />
+<link rel="canonical" href="https://www.lucid.now/guides/best-mental-health-billing-services/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Best Mental Health Billing Services for Groups?" />
+<meta property="og:description" content="Compare 8 mental health billing services for therapy and psychiatry groups: published rates, minimums and fit. Lucid books start from $130 a month." />
+<meta property="og:url" content="https://www.lucid.now/guides/best-mental-health-billing-services/" />
+<meta name="twitter:title" content="Best Mental Health Billing Services for Groups?" />
+<meta name="twitter:description" content="Compare 8 mental health billing services for therapy and psychiatry groups: published rates, minimums and fit. Lucid books start from $130 a month." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Best Mental Health Billing Services for Groups?","description":"Compare 8 mental health billing services for therapy and psychiatry groups: published rates, minimums and fit. Lucid books start from $130 a month.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/best-mental-health-billing-services/","publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"Best Mental Health Billing Services for Groups?","item":"https://www.lucid.now/guides/best-mental-health-billing-services/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+.guide a.btn{text-decoration:none;}.guide a.btn-primary{color:#fff;}.guide .g-cta{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px;}.guide .g-cta .btn{text-align:center;}.guide p.verdict{font-size:1.06rem;line-height:1.6;}.guide .choose{background:#f5f3ff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:0 0 14px;}.guide .choose h3{margin:0 0 8px;}.guide ul.why{list-style:none;padding-left:0;}.guide ul.why li{border-left:3px solid var(--brand);padding:2px 0 2px 12px;margin:0 0 10px;}
+.spec-prose{padding:30px 0;}
+.spec-prose .prose{max-width:860px;margin:0 auto;padding:0 16px;overflow-wrap:anywhere;}
+.spec-links summary{cursor:pointer;font-weight:700;color:var(--ink);padding:6px 0;}
+.spec-links ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+.spec-links li{margin:0;}
+.spec-links li a{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;}
+.guide table{max-width:none;}
+.guide-quote{margin:22px 0;padding:18px 20px;border-left:4px solid var(--brand);background:var(--bg-soft);border-radius:0 12px 12px 0;}
+.guide-quote blockquote{margin:0 0 8px;color:var(--ink);font-style:italic;}
+.guide-quote blockquote p{margin:0;}
+.guide-quote figcaption{font-weight:700;color:var(--ink);font-size:.92rem;}
+@media (max-width:640px){.guide{padding:24px 0 4px;}.guide h2{font-size:1.3rem;margin:26px 0 10px;}.spec-faq .faq details{padding:14px 0;}.spec-faq .faq summary{font-size:1rem;}.spec-prose{padding:20px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"Best Mental Health Billing Services for Groups?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":8,"itemListElement":[{"@type":"ListItem","position":1,"name":"Mental Health Billing SRG","url":"https://mentalhealthbillingsrg.com/"},{"@type":"ListItem","position":2,"name":"Practolytics","url":"https://www.practolytics.com/"},{"@type":"ListItem","position":3,"name":"ePsych Billing","url":"https://www.epsychbilling.com/"},{"@type":"ListItem","position":4,"name":"Advance A Practice","url":"https://advanceapractice.com/pricing/"},{"@type":"ListItem","position":5,"name":"Practice Solutions","url":"https://www.practicesol.com/done-for-you-billing"},{"@type":"ListItem","position":6,"name":"TheraThink","url":"https://www.therathink.com/pricing/"},{"@type":"ListItem","position":7,"name":"Ensora RCM","url":"https://ensorahealth.com/pricing/rcm"},{"@type":"ListItem","position":8,"name":"Billing for Therapists","url":"https://www.billingfortherapists.com/"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does a mental health billing service cost?","acceptedAnswer":{"@type":"Answer","text":"Most charge a percentage of collections. On their own sites, published rates run from 3.49% to 8%, often with a monthly minimum. For what billing companies charge in general, see what a medical billing company costs."}},{"@type":"Question","name":"Is a billing service better than Headway or Alma for a group?","acceptedAnswer":{"@type":"Answer","text":"It depends on control. A billing service bills under your own contracts and rates. Headway and Alma use their contracts and set the rate, but take the claims work away. Model both on your own numbers before moving clinicians."}},{"@type":"Question","name":"Can a billing service handle psychiatry and therapy in one group?","acceptedAnswer":{"@type":"Answer","text":"Yes, several do. ePsych Billing, Mental Health Billing SRG and Practolytics list psychiatry. Ask for references from groups with prescribers."}},{"@type":"Question","name":"Do billing services include credentialing?","acceptedAnswer":{"@type":"Answer","text":"Some do. Mental Health Billing SRG includes it in its rate, and Billing for Therapists lists it as a service. Others price it separately, so ask."}},{"@type":"Question","name":"How long does it take to switch billing services?","acceptedAnswer":{"@type":"Answer","text":"Plan for a few weeks of setup and a few months of overlap. Claims already sent keep paying out after you switch, so agree in writing who works them."}},{"@type":"Question","name":"How do I know my billing service is collecting everything?","acceptedAnswer":{"@type":"Answer","text":"Match each insurance deposit to its remittance, review A/R aging by payer and track your net collection rate each month. Your bookkeeper or accountant can do this from the bank side."}},{"@type":"Question","name":"Does Lucid do mental health billing?","acceptedAnswer":{"@type":"Answer","text":"No. Lucid does not file or chase insurance claims or run billing. Lucid keeps your books, taxes and CFO planning, and works next to your billing service."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>Best mental health billing services for groups?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your Lucid price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / Best mental health billing services for groups?</nav>
+<h2 id="short-answer">Short answer</h2>
+<p>For a therapy or psychiatry group that wants its insurance billing done for it, the services that publish rates are the easiest place to start: Mental Health Billing SRG, Practolytics, ePsych Billing, Advance A Practice, Practice Solutions and TheraThink. Ensora RCM suits groups already on TheraNest or Fusion, and Billing for Therapists bundles its service with a free EHR. Compare them on what the percentage is charged on, the monthly minimum and who works denials. Then check the result every month against the deposits that land in your bank.</p>
+<h2 id="comparison-table">Comparison table</h2>
+<p>Rates are as each company publishes them on its own site, checked November 26, 2026. Swipe the table sideways on a phone.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Comparison table"><table style="min-width:480px"><thead><tr><th scope="col">Service</th><th scope="col">Published price</th><th scope="col">Best for</th></tr></thead><tbody><tr><td>Mental Health Billing SRG</td><td>3.99% of collections</td><td>Groups that want one low rate with credentialing included</td></tr><tr><td>Practolytics</td><td>3.49% to 4.99% of net collections, $750 monthly minimum</td><td>Larger behavioral health groups, including psychiatry</td></tr><tr><td>ePsych Billing</td><td>4.75% of collections, $400 monthly minimum, $4 per benefits check</td><td>Therapy and psychiatry groups that want month to month terms</td></tr><tr><td>Advance A Practice</td><td>7% solo, 6.5% for 2 to 5 providers, down to 4.5% at 26 to 50</td><td>Growing groups that want the rate to fall as they hire</td></tr><tr><td>Practice Solutions</td><td>6% of collections, set pricing on request</td><td>Groups that may later bring billing in house</td></tr><tr><td>TheraThink</td><td>6.5% to 8% of the allowed amount, group rates on request</td><td>Small groups that want a simple percentage</td></tr><tr><td>Ensora RCM</td><td>Essentials at a set monthly rate, Advanced as a percent of posted payments, by quote</td><td>Groups already on TheraNest or Fusion</td></tr><tr><td>Billing for Therapists</td><td>See the vendor&#x27;s site</td><td>Small groups that also want a free EHR</td></tr></tbody></table></div>
+<h2 id="mental-health-billing-srg">Mental Health Billing SRG</h2>
+<p>Mental Health Billing SRG says it bills for therapists, psychiatrists, psychologists, ABA providers and group practices. Its home page lists 3.99% of what it collects, with credentialing, denials, patient statements and reporting included, and says you pay nothing if it does not collect. It also lists testing, IOP and PHP, and medication authorizations.</p>
+<p>Best for: groups that want the lowest published percentage with credentialing in the base rate. Limits: ask for a written list of what &quot;included&quot; covers and the notice period.</p>
+<h2 id="practolytics">Practolytics</h2>
+<p>Practolytics bills across many specialties, and its behavioral health brochure lists four plans from 3.49% to 4.99% of net collections, a $750 monthly minimum, and setup fees waived on 12 month agreements. It is covered in more depth in our <a href="/guides/best-medical-billing-companies/">best medical billing companies</a> guide.</p>
+<p>Best for: behavioral health groups with enough volume to clear the minimum. Limits: the minimum is high for a small group, and the lower rates sit in higher tiers.</p>
+<h2 id="epsych-billing">ePsych Billing</h2>
+<p>ePsych Billing works with therapists, psychologists, psychiatrists and group practices. Its site lists 4.75% of collections with a $400 monthly minimum, plus $4 per benefits verification. It says there are no setup fees, terms are month to month, and it offers a 30 day trial. It also says it posts EOBs and ERAs within 24 hours.</p>
+<p>Best for: groups that want a mid range rate without a long agreement. Limits: benefits checks are billed per check, so count them for a busy intake month.</p>
+<h2 id="advance-a-practice">Advance A Practice</h2>
+<p>Advance A Practice sells billing, credentialing and practice setup with published package prices. Ongoing billing is 7% of collections for a solo provider with a $300 monthly minimum. The rate falls to 6.5% for 2 to 5 providers, 6% for 6 to 10, 5% for 11 to 25 and 4.5% for 26 to 50, each with a per provider minimum. There is no setup fee, and old claims over 90 days can be worked for 20% of what it recovers.</p>
+<p>Best for: groups that plan to keep hiring, since the rate steps down with headcount. Limits: your monthly fee is the greater of the percentage or the combined minimum, so model a slow month.</p>
+<h2 id="practice-solutions">Practice Solutions</h2>
+<p>Practice Solutions offers done-for-you billing for solo therapists through group practices, covering eligibility and benefits through the rest of the revenue cycle. It says it charges 6% of collections, with set pricing available on request. It also sells billing training and do it yourself tools.</p>
+<p>Best for: groups that want a service now and may train an in house biller later. Limits: ask what the 6% covers in your consultation, as its site suggests.</p>
+<h2 id="therathink">TheraThink</h2>
+<p>TheraThink is a mental health billing service that charges 6.5% to 8% of the contracted rate or allowed amount of each claim it helps collect, depending on volume. It invites groups with two or more providers to ask about group rates. It lists no startup fee, no per claim fee and free eligibility checks. A $35 monthly clearinghouse fee per tax ID and rendering NPI applies in months with claims, waived when that fee would be under 5% of your invoice.</p>
+<p>Best for: small groups that want a percentage they can check against each claim. Limits: the allowed amount includes the client&#x27;s share, so the base can be larger than what the insurer pays you.</p>
+<h2 id="ensora-rcm">Ensora RCM</h2>
+<p>Ensora Health sells Ensora RCM as an add-on for its TheraNest and Fusion EHRs, and its team works inside your EHR. RCM Essentials is for practices with 1 to 5 clinicians at a set monthly rate, covering daily claim submission and payment posting. RCM Advanced is priced as a percentage of posted payments and adds A/R follow up, appeals and an assigned performance manager.</p>
+<p>Best for: groups already on TheraNest or Fusion. Limits: both plans are by quote, and you need Ensora&#x27;s EHR. See our <a href="/guides/best-ehr-for-behavioral-health-group-practices/">behavioral health EHR guide</a> for the software side.</p>
+<h2 id="billing-for-therapists">Billing for Therapists</h2>
+<p>Billing for Therapists offers mental health insurance billing services with its own billing software at no charge. Its site lists daily claims filing, benefits checks within 2 business days, appeals and denials, EAP, Medicare, Medicaid and TriCare billing, credentialing, a month by month agreement and free account setup.</p>
+<p>Best for: small groups that want the service and an EHR from one place. Limits: pricing is not on its site, so get it in writing.</p>
+<h2 id="not-billing-services-but-often-compared">Not billing services, but often compared</h2>
+<ol><li>Headway, Alma and Grow Therapy are networks. They credential clinicians under their own contracts and pay you, so you give up rate control. Our <a href="/guides/insurance-vs-private-pay-group-practice/">insurance vs private pay guide</a> covers how they pay a group.</li><li>Thrizer handles out of network billing for clients, so it suits private pay groups, not in network claims.</li><li>SimplePractice now presents insurance billing tools and phone access to insurance specialists on its site, not a done-for-you billing service, so it is not listed above.</li></ol>
+<h2 id="what-a-4-clinician-group-would-pay">What a 4 clinician group would pay</h2>
+<p>Here is one example: a group collecting $40,000 a month from insurance, using each published rate.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="What a 4 clinician group would pay"><table style="min-width:0"><thead><tr><th scope="col">Service</th><th scope="col">Monthly fee at $40,000</th></tr></thead><tbody><tr><td>Mental Health Billing SRG</td><td>$1,596</td></tr><tr><td>Practolytics</td><td>$1,396 to $1,996</td></tr><tr><td>ePsych Billing</td><td>$1,900 plus benefits checks</td></tr><tr><td>Practice Solutions</td><td>$2,400</td></tr><tr><td>Advance A Practice</td><td>$2,600</td></tr><tr><td>TheraThink</td><td>$2,600 to $3,200 before group rates</td></tr></tbody></table></div>
+<p>These are not like for like. Scope differs, and TheraThink charges on the allowed amount, not on collections. The real test is your net collection rate after the fee, which a cheap rate with slow denial work can lose.</p>
+<h2 id="what-makes-mental-health-billing-different">What makes mental health billing different</h2>
+<ol><li>Time based codes. Psychotherapy codes such as 90834 and 90837 depend on session length, and add-on codes apply when therapy is paired with a medication visit. Ask how the service checks time and add-on rules.</li><li>Supervised clinicians. Pre licensed clinicians often bill under a supervisor, and payer rules differ. Ask how the service handles rendering and supervising providers.</li><li>Psychiatry. Medication visits, prior authorizations and treatments such as Spravato bring medical style billing. ePsych, Mental Health Billing SRG and Practolytics all list psychiatry work.</li><li>Telehealth. Place of service codes and modifiers vary by payer. Ask for the service&#x27;s telehealth rules by payer.</li><li>Credentialing. Each new hire needs to be credentialed before claims pay. Ask whether credentialing is in the rate.</li></ol>
+<h2 id="how-to-choose">How to choose</h2>
+<ol><li>2 to 5 therapists, mostly insurance: compare Mental Health Billing SRG, ePsych Billing and Advance A Practice, then ask TheraThink for its group rate.</li><li>Group with prescribers: start with ePsych Billing, Mental Health Billing SRG and Practolytics, and ask each for a psychiatry reference.</li><li>10 or more clinicians: get quotes from Practolytics and Advance A Practice, where the published rates fall with volume.</li><li>Already on TheraNest or Fusion: price Ensora RCM first, since it works inside your EHR.</li><li>Want to bring billing in house later: look at Practice Solutions, which also trains billers.</li></ol>
+<p>Ask every service four questions. What is the percentage charged on? What is the minimum? Who works denials and old A/R, and how fast? What reports will I get by payer and by clinician?</p>
+<p>Running an ABA program too? Compare ABA specialists in <a href="/guides/best-aba-billing-companies/">What are the best ABA billing companies for a clinic?</a></p>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Frequently asked questions</h2></div>
+<div class="faq"><details><summary>What does a mental health billing service cost?</summary><p>Most charge a percentage of collections. On their own sites, published rates run from 3.49% to 8%, often with a monthly minimum. For what billing companies charge in general, see <a href="/guides/medical-billing-company-cost/">what a medical billing company costs</a>.</p></details><details><summary>Is a billing service better than Headway or Alma for a group?</summary><p>It depends on control. A billing service bills under your own contracts and rates. Headway and Alma use their contracts and set the rate, but take the claims work away. Model both on your own numbers before moving clinicians.</p></details><details><summary>Can a billing service handle psychiatry and therapy in one group?</summary><p>Yes, several do. ePsych Billing, Mental Health Billing SRG and Practolytics list psychiatry. Ask for references from groups with prescribers.</p></details><details><summary>Do billing services include credentialing?</summary><p>Some do. Mental Health Billing SRG includes it in its rate, and Billing for Therapists lists it as a service. Others price it separately, so ask.</p></details><details><summary>How long does it take to switch billing services?</summary><p>Plan for a few weeks of setup and a few months of overlap. Claims already sent keep paying out after you switch, so agree in writing who works them.</p></details><details><summary>How do I know my billing service is collecting everything?</summary><p>Match each insurance deposit to its remittance, review A/R aging by payer and track your net collection rate each month. Your bookkeeper or accountant can do this from the bank side.</p></details><details><summary>Does Lucid do mental health billing?</summary><p>No. Lucid does not file or chase insurance claims or run billing. Lucid keeps your books, taxes and CFO planning, and works next to your billing service.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2>
+<p>Your billing service works the claims. Lucid keeps the books that show what that work is worth to your group.</p>
+<ol><li>Books by payer. Lucid records revenue by payer, so a slow payer or a rate cut shows up in your numbers, not only in the biller&#x27;s report.</li><li>Deposit reconciliation. Lucid reconciles every insurance deposit to your books, so posted payments and your bank agree.</li><li>AR aging reports. Lucid reports what payers still owe, by age, each month.</li><li>Billing cost as a percent of collections. Lucid tracks your billing fee as a share of collections, so you see your true take home per clinician after billing fees. CFO planning models a switch before you make it.</li><li>Several locations. Lucid gives you consolidated reporting across every location.</li></ol>
+<p>Lucid is bookkeeping, taxes, tax credits and CFO services for practices with staff or several locations, with a dedicated CPA on your account and 24/7 support in a shared Slack channel. Bank and card connections are read only, and Lucid can connect your other systems on request. Lucid starts from $130 a month. See your price on the <a href="/pricing">pricing page</a> calculator. Month to month, no setup fee.</p>
+<figure class="guide-quote"><blockquote><p>Leads operations for Ascend Behavioral Health, a multi-location behavioral-health group - with real-time financial clarity across every clinic.</p></blockquote><figcaption>Samantha Hewett, Ascend Behavioral Health</figcaption></figure>
+<p>See the <a href="/specialty/behavioral-health">behavioral health page</a> and the <a href="/specialty/psychiatry/">psychiatry page</a>.</p>
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2>
+<ol><li>Mental Health Billing SRG: <a href="https://mentalhealthbillingsrg.com/" rel="noopener">https://mentalhealthbillingsrg.com/</a></li><li>Practolytics behavioral health brochure: <a href="https://practolytics.com/ebrochures/behavioral-health-billing" rel="noopener">https://practolytics.com/ebrochures/behavioral-health-billing</a></li><li>Practolytics home: <a href="https://www.practolytics.com/" rel="noopener">https://www.practolytics.com/</a></li><li>ePsych Billing: <a href="https://www.epsychbilling.com/" rel="noopener">https://www.epsychbilling.com/</a></li><li>Advance A Practice packages and pricing: <a href="https://advanceapractice.com/pricing/" rel="noopener">https://advanceapractice.com/pricing/</a></li><li>Practice Solutions done-for-you billing: <a href="https://www.practicesol.com/done-for-you-billing" rel="noopener">https://www.practicesol.com/done-for-you-billing</a></li><li>TheraThink pricing: <a href="https://www.therathink.com/pricing/" rel="noopener">https://www.therathink.com/pricing/</a></li><li>Ensora RCM pricing: <a href="https://ensorahealth.com/pricing/rcm" rel="noopener">https://ensorahealth.com/pricing/rcm</a></li><li>Billing for Therapists: <a href="https://www.billingfortherapists.com/" rel="noopener">https://www.billingfortherapists.com/</a></li><li>Thrizer: <a href="https://www.thrizer.com/" rel="noopener">https://www.thrizer.com/</a></li><li>SimplePractice insurance features: <a href="https://www.simplepractice.com/features/insurance/" rel="noopener">https://www.simplepractice.com/features/insurance/</a></li><li>Lucid behavioral health page: <a href="/specialty/behavioral-health">https://www.lucid.now/specialty/behavioral-health</a></li><li>Lucid psychiatry page: <a href="/specialty/psychiatry/">https://www.lucid.now/specialty/psychiatry/</a></li><li>Lucid pricing: <a href="/pricing">https://www.lucid.now/pricing</a></li><li>Lucid home page testimonials: <a href="/#testimonials">https://www.lucid.now/#testimonials</a></li><li>Demand signals (listicles and owner threads, not used for facts): <a href="https://crowncounseling.com/reviews/best-mental-health-billing-services" rel="noopener">https://crowncounseling.com/reviews/best-mental-health-billing-services</a> , <a href="https://www.usecortexa.com/compare/best-mental-health-billing-companies" rel="noopener">https://www.usecortexa.com/compare/best-mental-health-billing-companies</a> , <a href="https://www.reddit.com/r/therapists/comments/1xupovc/who_do_you_actually_use_for_mental_health_billing/" rel="noopener">https://www.reddit.com/r/therapists/comments/1xupovc/who_do_you_actually_use_for_mental_health_billing/</a></li></ol>
+</div></section>
+<section class="spec-prose"><div class="wrap"><div class="prose spec-links">
+<details><summary>Related guides</summary><ul><li><a href="/guides/best-medical-billing-companies/">Best Medical Billing Companies for Practices?</a></li><li><a href="/guides/medical-billing-company-cost/">How Much Does a Medical Billing Company Cost?</a></li><li><a href="/guides/best-ehr-for-behavioral-health-group-practices/">Best EHR for Behavioral Health Group Practices?</a></li><li><a href="/guides/insurance-vs-private-pay-group-practice/">Should My Group Take Insurance or Go Private Pay?</a></li><li><a href="/guides/best-aba-billing-companies/">Best ABA Billing Companies for Clinics?</a></li><li><a href="/guides/therapist-credentialing-service-vs-headway-alma/">Credentialing Service or Headway and Alma for Therapists?</a></li><li><a href="/guides/best-credentialing-services-for-practices/">Which Credentialing Services Are Worth Paying For?</a></li><li><a href="/guides/best-credit-card-processing-for-medical-practices/">Best Credit Card Processing for Medical Practices?</a></li><li><a href="/guides/best-patient-payment-software/">Best Patient Payment Software for Practices?</a></li><li><a href="/guides/best-dental-billing-companies/">Best Dental Billing Companies for Practices?</a></li><li><a href="/guides/best-physical-therapy-billing-companies/">Best Physical Therapy Billing Companies?</a></li></ul></details>
+</div></div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
