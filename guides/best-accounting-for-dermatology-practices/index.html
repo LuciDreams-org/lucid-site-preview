@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Best Accounting for Dermatology Practices?</title>
+<meta name="description" content="Best accounting for dermatology practices, compared: Lucid from $130 a month, plus CPA firms, healthcare specialists and what to ask each one." />
+<link rel="canonical" href="https://www.lucid.now/guides/best-accounting-for-dermatology-practices/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Best Accounting for Dermatology Practices?" />
+<meta property="og:description" content="Best accounting for dermatology practices, compared: Lucid from $130 a month, plus CPA firms, healthcare specialists and what to ask each one." />
+<meta property="og:url" content="https://www.lucid.now/guides/best-accounting-for-dermatology-practices/" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Best Accounting for Dermatology Practices?","description":"Best accounting for dermatology practices, compared: Lucid from $130 a month, plus CPA firms, healthcare specialists and what to ask each one.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/best-accounting-for-dermatology-practices/","author":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"},"publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"Best Accounting for Dermatology Practices?","item":"https://www.lucid.now/guides/best-accounting-for-dermatology-practices/"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"Best Accounting for Dermatology Practices?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":10,"itemListElement":[{"@type":"ListItem","position":1,"name":"Lucid","url":"https://www.lucid.now/specialty/dermatology"},{"@type":"ListItem","position":2,"name":"Compass East","url":"https://compasseast.com/"},{"@type":"ListItem","position":3,"name":"Sorso","url":"https://www.thesorso.com/"},{"@type":"ListItem","position":4,"name":"Dillon Business Advisors","url":"https://www.dillonadvisors.com/"},{"@type":"ListItem","position":5,"name":"Morey CPA","url":"https://www.aestheticcpa.com/"},{"@type":"ListItem","position":6,"name":"Simon CPAs","url":"https://www.doctorscpas.com/"},{"@type":"ListItem","position":7,"name":"ClearBooks CPA","url":"https://www.clearbookscpa.com/"},{"@type":"ListItem","position":8,"name":"Reed Tinsley CPA","url":"https://www.rtacpa.com/"},{"@type":"ListItem","position":9,"name":"Balance Partners","url":"https://balance-partners.com/"},{"@type":"ListItem","position":10,"name":"Tandem","url":"https://yourpractice.withtandem.com/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the best bookkeeping and accounting service for a dermatology practice?","acceptedAnswer":{"@type":"Answer","text":"Lucid. It keeps medical, cosmetic and retail revenue apart, reports profit by service line, location and provider, gives every account a dedicated CPA, and publishes a price from $130 a month. CPA firms such as Morey CPA, Simon CPAs and Compass East are alternatives if you want a local firm."}},{"@type":"Question","name":"Do I need a CPA, or is a bookkeeper enough?","acceptedAnswer":{"@type":"Answer","text":"A bookkeeper keeps the records. A CPA decides entity structure, owner pay, depreciation and tax timing, which matters for devices, mid level providers and several locations. Every Lucid account has a dedicated CPA. Compare Lucid against a regular accounting firm."}},{"@type":"Question","name":"Should I track cosmetic and medical revenue separately?","acceptedAnswer":{"@type":"Answer","text":"Yes. Cosmetic is paid up front and medical is paid by insurers weeks later. Keeping them separate shows which side is truly profitable and keeps prepaid packages from counting as income in your books before the treatment is done, and your CPA confirms the tax treatment."}},{"@type":"Question","name":"What should bookkeeping, tax and CFO cost for a 3 location dermatology practice?","acceptedAnswer":{"@type":"Answer","text":"It depends on size. Lucid starts from $130 a month. Bookkeeping and CFO are priced by monthly expenses, tax is a flat monthly price, and practices above $200,000 in monthly expenses get custom pricing. Other firms publish fee ladders, such as ClearBooks CPA from $1,500 a month for multi location practices, or quote privately."}},{"@type":"Question","name":"How do I get my books ready if a private equity firm calls?","acceptedAnswer":{"@type":"Answer","text":"Buyers rebuild your earnings from your books, so unreconciled records and mixed personal expenses slow or lower an offer. Lucid keeps books reconciled monthly, separates service lines and handles intercompany reconciliation. Your attorney handles the deal structure."}},{"@type":"Question","name":"Can an accountant help with slow insurance payments and denials?","acceptedAnswer":{"@type":"Answer","text":"Your biller handles the claims. An accountant gives you the financial view: payer mix, aging by payer and a cash forecast that shows what slow payment means for next month. That is what Lucid provides."}},{"@type":"Question","name":"Should I buy or lease a laser, and can I write it off?","acceptedAnswer":{"@type":"Answer","text":"It depends on your profit this year, your cash and how long you will keep the device. Lucid models payback and the tax and cash effect of buying, financing or leasing before you sign. Your CPA confirms the current deduction limits."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>Best Accounting for Dermatology Practices?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / Best Accounting for Dermatology Practices?</nav>
+<h2 id="short-answer">Short answer</h2><p>For a dermatology practice with staff, mid level providers or several locations, Lucid is the strongest pick: a dedicated CPA on every account, books that keep medical, cosmetic and retail revenue apart, profit by service line, location and provider, bookkeeping, tax, tax credits and CFO planning from one team, and a published price from $130 a month. CPA firms such as Compass East, Dillon, Morey CPA, Simon CPAs and Reed Tinsley CPA are alternatives, but almost none publish a price you can calculate before a sales call. Tandem is prior authorization software, not accounting.</p>
+<p>See how Lucid works for <a href="/specialty/dermatology">dermatology practices</a>.</p>
+<h2 id="comparison-table">Comparison table</h2><p>Lucid is first. Competitor facts come from each firm's own site, checked November 26, 2026. "Not published" means no price was found.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Comparison table"><table><thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Price</th><th scope="col">Specialties</th><th scope="col">CPA or not</th><th scope="col">Several locations</th><th scope="col">Best fit</th></tr></thead><tbody><tr><td>Lucid</td><td>CPA led bookkeeping, tax, tax credits and CFO</td><td>From $130 a month, priced by service. Month to month</td><td>Dermatology, med spa, primary care, orthopedics, dental, medical groups</td><td>Yes, a dedicated CPA on every account</td><td>Yes. Results by location or provider, PC and MSO structures</td><td>Practices with staff, mid level providers or several locations</td></tr><tr><td>Compass East</td><td>Outsourced finance and accounting</td><td>Not published</td><td>Dermatology, behavioral health, SaaS</td><td>Says CPAs and advisors</td><td>Yes</td><td>Private equity backed platforms</td></tr><tr><td>Sorso</td><td>Healthcare only accounting and fractional CFO</td><td>From $1,500 a month plus onboarding fee</td><td>Outpatient clinics</td><td>Not a CPA firm, partners for tax</td><td>Yes</td><td>Billing tied to the books, $0.5M to $50M</td></tr><tr><td>Dillon Business Advisors</td><td>CPA advisory and accounting</td><td>Not published</td><td>Dermatology, dental, veterinary</td><td>Yes</td><td>Not stated</td><td>Texas and Missouri practices</td></tr><tr><td>Morey CPA</td><td>CPA firm</td><td>Not published</td><td>Aesthetic medicine, dermatology</td><td>Yes</td><td>Not stated</td><td>Southern California cosmetic practices</td></tr><tr><td>Simon CPAs</td><td>CPA firm</td><td>Not published</td><td>Medical practices</td><td>Yes</td><td>Not stated</td><td>Eastern Massachusetts</td></tr><tr><td>ClearBooks CPA</td><td>CPA firm</td><td>From $375 a month. $800 single location. From $1,500 multi location</td><td>Dermatology, dental, med spas</td><td>Yes</td><td>Yes, on the $1,500 plus plan</td><td>California practices</td></tr><tr><td>Reed Tinsley CPA</td><td>CPA and practice advisory</td><td>Not published</td><td>Medical practices</td><td>Yes</td><td>Not stated</td><td>Valuation and sale advice</td></tr><tr><td>Balance Partners</td><td>CPA led, med spas only</td><td>From $1,500 a month</td><td>Med spas</td><td>Yes</td><td>Not stated in the sources reviewed</td><td>Cosmetic heavy practices</td></tr><tr><td>Tandem</td><td>Prior authorization software</td><td>Free to practices</td><td>Dermatology</td><td>Not accounting</td><td>Not applicable</td><td>Offloading authorizations</td></tr></tbody></table></div>
+<h2 id="lucid">Lucid</h2><p>Lucid is bookkeeping, taxes, tax credits and CFO services for medical and private practices, with a dedicated CPA on every account.</p>
+<p>What Lucid gives you that the other options on this list do not combine:</p>
+<ol><li>A published price. Lucid starts from $130 a month, with an online calculator, month to month and no setup fee. Lucid shows your price on a public calculator before any call, and several of the CPA firms here quote only on request.</li><li>A CPA on every account. A dedicated CPA and a dedicated account manager work with you in a shared Slack channel, with replies within one business day.</li><li>Medical and cosmetic kept apart. Lucid separates medical, cosmetic and retail revenue, so a strong cosmetic month cannot hide a medical side that is slipping. Lucid reports profit by service line, and cost and margin by provider.</li><li>Several locations in one view. Lucid reports each location and a combined view, with live P&amp;L and margin by location or provider, and handles PC and MSO structures with intercompany reconciliation. See <a href="/specialty/medical-group">medical groups</a>.</li><li>Four services under one team. Bookkeeping, tax, tax credits and CFO planning, including scenarios for a new location, laser or hire.</li><li>Simple terms. Month to month, live in about 24 hours for most practices, a fixed price for catch up work, and $0 if Lucid finds no tax credits.</li></ol>
+<p>Bookkeeping and CFO are priced by your monthly expenses, and Tax Essentials is a flat monthly price. Use the calculator on <a href="/pricing">Lucid pricing</a>.</p>
+<p>Your biller and payroll provider keep their records, and Lucid makes sure they land correctly in your books.</p>
+<!-- GATE:testimonial -->
+<h2 id="compass-east">Compass East</h2><p>Compass East, in Nashville, offers outsourced finance and accounting for dermatology practices: bookkeeping, payables and receivables, forecasting, KPI dashboards, payroll and tax. It names clinician owned and private equity owned groups with several locations. Pricing is not published.</p>
+<p>Where it is strong: it can run the whole back office of a private equity platform. Where Lucid gives you more: a price you can see before a call, a dedicated CPA on a shared Slack channel, and a month to month start.</p>
+<h2 id="sorso">Sorso</h2><p>Sorso is an accounting and fractional CFO firm for outpatient clinics, based in Austin. Its dermatology page lists a dual P&amp;L for medical and cosmetic revenue, from $1,500 a month with a $3,000 to $9,000 onboarding fee. Its own comparison page says it is not a CPA firm and partners with CPAs for tax.</p>
+<p>Where it is strong: a healthcare only focus. Where Lucid gives you more: a calculator that shows your price before any call, no onboarding fee, and a dedicated CPA with tax and tax credits under the same team.</p>
+<h2 id="dillon-business-advisors">Dillon Business Advisors</h2><p>Dillon Business Advisors serves Dallas and Fort Worth, Houston and St. Louis and markets dermatologist CPA services, with tax, payroll and financial management in a "team of three" per client. Its pricing page was not available, so no price is shown.</p>
+<p>Where it is strong: payroll bundled with the books. Where Lucid gives you more: published pricing, multi state filings and consolidated reporting across locations.</p>
+<h2 id="morey-cpa">Morey CPA</h2><p>Morey CPA and Associates, in San Clemente, California, runs an aesthetic medicine accounting site with a dermatologist page covering QuickBooks accounting, outsourced bookkeeping and tax reduction planning. Pricing is not published.</p>
+<p>Where it is strong: a local CPA for cosmetic heavy practices in Southern California. Where Lucid gives you more: published pricing, CFO scenario planning and multi state filings and one view across locations.</p>
+<h2 id="simon-cpas">Simon CPAs</h2><p>Simon CPAs is a CPA firm with offices in Westwood, Boston and Braintree, Massachusetts, with a dermatology page covering QuickBooks accounting, outsourced bookkeeping, tax reduction planning and benchmarking. Pricing is not published. Details come from search excerpts.</p>
+<p>Where it is strong: a local CPA relationship near Boston. Where Lucid gives you more: a calculable price, live results by location and provider, and a team in your Slack channel.</p>
+<h2 id="clearbooks-cpa">ClearBooks CPA</h2><p>ClearBooks CPA, in Irvine, California, publishes flat plans on its dermatology cost page: $375 a month for an owner with outside income, $800 for a single location practice or med spa, and from $1,500 for multi provider practices, multi location med spas and MSO structures. The page is written for California.</p>
+<p>Where it is strong: a published fee ladder. Where Lucid gives you more: a calculator that shows your price before any call, and CFO planning in the same team instead of a higher tier.</p>
+<h2 id="reed-tinsley-cpa">Reed Tinsley CPA</h2><p>Reed Tinsley CPA, in Houston, serves medical practice owners nationwide with accounting, tax planning, practice management consulting and valuation, and has a dermatology page. Pricing is not published. Details come from search excerpts.</p>
+<p>Where it is strong: advisory depth on valuation and practice sales. Where Lucid gives you more: ongoing monthly books and reporting at a price you can see.</p>
+<h2 id="balance-partners">Balance Partners</h2><p>Balance Partners is a CPA led practice that works only with med spas, from $1,500 a month. It does not list dermatology, so it fits only the cosmetic side of a practice that is mostly a med spa.</p>
+<p>Where it is strong: package and gift card liability work. Where Lucid gives you more: a practice that bills insurance and sells cosmetic services needs both sides in one set of books, with a calculator that shows your price. See <a href="/guides/best-bookkeeping-for-med-spas/">best bookkeeping for med spas</a>.</p>
+<h2 id="tandem">Tandem</h2><p>Tandem is prior authorization software for dermatology practices, covering authorizations, appeals and pharmacy follow up, and its site says it is free to practices. It is not an accounting service. It is here because denied authorizations show up in your cash.</p>
+<h2 id="what-a-dermatology-practice-needs-from-its-books">What a dermatology practice needs from its books</h2><p>Dermatology is several businesses under one tax ID.</p>
+<ol><li>Service line profit. In a vendor run survey of 156 dermatology owners, 46 percent did not regularly review their own financials. A blended profit number hides which line pays.</li><li>Medical versus cosmetic revenue. Medical revenue arrives weeks later from payers. Cosmetic revenue is paid up front, in packages and memberships, and is not earned until delivered. Lucid keeps the two sides in separate accounts and reconciles deposits to sales.</li><li>Sale readiness. In the same survey, 86 percent of independent owners had been approached by a private equity firm or consolidator. A buyer rebuilds your earnings from your books. Lucid keeps books reconciled monthly and handles intercompany reconciliation with a management company. Your attorney structures the deal.</li><li>Mid level providers. A nurse practitioner or PA carries pay, benefits, supervision time and a ramp period. Lucid builds cost and margin by provider and reviews worker classification.</li><li>Lasers and devices. Buying, financing or leasing changes both taxes and cash. Lucid models payback and the tax and cash effect before you sign.</li><li>Prior authorization and denials. Your biller works the claims. Lucid gives you payer mix, aging of what is owed by payer, and a cash forecast.</li><li>Injectables and retail. Product costs need to land in the right service line so margins are real. Unit level stock tracking stays in your practice software.</li><li>Mohs and in house pathology. Each has its own payer rules and costs, so each should read as its own line.</li></ol>
+<h2 id="bookkeeping-tax-and-cfo-for-a-3-location-dermatology-practice">Bookkeeping, tax and CFO for a 3 location dermatology practice</h2><p>A three location practice is a different problem from a single office. The questions get harder: which location earns what after shared costs, and whether a management company and a medical entity reconcile.</p>
+<p>Lucid gives each location its own P&amp;L and margin, and a combined view for the owner. If the practice uses a management company, Lucid handles the intercompany reconciliation between it and the medical entity. The CFO side adds budget against actuals and scenario planning for a fourth location or a new device, and tax planning in the same team. Bookkeeping and CFO are priced by monthly expenses on the <a href="/pricing">pricing page</a>, tax is a flat monthly price, and a practice above $200,000 in monthly expenses is quoted custom.</p>
+<p>Compass East, Sorso and ClearBooks CPA on its $1,500 plus plan say they serve multi location or multi provider practices. Dillon, Morey and Simon CPAs do not state it in the sources reviewed. Ask any firm for a sample monthly report by location.</p>
+<h2 id="how-to-choose">How to choose</h2><ol><li>Staff, mid level providers or several locations, one team for books, tax and CFO, and a visible price: Lucid.</li><li>A private equity backed platform wanting the back office run outside: Compass East or Lucid.</li><li>A cosmetic heavy practice in Southern California wanting a local CPA: Morey CPA or ClearBooks CPA.</li><li>A Boston area practice wanting a local CPA: Simon CPAs.</li><li>Texas or Missouri practices wanting payroll and tax bundled: Dillon Business Advisors.</li><li>A sale or valuation: Reed Tinsley CPA for advisory, with Lucid for the monthly books beforehand.</li></ol>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Questions owners ask</h2></div>
+<div class="faq"><details open><summary>What is the best bookkeeping and accounting service for a dermatology practice?</summary><p>Lucid. It keeps medical, cosmetic and retail revenue apart, reports profit by service line, location and provider, gives every account a dedicated CPA, and publishes a price from $130 a month. CPA firms such as Morey CPA, Simon CPAs and Compass East are alternatives if you want a local firm.</p></details><details><summary>Do I need a CPA, or is a bookkeeper enough?</summary><p>A bookkeeper keeps the records. A CPA decides entity structure, owner pay, depreciation and tax timing, which matters for devices, mid level providers and several locations. Every Lucid account has a dedicated CPA. Compare <a href="/guides/lucid-vs-a-regular-accounting-firm/">Lucid against a regular accounting firm</a>.</p></details><details><summary>Should I track cosmetic and medical revenue separately?</summary><p>Yes. Cosmetic is paid up front and medical is paid by insurers weeks later. Keeping them separate shows which side is truly profitable and keeps prepaid packages from counting as income in your books before the treatment is done, and your CPA confirms the tax treatment.</p></details><details><summary>What should bookkeeping, tax and CFO cost for a 3 location dermatology practice?</summary><p>It depends on size. Lucid starts from $130 a month. Bookkeeping and CFO are priced by monthly expenses, tax is a flat monthly price, and practices above $200,000 in monthly expenses get custom pricing. Other firms publish fee ladders, such as ClearBooks CPA from $1,500 a month for multi location practices, or quote privately.</p></details><details><summary>How do I get my books ready if a private equity firm calls?</summary><p>Buyers rebuild your earnings from your books, so unreconciled records and mixed personal expenses slow or lower an offer. Lucid keeps books reconciled monthly, separates service lines and handles intercompany reconciliation. Your attorney handles the deal structure.</p></details><details><summary>Can an accountant help with slow insurance payments and denials?</summary><p>Your biller handles the claims. An accountant gives you the financial view: payer mix, aging by payer and a cash forecast that shows what slow payment means for next month. That is what Lucid provides.</p></details><details><summary>Should I buy or lease a laser, and can I write it off?</summary><p>It depends on your profit this year, your cash and how long you will keep the device. Lucid models payback and the tax and cash effect of buying, financing or leasing before you sign. Your CPA confirms the current deduction limits.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2><p>Lucid fits a dermatology practice that has outgrown a bookkeeper and a once a year CPA. It gives you a dedicated CPA on every account, books that keep medical, cosmetic and retail revenue apart, profit by service line, location and provider, and bookkeeping, tax, tax credits and CFO planning from one team, from $130 a month and month to month. See <a href="/specialty/dermatology">Lucid for dermatology practices</a>, <a href="/specialty/medical-group">medical groups</a>, <a href="/specialty/medical-spa">med spas</a>, the <a href="/guides/best-accounting-for-medical-practices/">master list of accounting for medical practices</a> and <a href="/pricing">Lucid pricing</a>.</p>
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2><ol><li>Lucid: <a href="/">https://www.lucid.now/</a> , <a href="/pricing">https://www.lucid.now/pricing</a> , <a href="/specialty/dermatology">https://www.lucid.now/specialty/dermatology</a> , <a href="/specialty/medical-group">https://www.lucid.now/specialty/medical-group</a></li><li>Compass East: <a href="https://compasseast.com/industries/health-care/dermatology/" rel="noopener">https://compasseast.com/industries/health-care/dermatology/</a></li><li>Sorso: <a href="https://www.thesorso.com/healthcare-accounting-services/dermatology-accounting" rel="noopener">https://www.thesorso.com/healthcare-accounting-services/dermatology-accounting</a> , <a href="https://www.thesorso.com/compare/accounting-firms-for-dermatology-practices" rel="noopener">https://www.thesorso.com/compare/accounting-firms-for-dermatology-practices</a></li><li>Dillon Business Advisors: <a href="https://www.dillonadvisors.com/who-we-work-with/dermatologists/" rel="noopener">https://www.dillonadvisors.com/who-we-work-with/dermatologists/</a> , <a href="https://www.dillonadvisors.com/locations" rel="noopener">https://www.dillonadvisors.com/locations</a></li><li>Morey CPA: <a href="https://www.aestheticcpa.com/accounting-for-dermatologists" rel="noopener">https://www.aestheticcpa.com/accounting-for-dermatologists</a></li><li>Simon CPAs: <a href="https://www.doctorscpas.com/accounting-for-dermatologists.htm" rel="noopener">https://www.doctorscpas.com/accounting-for-dermatologists.htm</a></li><li>ClearBooks CPA: <a href="https://www.clearbookscpa.com/dermatologists-dentists/dermatology-practice-cpa-cost" rel="noopener">https://www.clearbookscpa.com/dermatologists-dentists/dermatology-practice-cpa-cost</a></li><li>Reed Tinsley CPA: <a href="https://www.rtacpa.com/industries/cpa-for-dermatology" rel="noopener">https://www.rtacpa.com/industries/cpa-for-dermatology</a></li><li>Balance Partners: <a href="https://balance-partners.com/services" rel="noopener">https://balance-partners.com/services</a> , <a href="https://balance-partners.com/pricing" rel="noopener">https://balance-partners.com/pricing</a></li><li>Tandem: <a href="https://yourpractice.withtandem.com/dermatology" rel="noopener">https://yourpractice.withtandem.com/dermatology</a></li><li>Dermatology owner survey of 156 owners (vendor run): <a href="https://www.practicelayer.com/p/what-156-derm-owners-just-told-us-about-2026" rel="noopener">https://www.practicelayer.com/p/what-156-derm-owners-just-told-us-about-2026</a></li></ol>
+</div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
