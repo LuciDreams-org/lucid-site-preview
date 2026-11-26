@@ -1,0 +1,720 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>What Records Must a Med Spa Keep, and for How Long? | Lucid</title>
+<meta name="description" content="How long a med spa keeps tax, payroll, equipment and sales records: a 14-row retention table, a year-end filing checklist, and how patient charts differ."/>
+<link rel="canonical" href="https://www.lucid.now/blog/what-records-does-a-med-spa-have-to-keep/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="What Records Must a Med Spa Keep, and for How Long? | Lucid"/>
+<meta property="og:description" content="How long a med spa keeps tax, payroll, equipment and sales records: a 14-row retention table, a year-end filing checklist, and how patient charts differ."/>
+<meta property="og:url" content="https://www.lucid.now/blog/what-records-does-a-med-spa-have-to-keep/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="What Records Must a Med Spa Keep, and for How Long? | Lucid"/>
+<meta name="twitter:description" content="How long a med spa keeps tax, payroll, equipment and sales records: a 14-row retention table, a year-end filing checklist, and how patient charts differ."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"What financial records does a med spa have to keep, and for how long?","description":"How long a med spa keeps tax, payroll, equipment and sales records: a 14-row retention table, a year-end filing checklist, and how patient charts differ.","url":"https://www.lucid.now/blog/what-records-does-a-med-spa-have-to-keep/","datePublished":"2026-12-08","dateModified":"2026-12-08","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/what-records-does-a-med-spa-have-to-keep/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does a med spa have to keep tax records?","acceptedAnswer":{"@type":"Answer","text":"At least 3 years after you file each return, for most records. Keep payroll records at least 4 years, equipment records until 3 years after the return for the year you sell the equipment, and your filed returns for good. If your state has its own sales tax period, follow the longer of the two."}},{"@type":"Question","name":"What records should be kept for 7 years?","acceptedAnswer":{"@type":"Answer","text":"The IRS sets a 7-year period for records behind a bad debt deduction or a loss from worthless securities. Some owners keep everything for 7 years, because that also covers the 6-year rule for income left off a return. It's a safe default if you're unsure."}},{"@type":"Question","name":"Can I keep receipts as photos instead of paper?","acceptedAnswer":{"@type":"Answer","text":"Yes. The IRS accepts electronic records that are complete, legible and easy to retrieve, and you can shred the paper once you've checked your copies. Take each photo so the date, vendor and amount are readable, and back the files up somewhere other than one phone."}},{"@type":"Question","name":"How long do I keep records for equipment like lasers?","acceptedAnswer":{"@type":"Answer","text":"Keep them until 3 years after you file the return for the year you sell or get rid of the equipment. For a laser you own for seven years, that means keeping the invoice for about 11 years. If you financed it, keep the loan papers in the same file."}},{"@type":"Question","name":"Are patient charts covered by the same rules?","acceptedAnswer":{"@type":"Answer","text":"No. Tax rules cover your financial records only. Your state sets how long you keep patient charts, and it may set a longer period for minors. Ask your attorney or your state medical board, then add the answer to your retention schedule."}},{"@type":"Question","name":"What happens to my records if I change software?","acceptedAnswer":{"@type":"Answer","text":"You still owe the IRS the records after the software company closes your account. Export before you cancel and check that each file opens. Ask the old vendor in writing how long it keeps your data after you leave, and whether it will send a full export later."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"What financial records does a med spa have to keep, and for how long?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">What financial records does a med spa have to keep, and for how long?</h1>
+<div class="article-meta"><time datetime="2026-12-08">December 8, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 8, 2026</p>
+<!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No post goes live without this line. -->
+<div class="article-body">
+<p>Keep most tax records for 3 years after you file the return they support, payroll records for at least 4 years, and equipment records until 3 years after the return for the year you sell the equipment. Keep your filed returns for good. Patient charts and drug logs follow state rules, so ask your attorney.<!-- CPA CHECK: the 3-year, 4-year and equipment periods, against IRS "How long should I keep records?" and Publication 583. --><!-- ATTORNEY CHECK: patient chart and controlled-substance record periods are set by state and federal health rules, not the IRS. --></p>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>The IRS can usually review a return for 3 years after you file it, or 6 years if you left out more than 25% of your gross income.<!-- CPA CHECK: IRS "How long should I keep records?", periods of limitations. --></li>
+<li>You&#39;ll keep payroll records for at least 4 years after the tax is due or paid, whichever is later.<!-- CPA CHECK: Publication 15, Recordkeeping; Publication 583. --></li>
+<li>Example 1 is a month-by-month list of what to pull at year end and where to file each item.</li>
+</ul>
+<h2 id="what-is-a-record-retention-schedule">What is a record retention schedule?</h2>
+<p>A record retention schedule is a written list of the records your med spa keeps, how long you keep each one, and where you file it.</p>
+<ul>
+<li><strong>The period of limitations</strong> is the time the IRS has to assess more tax on a return, and the time you have to amend it for a refund.</li>
+<li><strong>Basis</strong> is what you paid for an asset, such as a laser, plus improvements and minus the depreciation you&#39;ve taken.</li>
+<li><strong>Depreciation</strong> is the deduction you take for the cost of equipment, either all at once or spread over several years.</li>
+<li><strong>A business associate agreement</strong> is a contract that lets a vendor handle protected health information for your med spa under HIPAA.</li>
+</ul>
+<!-- CPA CHECK: definitions of period of limitations, basis and depreciation, against Publications 583 and 946. --><!-- ATTORNEY CHECK: the business associate agreement definition and which rules govern non-tax records. -->
+<h2 id="which-records-does-a-med-spa-keep-and-for-how-long">Which records does a med spa keep, and for how long?</h2>
+<p>A med spa keeps three kinds of records: tax records, with periods the IRS sets; payroll records, with a 4-year rule; and patient and drug records, with periods set by your state and federal health rules.<!-- CPA CHECK: IRS periods and the 4-year employment tax rule, Publications 583 and 15. --><!-- ATTORNEY CHECK: patient chart and drug record periods are set by state and federal health rules. --></p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Keep for</th>
+<th>Who asks for it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Filed tax returns: income, payroll and sales tax</td>
+<td>For good</td>
+<td>IRS, your CPA, a lender, a buyer<!-- CPA CHECK: IRS says keep copies, no end date; 'for good' is practical, not an IRS rule. --></td>
+</tr>
+<tr>
+<td>Bank, card and payment processor statements</td>
+<td>3 years after you file the return they support</td>
+<td>IRS, your CPA<!-- CPA CHECK: 3-year period. --></td>
+</tr>
+<tr>
+<td>Point-of-sale sales reports and daily close-outs</td>
+<td>3 years after you file the return</td>
+<td>IRS, state revenue department<!-- CPA CHECK: 3-year period; gross receipts documents, Publication 583. --></td>
+</tr>
+<tr>
+<td>Package, membership and gift card sales</td>
+<td>3 years after the return for the year you count the income</td>
+<td>IRS, your state for unused gift card balances<!-- CPA CHECK: 3-year period from the return that reports the income. --><!-- ATTORNEY CHECK: state unclaimed property rules on gift card balances. --></td>
+</tr>
+<tr>
+<td>Invoices for injectables, skin care and supplies</td>
+<td>3 years after you file the return</td>
+<td>IRS, your CPA<!-- CPA CHECK: inventory and expense documents, Publication 583. --></td>
+</tr>
+<tr>
+<td>Retail sales tax records</td>
+<td>The period your state sets</td>
+<td>State revenue department<!-- CPA CHECK: state sales tax record periods vary; name no state without sign-off. --></td>
+</tr>
+<tr>
+<td>Payroll records: Forms W-4 and W-2, pay registers, tax deposits</td>
+<td>At least 4 years after the tax is due or paid, whichever is later</td>
+<td>IRS, state tax and labor agencies<!-- CPA CHECK: Publication 15 and Publication 583, 4 years. --></td>
+</tr>
+<tr>
+<td>Forms 1099-NEC you filed, with each Form W-9</td>
+<td>At least 3 years from the due date; 4 if you withheld backup tax</td>
+<td>IRS<!-- CPA CHECK: General Instructions for Certain Information Returns, section on keeping copies. --></td>
+</tr>
+<tr>
+<td>Equipment purchases: lasers, devices, furniture</td>
+<td>Until 3 years after the return for the year you sell or dispose of it</td>
+<td>IRS, a buyer, a lender<!-- CPA CHECK: asset records, Publications 583 and 946. --></td>
+</tr>
+<tr>
+<td>Formation papers, EIN letter, any S corp election</td>
+<td>As long as the business exists</td>
+<td>Your bank, IRS, a buyer<!-- CPA CHECK: practical period, not an IRS rule. --></td>
+</tr>
+<tr>
+<td>Records behind a bad debt deduction</td>
+<td>7 years</td>
+<td>IRS<!-- CPA CHECK: 7-year period. --></td>
+</tr>
+<tr>
+<td>HIPAA policies, risk assessments and business associate agreements</td>
+<td>6 years from creation or the date last in effect, whichever is later</td>
+<td>HHS Office for Civil Rights<!-- ATTORNEY CHECK: 45 CFR 164.316(b)(2)(i). --></td>
+</tr>
+<tr>
+<td>Patient charts, consents and photos</td>
+<td>The period your state sets</td>
+<td>Your state medical board, a patient<!-- ATTORNEY CHECK: state medical records retention. --></td>
+</tr>
+<tr>
+<td>Controlled-substance records, if your med spa holds any</td>
+<td>Ask your attorney</td>
+<td>DEA, your state board of pharmacy<!-- ATTORNEY CHECK: DEA and state record periods. --></td>
+</tr>
+</tbody></table></div>
+<p>Before you shred anything, the IRS says to check whether your insurer or lenders need it kept longer (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records">IRS, How long should I keep records?</a>). For payroll records in detail, read <a href="/blog/payroll-tax-records-retention-rules-explained/">how long to keep W-2s and payroll records</a>.</p>
+<h2 id="how-far-back-can-the-irs-audit-a-med-spa">How far back can the IRS audit a med spa?</h2>
+<p>Usually 3 years from the date you filed the return. It&#39;s 6 years if you left out more than 25% of the gross income you reported, and there&#39;s no limit if you never filed or filed a fraudulent return. A return filed early counts as filed on its due date.<!-- CPA CHECK: periods of limitations and the early-filing rule, IRS "How long should I keep records?" and Publication 583 Table 3. --></p>
+<p>For a med spa, the 6-year rule matters when sales never reached the books, such as cash nobody entered. Matching point-of-sale sales to deposits each month is how you&#39;d catch that.</p>
+<h2 id="can-i-throw-out-paper-receipts-once-ive-scanned-them">Can I throw out paper receipts once I&#39;ve scanned them?</h2>
+<p>Yes, if your scans are complete, legible and easy to find, and you keep them for the full period. The IRS applies the same rules to electronic records as to paper and can test your system. The IRS sets out the rules for electronic storage in Revenue Procedure 97-22.<!-- CPA CHECK: electronic records, Publication 583, and Rev. Proc. 97-22. --></p>
+<p>Before you shred the boxes:</p>
+<ol>
+<li>Scan every receipt, invoice and statement.</li>
+<li>Name each file by year, type and month, such as &quot;2026 injectables March&quot;.</li>
+<li>Open a sample from each year to make sure you can read it, and keep a backup.<!-- CPA CHECK: electronic storage system requirements, Publication 583. --></li>
+</ol>
+<h2 id="example-1-year-end-records-checklist-for-a-3-year-old-med-spa">Example 1: year-end records checklist for a 3-year-old med spa</h2>
+<p>Assumptions: a med spa opened in January 2024, so December 2026 ends its third year. It has two injectors on payroll and one aesthetician on a 1099, sells retail skin care, and bought a laser in June 2024. The owner keeps one cloud folder per tax year, plus &quot;Assets&quot; and &quot;Tax returns&quot; folders.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Month</th>
+<th>What you pull and file</th>
+<th>Where it goes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>December 2026</td>
+<td>Count product on the shelf December 31; list prepaid balances; get a Form W-9 from the aesthetician</td>
+<td>2026 folder: Inventory, Prepaid, Contractors</td>
+</tr>
+<tr>
+<td>January 2027</td>
+<td>Download 12 months of bank, card and processor statements; export sales by month; save payroll registers and Forms W-2 and 1099-NEC</td>
+<td>2026 folder: Bank, Sales, Payroll</td>
+</tr>
+<tr>
+<td>February 2027</td>
+<td>Save each 2026 sales tax return and payment confirmation, and the year&#39;s product invoices</td>
+<td>2026 folder: Sales tax, Product</td>
+</tr>
+<tr>
+<td>March 2027</td>
+<td>Send your CPA the closed books; save the filed 2026 return and the depreciation schedule</td>
+<td>Tax returns folder; Assets folder: Laser 2024</td>
+</tr>
+<tr>
+<td>April 2027</td>
+<td>Make the shred list: nothing yet</td>
+<td>None</td>
+</tr>
+</tbody></table></div>
+<p>This med spa can&#39;t shred any tax record yet: it filed its first return, for 2024, in 2025, so the IRS can review that return into 2028.<!-- CPA CHECK: 3-year period from the filing or due date of the 2024 return. --> For the package and gift card records, see how a med spa records packages, memberships and gift cards<!-- TODO: link "how a med spa records packages, memberships and gift cards" to /blog/med-spa-packages-memberships-gift-cards-accounting/ once that post is live. -->.</p>
+<h2 id="example-2-how-long-a-med-spa-keeps-the-records-for-a-laser">Example 2: how long a med spa keeps the records for a laser</h2>
+<p>Assumptions: the same med spa buys a $90,000 laser in June 2024, sells it for $20,000 in 2031, and files the 2031 return in 2032.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Year</th>
+<th>What happens</th>
+<th>Records you keep</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2024</td>
+<td>You buy the laser and start using it</td>
+<td>Invoice, financing agreement, proof of payment, start date</td>
+</tr>
+<tr>
+<td>2024 to 2031</td>
+<td>Your CPA takes depreciation on your returns</td>
+<td>Each year&#39;s depreciation schedule</td>
+</tr>
+<tr>
+<td>2031</td>
+<td>You sell the laser for $20,000</td>
+<td>Bill of sale and proof of payment</td>
+</tr>
+<tr>
+<td>2032</td>
+<td>You file the 2031 return, reporting the sale</td>
+<td>The return</td>
+</tr>
+<tr>
+<td>2035</td>
+<td>You reach 3 years after filing the 2031 return</td>
+<td>You can shred the laser file</td>
+</tr>
+</tbody></table></div>
+<p>You keep the file until 2035 even if your CPA deducted the whole $90,000 in 2024, because your CPA figures the gain from the basis left.<!-- CPA CHECK: asset records kept until the period of limitations expires for the year of disposal; gain computed from adjusted basis, Publications 583 and 946. --></p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="what-should-i-export-before-i-switch-software">What should I export before I switch software?</h2>
+<p>Before you cancel the old system, export everything you&#39;d need to prove a past year, since you may lose access once you stop paying. Save each export as a file you can open without that software.</p>
+<ul>
+<li><strong>Point-of-sale system:</strong> daily sales by payment type, refunds, and prepaid balances by client.</li>
+<li><strong>Accounting software:</strong> the general ledger, reconciliations and attached receipts.</li>
+<li><strong>Payroll company:</strong> pay registers, payroll tax returns and Forms W-2.</li>
+</ul>
+<p>A med spa&#39;s client list can count as patient information, so store the export where your HIPAA policies apply.<!-- ATTORNEY CHECK: whether client names and balances in a point-of-sale export are protected health information. --> Keep each export for the same period as the paper records it replaces.<!-- CPA CHECK: electronic copies kept for the full period, Publication 583. --></p>
+<h2 id="are-patient-charts-and-drug-logs-covered-by-the-same-rules">Are patient charts and drug logs covered by the same rules?</h2>
+<p>No. The IRS periods cover tax records only. Your state sets how long you keep patient charts, consents and photos, and federal and state drug rules cover any controlled-substance records. Ask your attorney or your state medical board.<!-- ATTORNEY CHECK: no federal chart retention period is stated here; state law and DEA rules apply. --></p>
+<p>HIPAA adds one rule: you keep your HIPAA policies and risk assessments for 6 years from creation or the date last in effect, whichever is later (<a href="https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C/section-164.316">45 CFR 164.316(b)(2)</a>).<!-- ATTORNEY CHECK: 45 CFR 164.316(b)(2)(i), 6 years. --> Keep tax and patient records apart, so whoever shreds old receipts never touches a chart.</p>
+<h2 id="what-to-ask-your-cpa-and-attorney-about-record-retention">What to ask your CPA and attorney about record retention</h2>
+<ul>
+<li>Which of my records fall under the 3-year rule, and which should I keep longer?</li>
+<li>Does my state set its own period for sales tax records?</li>
+<li>How long does my state require me to keep patient charts and photos?</li>
+<li>If my med spa holds controlled substances, which records do I keep, and for how long?</li>
+</ul>
+<h2 id="what-lucid-does-for-a-med-spas-books">What Lucid does for a med spa&#39;s books</h2>
+<p>Lucid (lucid.now) offers bookkeeping, taxes and CFO support for medical practices, with a dedicated CPA who knows your specialty. For med spas, Lucid lists &quot;Membership and package revenue recognized correctly, reconciled to deposits.&quot; Lucid says data &quot;is encrypted in transit (TLS 1.2+) and at rest (AES-256),&quot; and a business associate agreement is available.</p>
+<p>Read about <a href="/specialty/medical-spa">bookkeeping for med spas</a>, <a href="/medical">how Lucid works with medical practices</a>, <a href="/security">how Lucid protects practice data</a> and <a href="/guides/tax-deductions-for-medical-practice-owners/">the records the IRS will accept for deductions</a>.</p>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h2 id="faq">Questions med spa owners ask about record retention</h2>
+<h3 id="how-long-does-a-med-spa-have-to-keep-tax-records" data-faq-q>How long does a med spa have to keep tax records?</h3>
+<p>At least 3 years after you file each return, for most records. Keep payroll records at least 4 years, equipment records until 3 years after the return for the year you sell the equipment, and your filed returns for good. If your state has its own sales tax period, follow the longer of the two.<!-- CPA CHECK: 3-year, 4-year, asset and state sales tax periods. --></p>
+<h3 id="what-records-should-be-kept-for-7-years" data-faq-q>What records should be kept for 7 years?</h3>
+<p>The IRS sets a 7-year period for records behind a bad debt deduction or a loss from worthless securities. Some owners keep everything for 7 years, because that also covers the 6-year rule for income left off a return. It&#39;s a safe default if you&#39;re unsure.<!-- CPA CHECK: 7-year and 6-year periods. --></p>
+<h3 id="can-i-keep-receipts-as-photos-instead-of-paper" data-faq-q>Can I keep receipts as photos instead of paper?</h3>
+<p>Yes. The IRS accepts electronic records that are complete, legible and easy to retrieve, and you can shred the paper once you&#39;ve checked your copies. Take each photo so the date, vendor and amount are readable, and back the files up somewhere other than one phone.<!-- CPA CHECK: electronic records, Publication 583 and Rev. Proc. 97-22. --></p>
+<h3 id="how-long-do-i-keep-records-for-equipment-like-lasers" data-faq-q>How long do I keep records for equipment like lasers?</h3>
+<p>Keep them until 3 years after you file the return for the year you sell or get rid of the equipment. For a laser you own for seven years, that means keeping the invoice for about 11 years. If you financed it, keep the loan papers in the same file.<!-- CPA CHECK: asset records rule, IRS "How long should I keep records?". --></p>
+<h3 id="are-patient-charts-covered-by-the-same-rules" data-faq-q>Are patient charts covered by the same rules?</h3>
+<p>No. Tax rules cover your financial records only. Your state sets how long you keep patient charts, and it may set a longer period for minors. Ask your attorney or your state medical board, then add the answer to your retention schedule.<!-- ATTORNEY CHECK: state chart retention, including minors. --></p>
+<h3 id="what-happens-to-my-records-if-i-change-software" data-faq-q>What happens to my records if I change software?</h3>
+<p>You still owe the IRS the records after the software company closes your account. Export before you cancel and check that each file opens. Ask the old vendor in writing how long it keeps your data after you leave, and whether it will send a full export later.<!-- CPA CHECK: records kept for the full period regardless of system, Publication 583. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records">How long should I keep records?</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p583">Publication 583, Starting a Business and Keeping Records</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15">Publication 15, Employer&#39;s Tax Guide</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p946">Publication 946, How to Depreciate Property</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1099gi">General Instructions for Certain Information Returns</a></li>
+<li>eCFR, <a href="https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C/section-164.316">45 CFR 164.316, Policies and procedures and documentation requirements</a></li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
