@@ -1,0 +1,688 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Can a Medical Practice Charge a Credit Card Fee? | Lucid</title>
+<meta name="description" content="Can a medical practice charge a credit card fee? Visa caps surcharges at 3% and bans them on debit and HSA cards, and three states ban them outright."/>
+<link rel="canonical" href="https://www.lucid.now/blog/can-a-medical-practice-charge-a-credit-card-fee/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Can a Medical Practice Charge a Credit Card Fee? | Lucid"/>
+<meta property="og:description" content="Can a medical practice charge a credit card fee? Visa caps surcharges at 3% and bans them on debit and HSA cards, and three states ban them outright."/>
+<meta property="og:url" content="https://www.lucid.now/blog/can-a-medical-practice-charge-a-credit-card-fee/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Can a Medical Practice Charge a Credit Card Fee? | Lucid"/>
+<meta name="twitter:description" content="Can a medical practice charge a credit card fee? Visa caps surcharges at 3% and bans them on debit and HSA cards, and three states ban them outright."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"Can my practice pass credit card fees on to patients?","description":"Can a medical practice charge a credit card fee? Visa caps surcharges at 3% and bans them on debit and HSA cards, and three states ban them outright.","url":"https://www.lucid.now/blog/can-a-medical-practice-charge-a-credit-card-fee/","datePublished":"2026-12-09","dateModified":"2026-12-09","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/can-a-medical-practice-charge-a-credit-card-fee/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can a medical practice charge patients a credit card fee?","acceptedAnswer":{"@type":"Answer","text":"Yes, in most states, as a surcharge on credit cards. Visa requires 30 days' written notice to your processor, signs at your entrance and checkout, and the fee on the receipt. Connecticut, Massachusetts and Maine ban surcharges. Without a surcharge, your practice pays the whole fee."}},{"@type":"Question","name":"What's the difference between a surcharge and a convenience fee?","acceptedAnswer":{"@type":"Answer","text":"A surcharge is a percentage you add because a patient paid by credit card. A convenience fee is a flat amount you charge for paying through a channel you don't usually offer, such as an online portal when you usually take payment at the desk. Visa requires the same convenience fee for every way to pay in that channel, cards or not."}},{"@type":"Question","name":"Can I surcharge debit cards or HSA cards?","acceptedAnswer":{"@type":"Answer","text":"No. Visa doesn't allow a surcharge on debit or prepaid cards, and issuers put HSA cards on prepaid or debit card numbers. That's true even when the patient chooses \"credit\" on the keypad. If your terminal can't tell debit from credit, don't surcharge until your processor fixes it, or you'll charge patients a fee you can't charge."}},{"@type":"Question","name":"What do practices usually pay in card processing fees?","acceptedAnswer":{"@type":"Answer","text":"It depends on your processor, your pricing plan and how many patients use credit versus debit. To find your own number, add every fee on one month's statement and divide by that month's card payments. In Example 1 the result is 2.85%. Compare that number across three months before you call your processor about a lower rate."}},{"@type":"Question","name":"How should card fees show in my books?","acceptedAnswer":{"@type":"Answer","text":"Record the full payment as revenue and the fees as a separate expense, even when your processor deposits the net amount. If you collect a surcharge, give it its own line too. Ask your CPA whether surcharges count in your taxable sales if your state taxes any of what you sell."}},{"@type":"Question","name":"Can I offer a cash discount instead?","acceptedAnswer":{"@type":"Answer","text":"Yes. Federal law stops card issuers from blocking a discount for paying by cash or check, and Connecticut, Massachusetts and Maine allow one too. Offer it to every patient and post it clearly; Connecticut requires a posted notice. Charging everyone a higher price and calling it a discount may count as a surcharge, so ask a lawyer how to set it up."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"Can my practice pass credit card fees on to patients?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+@media (max-width:640px){.article-body table.fee-types thead{display:none}.article-body table.fee-types tr{display:block;border:1px solid var(--line,#e5e7eb);border-radius:12px;margin:0 0 12px;padding:4px 0}.article-body table.fee-types td{display:block;border:0;padding:6px 14px}.article-body table.fee-types td:first-child{font-weight:700;font-size:1.05rem}.article-body table.fee-types td:nth-child(n+2)::before{content:attr(data-label);display:block;font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7}.article-body table.ex2 th,.article-body table.ex2 td{padding-left:8px;padding-right:8px}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Can my practice pass credit card fees on to patients?</h1>
+<div class="article-meta"><time datetime="2026-12-09">December 9, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 9, 2026</p>
+<div class="article-body">
+<p>In most states, yes, on credit cards. Visa lets a practice add a surcharge of up to 3%, never more than the practice pays to take the card, once it gives its processor 30 days&#39; notice and posts signs. You can&#39;t surcharge debit or HSA cards, and Connecticut, Massachusetts and Maine ban card surcharges.</p>
+<!-- SOURCE CHECK: 3% cap, cost cap, 30 days' notice, signs, debit ban: Visa Core Rules 5.5.1.5, 5.5.1.8, 5.5.1.9 and the Visa Surcharge Cap definition, edition 24 October 2026, https://usa.visa.com/content/dam/VCOM/download/about-visa/visa-rules-public.pdf. HSA cards: Visa Core Rules 2.5.1.1 (issued on prepaid or debit BINs). States: Conn. Gen. Stat. 42-133ff(b), https://www.cga.ct.gov/current/pub/chap_739.htm#sec_42-133ff; M.G.L. c. 140D s. 28A, https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter140D/Section28A; 9-A M.R.S. 8-509, https://legislature.maine.gov/statutes/9-A/title9-Asec8-509.html. -->
+
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><em>This post is general information, not legal advice. Card network rules and state laws change, so check them with your processor and a lawyer before you add a fee.</em></p>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>Visa caps a US credit card surcharge at 3%, or at your own average credit card rate if that&#39;s lower.</li>
+<li>Federal law stops card issuers from blocking a discount for patients who pay by cash or check (15 U.S.C. 1666f).</li>
+<li>On $40,000 a month of card payments with 30% on debit and HSA cards, a 3% surcharge collects $10,080 a year (Example 2).</li>
+</ul>
+<!-- SOURCE CHECK: key point 1, Visa Core Rules 5.5.1.8 and the Visa Surcharge Cap definition (URL above); key point 2, https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap41-subchapI-partD-sec1666f.htm; key point 3, Example 2 below. -->
+<h2 id="whats-the-difference-between-a-surcharge-a-convenience-fee-and-a-cash-discount">What&#39;s the difference between a surcharge, a convenience fee and a cash discount?</h2>
+<p>A <strong>credit card surcharge</strong> is an extra charge a practice adds because the patient paid with a credit card. A <strong>convenience fee</strong> is a flat fee a practice charges for paying through a channel it doesn&#39;t normally use, not for the card itself. A <strong>cash discount</strong> is a lower price a practice offers to every patient who pays by cash, check or a similar method.</p>
+<div class="lc-table"><table class="fee-types">
+<thead>
+<tr>
+<th></th>
+<th>What it is</th>
+<th>The rule</th>
+<th>Cap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="">Surcharge</td>
+<td data-label="What it is">A percentage added to credit card payments</td>
+<td data-label="The rule">Visa: credit cards only; 30 days&#39; notice to your processor; signs at the entrance and at checkout; shown on the receipt</td>
+<td data-label="Cap">Visa: your average credit card rate, never more than 3%</td>
+</tr>
+<tr>
+<td data-label="">Convenience fee</td>
+<td data-label="What it is">A flat fee for paying online or by phone when you usually take payment in person</td>
+<td data-label="The rule">Visa: same fee for every way to pay in that channel; not on recurring or installment payments; never on top of a surcharge</td>
+<td data-label="Cap">Visa: a flat amount, not a percentage</td>
+</tr>
+<tr>
+<td data-label="">Cash discount</td>
+<td data-label="What it is">A lower price for cash or check</td>
+<td data-label="The rule">Federal law: card issuers can&#39;t stop you from offering it; Connecticut requires a posted notice</td>
+<td data-label="Cap">No limit in the federal law</td>
+</tr>
+</tbody></table></div>
+<!-- SOURCE CHECK: surcharge row, Visa Core Rules 5.5.1.5, 5.5.1.8, 5.5.1.9; convenience fee row, Visa Core Rules 5.5.2.1 and Table 5-4 (US Region), both at the Visa Core Rules URL above; cash discount row, 15 U.S.C. 1666f (govinfo URL above) and Conn. Gen. Stat. 42-133ff(c)(1) (cga.ct.gov URL above). Mastercard sets its own surcharge and convenience fee rules: https://www.mastercard.us/en-us/business/overview/support/merchant-surcharge-rules.html returned 403 to curl on 2026-11-26, so this post states no Mastercard rule. -->
+
+<p>Each card brand sets its own rules. This post covers Visa&#39;s. Mastercard&#39;s rules weren&#39;t checked for this post, so check them and every other brand you take before you start.<!-- SOURCE CHECK: Mastercard's surcharge rules weren't read; mastercard.us returned 403 to curl and to browser headers on 2026-11-26. On publish day, open https://www.mastercard.us/en-us/business/overview/support/merchant-surcharge-rules.html by hand in a browser. If it can be read, add a Mastercard line from what it says; if not, this sentence stands as written. --></p>
+<h2 id="can-a-medical-practice-add-a-credit-card-surcharge">Can a medical practice add a credit card surcharge?</h2>
+<p>Yes, in most states, if you follow Visa&#39;s steps. You tell your processor in writing 30 days before you start, you post the fee at your entrance and at checkout, and you show it on every receipt. You charge it only on credit cards, and never more than your own average credit card rate or 3%.</p>
+<ol>
+<li>Tell your processor in writing at least 30 days before you announce or start the surcharge.</li>
+<li>Post signs at your main entrance (32 point type or larger) and at every checkout desk (16 point or larger).</li>
+<li>At checkout, state the percentage, that your practice charges it, that it&#39;s for credit cards only, and that it isn&#39;t more than your rate.</li>
+<li>Online, post it where you first list the cards you take, and again at checkout.</li>
+<li>Show it as its own line on the receipt.</li>
+<li>Keep it at or below your average credit card rate over the last one or 12 months, and never above 3%.</li>
+</ol>
+<!-- SOURCE CHECK: steps 1 to 6, Visa Core Rules 5.5.1.5 (notice), 5.5.1.9 and Table 5-3 (disclosure, font sizes), Table 5-33 (receipt), 5.5.1.8 and the Visa Surcharge Cap definition (one or 12 months, 3%), plus Visa's "Merchant Surcharging Considerations and Requirements" (receipt itemization), https://usa.visa.com/content/dam/VCOM/global/support-legal/documents/merchant-surcharging-considerations-and-requirements.pdf. -->
+
+<p>If you pay 2.6% on credit cards, you can&#39;t charge 3%.<!-- SOURCE CHECK: Visa Core Rules glossary: Merchant Discount Rate and Visa Surcharge Cap. --></p>
+<h2 id="which-states-ban-credit-card-surcharges">Which states ban credit card surcharges?</h2>
+<p>Massachusetts bans surcharges on credit cards, Maine bans them on credit and debit cards, and Connecticut bans them on every way of paying. All three still let you offer a discount for cash. Other states limit how much you can add or how you post prices, so read your own state&#39;s law before you start.</p>
+<ul>
+<li><strong>Connecticut:</strong> no surcharge on any transaction. A discount for cash, check or debit is allowed with a posted notice (<a href="https://www.cga.ct.gov/current/pub/chap_739.htm#sec_42-133ff">Conn. Gen. Stat. 42-133ff</a>).</li>
+<li><strong>Massachusetts:</strong> no surcharge when a patient pays with a credit card instead of cash or check (<a href="https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter140D/Section28A">M.G.L. c. 140D, s. 28A</a>).</li>
+<li><strong>Maine:</strong> no surcharge on a credit or debit card; a discount from the regular price isn&#39;t a surcharge (<a href="https://legislature.maine.gov/statutes/9-A/title9-Asec8-509.html">9-A M.R.S. 8-509</a>).</li>
+</ul>
+<!-- SOURCE CHECK: each state line against its statute at the URL linked in the line. No other state is named. Quinn re-reads each statute on Dec 9. -->
+
+<p>If your practice has offices in more than one state, follow each state&#39;s law at each office.</p>
+<h2 id="can-i-surcharge-debit-hsa-or-fsa-cards">Can I surcharge debit, HSA or FSA cards?</h2>
+<p>No. Visa doesn&#39;t allow a surcharge on a debit or prepaid card. Visa HSA cards run on prepaid or debit card numbers, and Visa FSA cards are prepaid. Visa bans it even when the patient presses &quot;credit&quot; on your terminal, so you&#39;ll need to set your terminal to tell debit from credit.</p>
+<!-- SOURCE CHECK: debit and the "credit" button, Visa Core Rules 5.5.1.9; HSA card numbers, Visa Core Rules 2.5.1.1; FSA cards as prepaid, Visa Core Rules 4.13.5 (Prepaid, Employee Benefits/Healthcare); all at the Visa Core Rules URL above. -->
+<h2 id="can-my-payer-contracts-stop-me-from-charging-insured-patients-a-fee">Can my payer contracts stop me from charging insured patients a fee?</h2>
+<p>They may. Your insurance contracts, and Medicare if you take it, may limit what you can collect from an insured patient for a covered visit. Read each contract&#39;s section on patient charges, or ask the payer, before you add a surcharge to an insured patient&#39;s balance.</p>
+<!-- SOURCE CHECK: payer contracts. No rule is stated; the post only tells the owner to read the contract. No Medicare page was checked. -->
+<h2 id="how-do-i-find-what-i-really-pay-in-card-fees">How do I find what I really pay in card fees?</h2>
+<p>Divide the total fees on your monthly processor statement by your total card payments for the month. That&#39;s your effective rate. You may never have seen that total, because your processor may take the fees out before each deposit, and you&#39;ll often find them split across dozens of lines.</p>
+<p>Your <strong>effective rate</strong> is your total card fees for a month divided by your total card payments for that month. <strong>Interchange</strong> is the fee the patient&#39;s card bank charges on each payment, set in rate tables the card networks publish.</p>
+<p><strong>Read your processor statement this way:</strong></p>
+<ol>
+<li>Find total card volume, the full amount patients paid by card.</li>
+<li>Add every fee: interchange, network fees, the processor&#39;s markup, and monthly, terminal and chargeback fees.</li>
+<li>Divide total fees by total volume.</li>
+<li>Check whether your processor takes fees out of each deposit or charges them once at month end.</li>
+<li>Split credit from debit. Debit cards from banks with $10 billion or more in assets often cost you less, because the Federal Reserve caps their interchange at 21 cents plus 0.05% of the payment, plus 1 cent for fraud prevention.</li>
+</ol>
+<!-- SOURCE CHECK: debit interchange cap, 12 CFR 235.3 and 235.4 (Regulation II), https://www.ecfr.gov/current/title-12/chapter-II/subchapter-A/part-235; the $10 billion asset exemption in 235.5. Visa interchange tables: https://www.visa.com/en-us/support/business/regulation-fees. -->
+<h2 id="how-should-card-fees-show-in-my-books">How should card fees show in my books?</h2>
+<p>Record the full amount patients paid as revenue and your card fees as their own expense line. If you book only your deposits, you&#39;ll understate revenue, lose sight of your fees, and miss it when they go up.</p>
+<p><strong>Example 1: the same month, booked two ways.</strong> A dental practice takes $40,000 in card payments in March. Its processor charges $840 on $28,000 of credit card payments and $300 on $12,000 of debit and HSA card payments. The processor takes the $1,140 out before each deposit, so the practice receives $38,860.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th></th>
+<th align="right">Booked from deposits</th>
+<th align="right">Booked from the statement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Card payments (revenue)</td>
+<td align="right">$38,860</td>
+<td align="right">$40,000</td>
+</tr>
+<tr>
+<td>Card fees (expense)</td>
+<td align="right">$0</td>
+<td align="right">$1,140</td>
+</tr>
+<tr>
+<td>Cash in the bank</td>
+<td align="right">$38,860</td>
+<td align="right">$38,860</td>
+</tr>
+<tr>
+<td>Effective rate you can see</td>
+<td align="right">None</td>
+<td align="right">2.85%</td>
+</tr>
+</tbody></table></div>
+<p>You end with the same cash either way. Only the second way shows you $1,140 a month, or $13,680 a year, as a cost you can compare and cut.</p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p>You&#39;ll see your fees as their own line on your profit and loss statement<!-- TODO: link "profit and loss statement" to /blog/how-to-read-a-medical-practice-pl/ once that post is live. -->, and you can track them as part of your <a href="/guides/overhead-percentage-medical-practice/">overhead percentage</a>. If you surcharge, record what you collect on its own line too.</p>
+<h2 id="what-does-a-3-surcharge-save-a-practice">What does a 3% surcharge save a practice?</h2>
+<p>A 3% surcharge brings back 3% of your credit card payments only. On $40,000 a month of card payments, you&#39;d collect $1,200 a month if every patient paid by credit card. You can&#39;t surcharge debit or HSA cards, so if 30% of your card payments come on those, you&#39;ll collect $840.</p>
+<p><strong>Example 2: what a 3% surcharge brings back.</strong> The same dental practice takes $40,000 a month in card payments: $28,000 on credit cards and $12,000 on debit and HSA cards. Its average credit card rate is 3%, so it can surcharge the full 3%. No patient switches how they pay.</p>
+<div class="lc-table"><table class="ex2">
+<thead>
+<tr>
+<th></th>
+<th align="right">Monthly card payments</th>
+<th align="right">Surcharge collected a month</th>
+<th align="right">A year</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="">Credit cards</td>
+<td align="right" data-label="Monthly card payments">$28,000</td>
+<td align="right" data-label="Surcharge collected a month">$840</td>
+<td align="right" data-label="A year">$10,080</td>
+</tr>
+<tr>
+<td data-label="">Debit and HSA cards</td>
+<td align="right" data-label="Monthly card payments">$12,000</td>
+<td align="right" data-label="Surcharge collected a month">$0</td>
+<td align="right" data-label="A year">$0</td>
+</tr>
+<tr>
+<td data-label="">Total</td>
+<td align="right" data-label="Monthly card payments">$40,000</td>
+<td align="right" data-label="Surcharge collected a month">$840</td>
+<td align="right" data-label="A year">$10,080</td>
+</tr>
+</tbody></table></div>
+<p>The practice also pays its processor&#39;s 3% on the surcharge itself, so it keeps about $815 of the $840 a month, or about $9,780 of the $10,080 a year.<!-- SOURCE CHECK: the surcharge is part of the transaction amount, so the processor's rate applies to it, Visa Core Rules 5.5.1.7, URL above. $840 x 0.97 = $814.80; x 12 = $9,777.60. --></p>
+<p>This is an example with round numbers, not a typical result. The practice still pays the $300 a month in debit and HSA card fees from Example 1. If some patients switch to debit to avoid the fee, the practice collects less again. For the other places your cash goes, see why a practice can be profitable but short on cash<!-- TODO: link "why a practice can be profitable but short on cash" to /blog/practice-profitable-but-no-cash/ once that post is live. -->.<!-- SOURCE CHECK: debit and HSA cards can't be surcharged and the 3% cap, Visa Core Rules 5.5.1.8, 5.5.1.9, 2.5.1.1, URL above. --></p>
+<h2 id="for-dental-practices">For dental practices</h2>
+<p>If your dental practice collects much of its revenue at the front desk, card fees are a bigger line for you. Before you surcharge, check what your dental plan contracts let you add to a member&#39;s bill. See <a href="/specialty/dental">dental practice bookkeeping</a>.</p>
+<h2 id="what-to-ask-your-processor-before-you-add-a-fee">What to ask your processor before you add a fee</h2>
+<ul>
+<li>What&#39;s my average credit card rate over the last 12 months?</li>
+<li>Will my terminal skip the surcharge on debit, prepaid and HSA cards?</li>
+<li>Do you deposit my payments in full, or with fees taken out?</li>
+<li>What do I need to send you in writing before I start?</li>
+</ul>
+<h2 id="what-lucid-does-for-your-books">What Lucid does for your books</h2>
+<p>Lucid (lucid.now) handles bookkeeping, taxes, tax credits and CFO services for medical practices. Lucid describes its bookkeeping as &quot;Real-time bookkeeping, reconciled across every payer, software and location,&quot; with &quot;Live P&amp;L, cash flow, and margin by location or provider.&quot; You get &quot;a dedicated CPA who knows your specialty.&quot; On the call, ask how Lucid would record your card fees and deposits.</p>
+<p>Read <a href="/medical">how Lucid works with medical practices</a>.</p>
+<h2 id="faq">Questions practice owners ask about credit card fees</h2>
+<p><em>This post is general information, not legal advice. Card network rules and state laws change, so check them with your processor and a lawyer before you add a fee.</em></p>
+<h3 id="can-a-medical-practice-charge-patients-a-credit-card-fee" data-faq-q>Can a medical practice charge patients a credit card fee?</h3>
+<p>Yes, in most states, as a surcharge on credit cards. Visa requires 30 days&#39; written notice to your processor, signs at your entrance and checkout, and the fee on the receipt. Connecticut, Massachusetts and Maine ban surcharges. Without a surcharge, your practice pays the whole fee.</p>
+<!-- SOURCE CHECK: Visa Core Rules 5.5.1.5, 5.5.1.9; state statutes linked in "Which states ban credit card surcharges?" -->
+<h3 id="whats-the-difference-between-a-surcharge-and-a-convenience-fee" data-faq-q>What&#39;s the difference between a surcharge and a convenience fee?</h3>
+<p>A surcharge is a percentage you add because a patient paid by credit card. A convenience fee is a flat amount you charge for paying through a channel you don&#39;t usually offer, such as an online portal when you usually take payment at the desk. Visa requires the same convenience fee for every way to pay in that channel, cards or not.</p>
+<!-- SOURCE CHECK: Visa Core Rules 5.5.2.1 and Table 5-4, US Region. -->
+<h3 id="can-i-surcharge-debit-cards-or-hsa-cards" data-faq-q>Can I surcharge debit cards or HSA cards?</h3>
+<p>No. Visa doesn&#39;t allow a surcharge on debit or prepaid cards, and issuers put HSA cards on prepaid or debit card numbers. That&#39;s true even when the patient chooses &quot;credit&quot; on the keypad. If your terminal can&#39;t tell debit from credit, don&#39;t surcharge until your processor fixes it, or you&#39;ll charge patients a fee you can&#39;t charge.</p>
+<!-- SOURCE CHECK: Visa Core Rules 5.5.1.9 and 2.5.1.1. -->
+<h3 id="what-do-practices-usually-pay-in-card-processing-fees" data-faq-q>What do practices usually pay in card processing fees?</h3>
+<p>It depends on your processor, your pricing plan and how many patients use credit versus debit. To find your own number, add every fee on one month&#39;s statement and divide by that month&#39;s card payments. In Example 1 the result is 2.85%. Compare that number across three months before you call your processor about a lower rate.</p>
+<h3 id="how-should-card-fees-show-in-my-books-2" data-faq-q>How should card fees show in my books?</h3>
+<p>Record the full payment as revenue and the fees as a separate expense, even when your processor deposits the net amount. If you collect a surcharge, give it its own line too. Ask your CPA whether surcharges count in your taxable sales if your state taxes any of what you sell.</p>
+<h3 id="can-i-offer-a-cash-discount-instead" data-faq-q>Can I offer a cash discount instead?</h3>
+<p>Yes. Federal law stops card issuers from blocking a discount for paying by cash or check, and Connecticut, Massachusetts and Maine allow one too. Offer it to every patient and post it clearly; Connecticut requires a posted notice. Charging everyone a higher price and calling it a discount may count as a surcharge, so ask a lawyer how to set it up.</p>
+<!-- SOURCE CHECK: 15 U.S.C. 1666f(a) and (b); Conn. Gen. Stat. 42-133ff(c)(1); M.G.L. c. 140D s. 28A(a); 9-A M.R.S. 8-509(1). -->
+<h2 id="sources">Sources</h2>
+<ul>
+<li>Visa, <a href="https://usa.visa.com/content/dam/VCOM/download/about-visa/visa-rules-public.pdf">Visa Core Rules and Visa Product and Service Rules, 24 October 2026 edition</a>: sections 2.5.1.1, 4.13.5, 5.5.1.5, 5.5.1.8, 5.5.1.9, 5.5.2.1, Tables 5-3, 5-4 and 5-33, glossary</li>
+<li>Visa, <a href="https://usa.visa.com/content/dam/VCOM/global/support-legal/documents/merchant-surcharging-considerations-and-requirements.pdf">Merchant Surcharging Considerations and Requirements</a></li>
+<li>Visa, <a href="https://www.visa.com/en-us/support/business/regulation-fees">Regulations and fees: interchange and merchant credit surcharging</a></li>
+<li>U.S. Code, <a href="https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap41-subchapI-partD-sec1666f.htm">15 U.S.C. 1666f, Inducements to cardholders by sellers of cash discounts</a></li>
+<li>Federal Reserve, <a href="https://www.ecfr.gov/current/title-12/chapter-II/subchapter-A/part-235">12 CFR Part 235, Debit Card Interchange Fees and Routing (Regulation II)</a></li>
+<li>Connecticut General Assembly, <a href="https://www.cga.ct.gov/current/pub/chap_739.htm#sec_42-133ff">Conn. Gen. Stat. 42-133ff, Surcharge based on method of payment prohibited</a></li>
+<li>Massachusetts Legislature, <a href="https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter140D/Section28A">M.G.L. c. 140D, s. 28A</a></li>
+<li>Maine Legislature, <a href="https://legislature.maine.gov/statutes/9-A/title9-Asec8-509.html">9-A M.R.S. 8-509, Credit card and debit card surcharge prohibition</a></li>
+</ul>
+<p>[Blog shell closing box (<code>.article-cta</code>), Lucid&#39;s copy unchanged: &quot;Ready to simplify your practice finances?&quot; and its one Get Started button. Change its href from <code>/pricing</code> to <code>/book?cta=GetStarted</code>.]</p>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
