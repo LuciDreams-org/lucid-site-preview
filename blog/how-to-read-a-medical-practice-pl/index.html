@@ -1,0 +1,742 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How to Read a P&amp;L for Your Medical Practice | Lucid</title>
+<meta name="description" content="How to read a medical practice profit and loss statement line by line, with a sample P&amp;L, cash vs accrual, warning signs and what to ask your bookkeeper."/>
+<link rel="canonical" href="https://www.lucid.now/blog/how-to-read-a-medical-practice-pl/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How to Read a P&amp;L for Your Medical Practice | Lucid"/>
+<meta property="og:description" content="How to read a medical practice profit and loss statement line by line, with a sample P&amp;L, cash vs accrual, warning signs and what to ask your bookkeeper."/>
+<meta property="og:url" content="https://www.lucid.now/blog/how-to-read-a-medical-practice-pl/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Read a P&amp;L for Your Medical Practice | Lucid"/>
+<meta name="twitter:description" content="How to read a medical practice profit and loss statement line by line, with a sample P&amp;L, cash vs accrual, warning signs and what to ask your bookkeeper."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"How do I read my practice's profit and loss statement?","description":"How to read a medical practice profit and loss statement line by line, with a sample P&L, cash vs accrual, warning signs and what to ask your bookkeeper.","url":"https://www.lucid.now/blog/how-to-read-a-medical-practice-pl/","datePublished":"2026-12-02","dateModified":"2026-12-02","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/how-to-read-a-medical-practice-pl/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What shows on a profit and loss statement for a medical practice?","acceptedAnswer":{"@type":"Answer","text":"A medical practice P&L shows gross charges, contractual adjustments and net revenue at the top, then operating expenses such as staff, supplies, rent, billing fees and software, then owner pay and net income. Some practices also have other income, such as interest or rent from a subtenant. Your bookkeeper should list it on its own line, below operating expenses, so it doesn't make the practice look busier than it is."}},{"@type":"Question","name":"How do I read a P&L if I'm not an accountant?","acceptedAnswer":{"@type":"Answer","text":"Start with three numbers: net revenue, total operating expenses and net income. Divide the last two by net revenue, then compare them with last month. You don't need the accounting terms to spot a change. Circle any line that moved and ask your bookkeeper why."}},{"@type":"Question","name":"What is a good profit margin for a medical practice?","acceptedAnswer":{"@type":"Answer","text":"There isn't one number, because your margin depends on your specialty and on whether owner pay counts as an expense. A practice that pays its owners a salary shows a much smaller margin than one where owners take whatever is left. Track your own margin before and after owner pay each month, and compare it with published figures only when the definitions match."}},{"@type":"Question","name":"Why doesn't my P&L match my bank balance?","acceptedAnswer":{"@type":"Answer","text":"Your P&L is a record of what you earned and spent, and your bank balance is cash. The two differ because insurers pay weeks after a visit, because loan principal payments leave the bank without being expenses, and because you record big equipment purchases as assets over several years. Ask your bookkeeper for a cash flow statement, so you can see the gap line by line."}},{"@type":"Question","name":"Should owner pay be on the practice P&L?","acceptedAnswer":{"@type":"Answer","text":"A salary you take through payroll is an expense, so it belongs on the P&L. Draws and distributions aren't expenses, so they don't. If your owners only take draws, add a fair salary for each owner before you compare your practice with published figures. Otherwise your practice will look more profitable than it is."}},{"@type":"Question","name":"How often should I review my P&L?","acceptedAnswer":{"@type":"Answer","text":"Review it once a month, after your bookkeeper has closed the books and reconciled the bank accounts, so the numbers won't change after you read them. Once a quarter, read the last 12 months side by side to spot seasonal patterns. Before a big decision, like hiring a provider or signing a lease, ask for a P&L for the year so far."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"How do I read my practice's profit and loss statement?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+@media (max-width:640px){.article-body table.pl-sample thead{display:none}.article-body table.pl-sample tr{display:grid;grid-template-columns:1fr auto;border-bottom:1px solid var(--line)}.article-body table.pl-sample td{border:0;padding:10px 12px 2px}.article-body table.pl-sample td:nth-child(2){text-align:right;font-weight:600}.article-body table.pl-sample td:nth-child(3){grid-column:1/-1;padding:0 12px 10px;color:var(--ink-soft);font-size:.9rem}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How do I read my practice's profit and loss statement?</h1>
+<div class="article-meta"><time datetime="2026-12-02">December 2, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 2, 2026</p>
+<div class="article-body">
+<p>To read your practice&#39;s P&amp;L, start at the top and work down. Gross charges minus contractual adjustments gives you net revenue, the money you can expect to collect. Take away operating expenses such as staff, supplies, rent and billing fees, then owner pay, and you reach net income. Then compare each line with net revenue and with last month.</p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>Judge your practice by net revenue, not gross charges, because gross charges include money your insurers will never pay.</li>
+<li>In Example 1 below, a three-provider practice keeps 43.7% of net revenue before owner pay and 9.5% after it.</li>
+<li>Divide every expense line by net revenue to compare one month with another.</li>
+<li>On the accrual method, your P&amp;L can show a profit in a month when your bank balance falls. You&#39;ll see how in Example 2.</li>
+</ul>
+<h2 id="what-is-a-profit-and-loss-statement">What is a profit and loss statement?</h2>
+<p>A profit and loss statement (P&amp;L) is a report of what your practice earned and spent over a period, usually one month, and what was left. It&#39;s also called an income statement (<a href="https://www.sec.gov/about/reports-publications/beginners-guide-financial-statements">SEC, Beginners&#39; Guide to Financial Statements</a>). Your balance sheet is a different report: it shows what the practice owns and owes on one day.</p>
+<p>Six terms to know:</p>
+<ul>
+<li><strong>Gross charges</strong> are what your practice bills at its own fee schedule, before any insurer discount.</li>
+<li><strong>A contractual adjustment</strong> is the part of a charge your payer contract says you won&#39;t collect.</li>
+<li><strong>Net revenue</strong> is gross charges minus contractual adjustments: what you can expect to be paid.</li>
+<li><strong>An operating expense</strong> is a cost of running the practice, such as staff pay, supplies, rent and software.</li>
+<li><strong>Net income</strong> is what&#39;s left after every expense, including owner pay. It&#39;s the bottom line.</li>
+<li><strong>Accrual</strong> is a way of keeping books where you record revenue when you give the care and expenses when you get the bill, not when you get or pay the cash (<a href="https://www.irs.gov/publications/p538">IRS, Publication 538</a>).</li>
+</ul>
+<h2 id="whats-on-a-medical-practice-p-l-line-by-line">What&#39;s on a medical practice P&amp;L, line by line?</h2>
+<p>A medical practice P&amp;L comes in three parts. At the top, you&#39;ll see what you billed and what you can expect to collect. In the middle, you&#39;ll see what it cost to run the practice. At the bottom, you&#39;ll see what&#39;s left for the owners and for the practice. Below is one month for a three-provider primary care practice.</p>
+<p><strong>Sample P&amp;L: a three-provider primary care practice, October 2026.</strong> All three owners see patients and take a salary through payroll. The numbers are an example to show the arithmetic, not typical results.</p>
+<div class="lc-table"><table class="pl-sample">
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Amount</th>
+<th>What this line tells you</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gross charges</td>
+<td align="right">$310,000</td>
+<td>What you billed at your own fees. Good for tracking volume, not money.</td>
+</tr>
+<tr>
+<td>Contractual adjustments</td>
+<td align="right">($152,000)</td>
+<td>What your payer contracts say you won&#39;t collect. Watch its share of charges.</td>
+</tr>
+<tr>
+<td><strong>Net revenue</strong></td>
+<td align="right"><strong>$158,000</strong></td>
+<td>What you can expect to be paid. Judge every other line against it.</td>
+</tr>
+<tr>
+<td>Staff wages and benefits</td>
+<td align="right">$46,000</td>
+<td>Front desk, medical assistants, nurses and billers. The biggest cost here.</td>
+</tr>
+<tr>
+<td>Medical supplies</td>
+<td align="right">$9,500</td>
+<td>Supplies used in patient care. It should rise and fall with visits.</td>
+</tr>
+<tr>
+<td>Rent and utilities</td>
+<td align="right">$15,000</td>
+<td>A fixed cost. It stays the same in a slow month.</td>
+</tr>
+<tr>
+<td>Billing company fees</td>
+<td align="right">$7,900</td>
+<td>If your biller charges a percent of collections, this grows with revenue.</td>
+</tr>
+<tr>
+<td>Software, insurance and other</td>
+<td align="right">$10,600</td>
+<td>EHR, malpractice cover, phones, marketing. Ask for detail if it grows.</td>
+</tr>
+<tr>
+<td><strong>Total operating expenses</strong></td>
+<td align="right"><strong>$89,000</strong></td>
+<td>What it cost to run the practice before the owners were paid.</td>
+</tr>
+<tr>
+<td><strong>Income before owner pay</strong></td>
+<td align="right"><strong>$69,000</strong></td>
+<td>What the practice earned for its owners.</td>
+</tr>
+<tr>
+<td>Owner pay, three owners</td>
+<td align="right">$54,000</td>
+<td>Salaries for the owners who see patients.</td>
+</tr>
+<tr>
+<td><strong>Net income</strong></td>
+<td align="right"><strong>$15,000</strong></td>
+<td>What the practice kept after everyone was paid.</td>
+</tr>
+</tbody></table></div>
+<p>If you own an S corp and take a salary through payroll, that salary is a wage, and it&#39;s an expense on the P&amp;L (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/paying-yourself">IRS, Paying yourself</a>; <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-employees-shareholders-and-corporate-officers">IRS, S corporation employees, shareholders and corporate officers</a>). Draws and distributions aren&#39;t expenses, so they don&#39;t appear on it at all.</p>
+<p>Your bookkeeper names these lines in your chart of accounts. For a starting list, see <a href="/guides/chart-of-accounts-medical-practice/">the chart of accounts a medical practice should use</a>.</p>
+<h2 id="how-do-i-read-my-p-l-from-top-to-bottom">How do I read my P&amp;L from top to bottom?</h2>
+<p>Read it in the same order every month. Check net revenue first, then each expense line as a percent of net revenue, then income before owner pay, then net income. Compare each number with last month and with the same month last year. When a line moves more than revenue does, that&#39;s the line to ask about.</p>
+<ol>
+<li><strong>Check the period and the method.</strong> Make sure it&#39;s one full month, and find out whether it&#39;s on the cash or accrual method.</li>
+<li><strong>Check the adjustment share.</strong> Divide contractual adjustments by gross charges.</li>
+<li><strong>Read net revenue.</strong> Compare it with last month and the same month last year, since many practices have busy and slow seasons.</li>
+<li><strong>Divide each expense line by net revenue.</strong> That turns dollars into shares you can compare from month to month.</li>
+</ol>
+<p><strong>Example 1: reading the October sample, top to bottom.</strong> The numbers come from the sample P&amp;L above.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Arithmetic</th>
+<th align="right">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Adjustment share</td>
+<td>$152,000 ÷ $310,000</td>
+<td align="right">49.0%</td>
+</tr>
+<tr>
+<td>Staff cost share</td>
+<td>$46,000 ÷ $158,000</td>
+<td align="right">29.1%</td>
+</tr>
+<tr>
+<td>Supplies share</td>
+<td>$9,500 ÷ $158,000</td>
+<td align="right">6.0%</td>
+</tr>
+<tr>
+<td>Overhead share</td>
+<td>$89,000 ÷ $158,000</td>
+<td align="right">56.3%</td>
+</tr>
+<tr>
+<td>Margin before owner pay</td>
+<td>$69,000 ÷ $158,000</td>
+<td align="right">43.7%</td>
+</tr>
+<tr>
+<td>Net margin</td>
+<td>$15,000 ÷ $158,000</td>
+<td align="right">9.5%</td>
+</tr>
+</tbody></table></div>
+<p>The owners earned $69,000, or 43.7% of net revenue, before their own pay. They paid most of it to themselves as salary, so the practice kept $15,000. If staff cost was also 29.1% of net revenue in September, the staff line is steady. If it was 26%, they&#39;d ask why staff cost grew faster than revenue.</p>
+<p>For days in accounts receivable, collection rate and the rest of the monthly list, see <a href="/guides/monthly-numbers-practice-owner-should-review/">the numbers to check every month</a>. To put these numbers on one screen, see <a href="/blog/ultimate-guide-to-financial-dashboards-for-startups/">what a medical practice financial dashboard should track</a>.</p>
+<h2 id="why-does-the-same-month-look-different-on-cash-and-accrual">Why does the same month look different on cash and accrual?</h2>
+<p>On the accrual method, your P&amp;L counts care in the month you gave it, even if the insurer pays you weeks later. On the cash method, it counts money in the month it reaches your bank. So the same October can show a profit on one method and a loss on the other, as you&#39;ll see in Example 2.</p>
+<p><strong>Example 2: the same practice, October 2026, on both methods.</strong> In October, insurers paid the practice $141,000, mostly for September visits. The practice also paid a $7,500 supply invoice from September.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Accrual</th>
+<th align="right">Cash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Net revenue</td>
+<td align="right">$158,000</td>
+<td align="right">$141,000</td>
+</tr>
+<tr>
+<td>Operating expenses</td>
+<td align="right">$89,000</td>
+<td align="right">$96,500</td>
+</tr>
+<tr>
+<td>Owner pay</td>
+<td align="right">$54,000</td>
+<td align="right">$54,000</td>
+</tr>
+<tr>
+<td>Net income</td>
+<td align="right">$15,000</td>
+<td align="right">($9,500)</td>
+</tr>
+</tbody></table></div>
+<p>On the accrual P&amp;L, the owners see what October&#39;s work earned. On the cash P&amp;L, they see why the bank balance fell. If you see a profit on your P&amp;L and less money in the bank, ask your bookkeeper how much insurers still owe you, and how long they&#39;ve owed it.</p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p>To choose a method for your practice, see <a href="/guides/cash-vs-accrual-accounting-for-medical-practices/">cash or accrual for a medical practice</a>.</p>
+<h2 id="how-can-i-tell-if-staff-or-supply-costs-are-too-high">How can I tell if staff or supply costs are too high?</h2>
+<p>Look at each cost as a percent of net revenue, and compare it with your own last six to twelve months. A cost that grows faster than net revenue is the one to question. You can only do that if your bookkeeper splits the lines, so staff, supplies and billing fees each get their own row instead of one lump.</p>
+<p>Published overhead figures vary by specialty and by whether they count owner pay. You&#39;ll find the figures with named sources in <a href="/guides/overhead-percentage-medical-practice/">what overhead percentage is normal for a medical practice</a>.</p>
+<p>Ask your bookkeeper about any of these five signs:</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Warning sign</th>
+<th>Line to check</th>
+<th>What to ask</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Net income up, bank balance down</td>
+<td>Net revenue against deposits</td>
+<td>How much do insurers owe us, and since when?</td>
+</tr>
+<tr>
+<td>Adjustment share jumps</td>
+<td>Contractual adjustments</td>
+<td>Did a payer cut its rates, or did our payer mix change?</td>
+</tr>
+<tr>
+<td>Staff cost grows faster than revenue</td>
+<td>Staff wages and benefits</td>
+<td>Is it new hires, overtime or raises?</td>
+</tr>
+<tr>
+<td>Supplies swing month to month</td>
+<td>Medical supplies</td>
+<td>Do you record bulk orders when they arrive or when we use them?</td>
+</tr>
+<tr>
+<td>A large &quot;other&quot; line</td>
+<td>Software, insurance and other</td>
+<td>Can you split this into its own lines?</td>
+</tr>
+</tbody></table></div>
+<h2 id="for-primary-care-practices-and-cash-pay-practices">For primary care practices and cash-pay practices</h2>
+<p>Primary care practices often get capitation or membership payments as lump deposits. Ask your bookkeeper to put each kind on its own revenue line, so you can see what each one brings in. See <a href="/specialty/primary-care">bookkeeping for primary care practices</a>.</p>
+<p>A cash-pay practice, such as a med spa, has few or no contractual adjustments, so net revenue sits close to what you charge. The line to watch instead is cost of goods sold. <strong>Cost of goods sold</strong> is what you paid for the product you used in treatments or sold, such as injectables and skincare.</p>
+<h2 id="what-to-ask-your-bookkeeper-or-cpa-about-your-p-l">What to ask your bookkeeper or CPA about your P&amp;L</h2>
+<ul>
+<li>Is my monthly P&amp;L on the cash or accrual method?</li>
+<li>Can you show each expense line as a percent of net revenue, next to last month and the same month last year?</li>
+<li>Can you split payroll into owners, other providers and support staff?</li>
+<li>Is the month closed, or could these numbers still change?</li>
+<li>How should my own pay show up on the P&amp;L?</li>
+</ul>
+<h2 id="what-lucid-does-for-your-monthly-p-l">What Lucid does for your monthly P&amp;L</h2>
+<p>Lucid (lucid.now) does bookkeeping, taxes, tax credits and CFO services for medical practices. Lucid offers &quot;Real-time bookkeeping, reconciled across every payer, software and location,&quot; and says your books &quot;update the moment money moves.&quot; For primary care practices, Lucid lists a &quot;Live P&amp;L and margin by location or provider.&quot; You also get a dedicated CPA who knows your specialty.</p>
+<p>Read more about <a href="/medical">bookkeeping for medical practices</a>.</p>
+<h2 id="faq">Questions practice owners ask about their P&amp;L</h2>
+<h3 id="what-shows-on-a-profit-and-loss-statement-for-a-medical-practice" data-faq-q>What shows on a profit and loss statement for a medical practice?</h3>
+<p>A medical practice P&amp;L shows gross charges, contractual adjustments and net revenue at the top, then operating expenses such as staff, supplies, rent, billing fees and software, then owner pay and net income. Some practices also have other income, such as interest or rent from a subtenant. Your bookkeeper should list it on its own line, below operating expenses, so it doesn&#39;t make the practice look busier than it is.</p>
+<h3 id="how-do-i-read-a-p-l-if-im-not-an-accountant" data-faq-q>How do I read a P&amp;L if I&#39;m not an accountant?</h3>
+<p>Start with three numbers: net revenue, total operating expenses and net income. Divide the last two by net revenue, then compare them with last month. You don&#39;t need the accounting terms to spot a change. Circle any line that moved and ask your bookkeeper why.</p>
+<h3 id="what-is-a-good-profit-margin-for-a-medical-practice" data-faq-q>What is a good profit margin for a medical practice?</h3>
+<p>There isn&#39;t one number, because your margin depends on your specialty and on whether owner pay counts as an expense. A practice that pays its owners a salary shows a much smaller margin than one where owners take whatever is left. Track your own margin before and after owner pay each month, and compare it with published figures only when the definitions match.</p>
+<h3 id="why-doesnt-my-p-l-match-my-bank-balance" data-faq-q>Why doesn&#39;t my P&amp;L match my bank balance?</h3>
+<p>Your P&amp;L is a record of what you earned and spent, and your bank balance is cash. The two differ because insurers pay weeks after a visit, because loan principal payments leave the bank without being expenses, and because you record big equipment purchases as assets over several years. Ask your bookkeeper for a cash flow statement, so you can see the gap line by line.</p>
+<h3 id="should-owner-pay-be-on-the-practice-p-l" data-faq-q>Should owner pay be on the practice P&amp;L?</h3>
+<p>A salary you take through payroll is an expense, so it belongs on the P&amp;L. Draws and distributions aren&#39;t expenses, so they don&#39;t. If your owners only take draws, add a fair salary for each owner before you compare your practice with published figures. Otherwise your practice will look more profitable than it is.</p>
+<h3 id="how-often-should-i-review-my-p-l" data-faq-q>How often should I review my P&amp;L?</h3>
+<p>Review it once a month, after your bookkeeper has closed the books and reconciled the bank accounts, so the numbers won&#39;t change after you read them. Once a quarter, read the last 12 months side by side to spot seasonal patterns. Before a big decision, like hiring a provider or signing a lease, ask for a P&amp;L for the year so far.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>U.S. Securities and Exchange Commission, <a href="https://www.sec.gov/about/reports-publications/beginners-guide-financial-statements">Beginners&#39; Guide to Financial Statements</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p538">Publication 538, Accounting Periods and Methods</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/paying-yourself">Paying yourself</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-employees-shareholders-and-corporate-officers">S corporation employees, shareholders and corporate officers</a></li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
