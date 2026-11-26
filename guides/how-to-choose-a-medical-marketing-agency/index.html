@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>How do I choose a medical marketing agency?</title>
+<meta name="description" content="How to choose a medical marketing or SEO agency: agency types, fees as published, contract terms, questions to ask and tracking cost per booked patient." />
+<link rel="canonical" href="https://www.lucid.now/guides/how-to-choose-a-medical-marketing-agency/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="How do I choose a medical marketing agency?" />
+<meta property="og:description" content="How to choose a medical marketing or SEO agency: agency types, fees as published, contract terms, questions to ask and tracking cost per booked patient." />
+<meta property="og:url" content="https://www.lucid.now/guides/how-to-choose-a-medical-marketing-agency/" />
+<meta name="twitter:title" content="How do I choose a medical marketing agency?" />
+<meta name="twitter:description" content="How to choose a medical marketing or SEO agency: agency types, fees as published, contract terms, questions to ask and tracking cost per booked patient." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"How do I choose a medical marketing agency?","description":"How to choose a medical marketing or SEO agency: agency types, fees as published, contract terms, questions to ask and tracking cost per booked patient.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/how-to-choose-a-medical-marketing-agency/","publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"How do I choose a medical marketing agency?","item":"https://www.lucid.now/guides/how-to-choose-a-medical-marketing-agency/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+.guide a.btn{text-decoration:none;}.guide a.btn-primary{color:#fff;}.guide .g-cta{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px;}.guide .g-cta .btn{text-align:center;}.guide p.verdict{font-size:1.06rem;line-height:1.6;}.guide .choose{background:#f5f3ff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:0 0 14px;}.guide .choose h3{margin:0 0 8px;}.guide ul.why{list-style:none;padding-left:0;}.guide ul.why li{border-left:3px solid var(--brand);padding:2px 0 2px 12px;margin:0 0 10px;}
+.spec-prose{padding:30px 0;}
+.spec-prose .prose{max-width:860px;margin:0 auto;padding:0 16px;overflow-wrap:anywhere;}
+.spec-links summary{cursor:pointer;font-weight:700;color:var(--ink);padding:6px 0;}
+.spec-links ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+.spec-links li{margin:0;}
+.spec-links li a{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;}
+.guide table{max-width:none;}
+.guide-quote{margin:22px 0;padding:18px 20px;border-left:4px solid var(--brand);background:var(--bg-soft);border-radius:0 12px 12px 0;}
+.guide-quote blockquote{margin:0 0 8px;color:var(--ink);font-style:italic;}
+.guide-quote blockquote p{margin:0;}
+.guide-quote figcaption{font-weight:700;color:var(--ink);font-size:.92rem;}
+@media (max-width:640px){.guide{padding:24px 0 4px;}.guide h2{font-size:1.3rem;margin:26px 0 10px;}.spec-faq .faq details{padding:14px 0;}.spec-faq .faq summary{font-size:1rem;}.spec-prose{padding:20px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"How do I choose a medical marketing agency?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":6,"itemListElement":[{"@type":"ListItem","position":1,"name":"Website and SEO platform"},{"@type":"ListItem","position":2,"name":"Specialty agency (dental only, for example)"},{"@type":"ListItem","position":3,"name":"Full service healthcare agency"},{"@type":"ListItem","position":4,"name":"Paid media specialist"},{"@type":"ListItem","position":5,"name":"Practice software with marketing"},{"@type":"ListItem","position":6,"name":"Freelancer or small studio"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does a medical marketing agency cost?","acceptedAnswer":{"@type":"Answer","text":"Published fees run from about $299 a month for a website and SEO starter package to $575 to $1,500 a month for SEO plans at a specialty agency, and many full service healthcare agencies start around $10,000 a month. Ad spend is usually on top. Get the total monthly cost in writing."}},{"@type":"Question","name":"How do I know if my marketing agency is working?","acceptedAnswer":{"@type":"Answer","text":"Track cost per booked patient and cost per paid patient by channel each month, using your books and your scheduling software. Rankings and clicks are early signs, not results. Give SEO three to six months; paid ads should show leads within the first month."}},{"@type":"Question","name":"Should I hire a specialty agency or a general one?","acceptedAnswer":{"@type":"Answer","text":"A specialty agency knows your patients, your services and privacy rules, which shortens the ramp up. A general agency can work if it can show results for practices like yours. Ask how many current clients are in your specialty."}},{"@type":"Question","name":"What contract length is normal for a marketing agency?","acceptedAnswer":{"@type":"Answer","text":"Many agencies ask for a first term, often around six months for SEO or paid ads, then move to month to month. Avoid long lock ins with no performance review, and get cancellation and offboarding steps in writing."}},{"@type":"Question","name":"Who should own my website and ad accounts?","acceptedAnswer":{"@type":"Answer","text":"You should. Your domain, site files, content, ad accounts, analytics and call tracking numbers should be in your name or transferable on exit. Put this in the paperwork before you start."}},{"@type":"Question","name":"How much should a practice spend on marketing?","acceptedAnswer":{"@type":"Answer","text":"It depends on growth goals and competition. Golden Proportions, a dental agency, suggests 7% to 9% of collections for practices aiming for fast growth. Set the budget against cost per paid patient, not a percent alone."}},{"@type":"Question","name":"What are red flags when hiring a healthcare SEO agency?","acceptedAnswer":{"@type":"Answer","text":"Guaranteed rankings or lead counts, vanity metrics instead of bookings, working with a competitor in your city, no references and long contracts with no accountability. Also be wary if the agency cannot explain how it handles health content."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>How do I choose a medical marketing agency?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your Lucid price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / How do I choose a medical marketing agency?</nav>
+<h2 id="short-answer">Short answer</h2>
+<p>Pick the agency type that matches your gap (website, SEO, paid ads, reviews or all of them), then judge it on one number: what you pay in agency fees plus ad spend for each new patient who books and pays, tracked in your books by channel. Published fees run from a $299 a month website and SEO starter package (Officite) and $575 to $1,500 a month SEO plans (Delmain) to full service healthcare agencies where most clients invest at least $10,000 a month (Healthcare Success), as seen November 26, 2026. Ask for month to month or a short first term, written offboarding steps, and reports on booked patients, not impressions. Walk away from guaranteed rankings, guaranteed lead counts and long lock ins with no performance review.</p>
+<h2 id="do-you-need-an-agency-at-all">Do you need an agency at all?</h2>
+<p>An agency makes sense when the work is steady and technical: content, technical SEO, ad management and weekly review of results. If you only need a website refresh or help with reviews, a website platform or review tool may be enough. If the real problem is that patients call and do not book, that is a front office problem. See <a href="/guides/how-to-choose-a-medical-practice-consultant/">how to choose a medical practice consultant</a> or, for dental, our guide to <a href="/guides/best-dental-practice-consultants/">dental practice consultants</a>.</p>
+<h2 id="agency-types">Agency types</h2>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Agency types"><table style="min-width:480px"><thead><tr><th scope="col">Type</th><th scope="col">Best for</th><th scope="col">Fee shape as published</th></tr></thead><tbody><tr><td>Website and SEO platform</td><td>A new site, hosting and basic SEO</td><td>Monthly package</td></tr><tr><td>Specialty agency (dental only, for example)</td><td>Full marketing for one specialty</td><td>Monthly retainer by tier</td></tr><tr><td>Full service healthcare agency</td><td>Groups with several locations</td><td>Custom, often $10,000 a month and up</td></tr><tr><td>Paid media specialist</td><td>Google and Meta ads at scale</td><td>Management fee or % of ad spend</td></tr><tr><td>Practice software with marketing</td><td>Site, listings and reviews tied to your scheduling</td><td>Bundled, quote</td></tr><tr><td>Freelancer or small studio</td><td>One project or a tight budget</td><td>Hourly or per project</td></tr></tbody></table></div>
+<p>Examples by type, as described on their own sites:</p>
+<ol><li>Website and SEO platforms: Officite and ProSites serve dental and other practices with websites, hosting and SEO.</li><li>Specialty agencies: Golden Proportions Marketing says dental marketing is all it does. Delmain also focuses on dental practices.</li><li>Full service healthcare agencies: Healthcare Success and Intrepy, which lists orthopedic, med spa, dermatology and other specialties.</li><li>Paid media and growth: Cardinal Digital Marketing works with multi location groups, DSOs, dermatology and behavioral health.</li><li>Software with marketing: Tebra offers specialty websites, local SEO, paid search, social and review replies alongside its practice software. Scorpion also works with healthcare practices.</li></ol>
+<h2 id="what-each-service-should-do">What each service should do</h2>
+<h3 id="seo">SEO</h3>
+<p>SEO means your site and your Google Business Profile show up when local patients search. It is slow: one SEO hiring guide for medical practices says to expect three to six months before results show, and Golden Proportions says SEO can take six to nine months. A good SEO agency interviews you before it writes service pages, explains how it handles health content that search engines judge strictly, and reports on calls and bookings from search, not only rankings.</p>
+<h3 id="paid-ads">Paid ads</h3>
+<p>Google Ads and Meta ads can bring leads in the first month, but they stop the day the budget stops. Ask who owns the ad accounts (it should be you), how the management fee is set, and whether ad spend is billed by the agency or paid straight from your card. Delmain, for example, publishes a management fee of $650 to $975 a month by ad spend tier, moving to 10% of spend above $9,750 a month.</p>
+<h3 id="reviews-and-reputation">Reviews and reputation</h3>
+<p>A steady pace of new reviews matters more than a large total. Ask how the agency asks for reviews, how replies stay HIPAA safe, and whether it ever writes or buys reviews (it never should).</p>
+<h3 id="websites">Websites</h3>
+<p>You should own the domain, the content and the site files, or have a written right to take them with you. Ask what happens to the site if you leave. Delmain lists a custom website at $6,500 one time plus $175 a month for hosting and support when bundled. Platform sites such as Officite&#x27;s starter package fold the site into a monthly fee.</p>
+<h2 id="fees-as-published">Fees as published</h2>
+<p>Most agencies quote after a call. These publish numbers, as seen November 26, 2026.</p>
+<ol><li>Officite: a Premium Plus Starter Package at $299 a month with HIPAA compliant hosting, SEO and live support, offered to new customers.</li><li>Delmain: SEO at $575 (only after six months on a higher tier), $1,100 or $1,500 a month, plus $200 a month per extra location; social media at $725 a month; branding $2,500 and photos and videos $8,500 one time.</li><li>Healthcare Success: says most clients invest at least $10,000 a month, with larger programs in the low six figures a year.</li></ol>
+<p>Third party guides give wider ranges. One SEO hiring guide for medical practices puts quality SEO at $1,500 to $5,000 a month and warns about $500 a month offers. A Dental Economics guide (August 7, 2026) says costs run from a few hundred dollars a month to several thousand for full service work with ads. Golden Proportions suggests a practice aiming for fast growth budget 7% to 9% of collections for marketing.</p>
+<h2 id="contract-terms-to-check">Contract terms to check</h2>
+<ol><li>Length: month to month, or a short first term. Delmain, for example, asks for six months on SEO or paid ads, then goes month to month with 30 days notice.</li><li>Exit: written cancellation and offboarding steps, and how long they take.</li><li>Ownership: your domain, site, content, ad accounts, call tracking numbers and analytics stay yours.</li><li>Exclusivity: whether the agency works with a competitor in your city and specialty.</li><li>Reporting: what you get each month and who reviews it with you.</li><li>Ad spend: whether it passes through the agency or is billed to you directly.</li></ol>
+<h2 id="how-to-measure-cost-per-booked-patient">How to measure cost per booked patient</h2>
+<p>This is the test that matters. Rankings, clicks and leads are steps along the way. A new patient who books, shows up and pays is the result.</p>
+<ol><li>Total cost for the month: agency fee plus ad spend plus any tools.</li><li>Booked new patients from that channel, from call tracking and your scheduling software.</li><li>Cost per booked patient = total cost divided by booked new patients.</li><li>Then check how many of those patients showed up and paid, and what they paid. That gives cost per paid patient, which is the number to compare across agencies.</li></ol>
+<p>A simple example: an agency fee of $2,000 and ad spend of $3,000 is $5,000 a month. If that brings 25 booked new patients, cost per booked patient is $200. If 20 of them show up and pay, cost per paid patient is $250. Compare that to what a new patient is worth to you over a year.</p>
+<p>To do this, your books need marketing split by channel and vendor, not one &quot;advertising&quot; line. See how to set up a <a href="/guides/chart-of-accounts-medical-practice/">chart of accounts</a>, and track it monthly with the <a href="/guides/monthly-numbers-practice-owner-should-review/">numbers every owner should review</a> and a <a href="/guides/best-practice-analytics-dashboards/">practice analytics dashboard</a>.</p>
+<p>Running a med spa? Published fees and fee models for eight med spa agencies are in <a href="/guides/best-med-spa-marketing-agencies/">Which med spa marketing agencies get results?</a></p>
+<h2 id="by-specialty">By specialty</h2>
+<h3 id="dental">Dental</h3>
+<p>Dental has the most dental only agencies and website platforms. Track new patients by source and case acceptance, and compare marketing cost to collections, not production, because PPO write offs can make production look better than the cash. See how Lucid handles <a href="/specialty/dental">dental practices</a>.</p>
+<h3 id="dermatology">Dermatology</h3>
+<p>Dermatology practices often market cosmetic services that patients pay for directly, next to insurance work. Ask the agency to report bookings and revenue for cosmetic services separately, since that is where paid ads usually aim.</p>
+<h3 id="orthopedics">Orthopedics</h3>
+<p>Orthopedic practices often rely on referrals as well as search. Ask how the agency tracks self referred patients versus referred ones, and judge it on booked visits for the service lines you want to grow, not total traffic.</p>
+<h2 id="questions-to-ask">Questions to ask</h2>
+<ol><li>How many of your current clients are practices in my specialty?</li><li>Do you work with a competitor in my city and specialty?</li><li>Who works on my account, by name, and is that the person I am talking to now?</li><li>What will you report each month, and will it include booked patients by channel?</li><li>Who owns the website, content, ad accounts and call tracking numbers?</li><li>What are the cancellation and offboarding terms, in writing?</li><li>How do you handle patient privacy in forms, tracking and review replies?</li><li>Can I speak with two current clients like my practice?</li><li>How will you help my practice show up in AI answer engines as well as Google?</li></ol>
+<h2 id="warning-signs">Warning signs</h2>
+<p>Described generally, not about any agency named in this guide.</p>
+<ol><li>Guaranteed rankings or a guaranteed number of leads in a set time.</li><li>Reports full of impressions and clicks with no bookings.</li><li>Long lock ins with no performance review or exit path.</li><li>The agency, not you, owns your site, domain or ad accounts.</li><li>No named person on your account, or a different team after the sale.</li><li>Reluctance to give references.</li><li>Offers to write or buy reviews.</li><li>A generic pitch deck instead of a plan for your market.</li></ol>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Frequently asked questions</h2></div>
+<div class="faq"><details><summary>How much does a medical marketing agency cost?</summary><p>Published fees run from about $299 a month for a website and SEO starter package to $575 to $1,500 a month for SEO plans at a specialty agency, and many full service healthcare agencies start around $10,000 a month. Ad spend is usually on top. Get the total monthly cost in writing.</p></details><details><summary>How do I know if my marketing agency is working?</summary><p>Track cost per booked patient and cost per paid patient by channel each month, using your books and your scheduling software. Rankings and clicks are early signs, not results. Give SEO three to six months; paid ads should show leads within the first month.</p></details><details><summary>Should I hire a specialty agency or a general one?</summary><p>A specialty agency knows your patients, your services and privacy rules, which shortens the ramp up. A general agency can work if it can show results for practices like yours. Ask how many current clients are in your specialty.</p></details><details><summary>What contract length is normal for a marketing agency?</summary><p>Many agencies ask for a first term, often around six months for SEO or paid ads, then move to month to month. Avoid long lock ins with no performance review, and get cancellation and offboarding steps in writing.</p></details><details><summary>Who should own my website and ad accounts?</summary><p>You should. Your domain, site files, content, ad accounts, analytics and call tracking numbers should be in your name or transferable on exit. Put this in the paperwork before you start.</p></details><details><summary>How much should a practice spend on marketing?</summary><p>It depends on growth goals and competition. Golden Proportions, a dental agency, suggests 7% to 9% of collections for practices aiming for fast growth. Set the budget against cost per paid patient, not a percent alone.</p></details><details><summary>What are red flags when hiring a healthcare SEO agency?</summary><p>Guaranteed rankings or lead counts, vanity metrics instead of bookings, working with a competitor in your city, no references and long contracts with no accountability. Also be wary if the agency cannot explain how it handles health content.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2>
+<p>Lucid is not a marketing agency and does not run ads, SEO or websites. Lucid is the bookkeeping, tax, tax credits and CFO team that shows you, in your books, what each agency and channel really costs per paid patient.</p>
+<p>What Lucid gives you:</p>
+<ol><li>Marketing cost per paid patient, with agency fees and ad spend split by channel and vendor so agencies can be compared on the same number.</li><li>KPI reporting through an industry specific KPI dashboard, reviewed monthly.</li><li>For dental practices, production and collections reconciled to your bank deposits, so new patient growth is measured in collected cash.</li><li>CFO planning: budget vs actuals, scenario planning and a custom financial model, for example to set a marketing budget you can afford before you sign an agency.</li><li>A dedicated CPA and account manager, with 24/7 support in a shared Slack channel. Lucid uses read only bank and card connections and can connect your other systems on request.</li></ol>
+<p>Lucid starts from $130 a month. See your price on the <a href="/pricing">pricing page calculator</a>. Month to month, no setup fee. Most practices are live in about 24 hours; if your books are behind, catch up work is scoped first.</p>
+<!-- GATE:testimonial -->
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2>
+<ol><li>Dental Economics, how to pick a dental marketing agency (August 7, 2026): <a href="https://www.dentaleconomics.com/practice/marketing/article/55396685/do-you-really-need-a-dental-marketing-agency-heres-how-to-pick-the-right-one" rel="noopener">https://www.dentaleconomics.com/practice/marketing/article/55396685/do-you-really-need-a-dental-marketing-agency-heres-how-to-pick-the-right-one</a></li><li>SEO agency hiring guide for medical practices (January 20, 2026, updated November 2026): <a href="https://doctorrank.com/hiring-seo-agency-medical-practice" rel="noopener">https://doctorrank.com/hiring-seo-agency-medical-practice</a></li><li>Delmain pricing: <a href="https://delmain.co/investments/" rel="noopener">https://delmain.co/investments/</a></li><li>Officite starter package offer: <a href="https://solutions.officite.com/nov26/tma?src=tma-page" rel="noopener">https://solutions.officite.com/nov26/tma?src=tma-page</a></li><li>Healthcare Success, cost and typical investment: <a href="https://healthcaresuccess.com/faqs/how-to-choose-an-agency/how-much-does-healthcare-success-cost-and-what-do-clients-typically-invest" rel="noopener">https://healthcaresuccess.com/faqs/how-to-choose-an-agency/how-much-does-healthcare-success-cost-and-what-do-clients-typically-invest</a></li><li>Golden Proportions Marketing: <a href="https://www.goldenproportions.com/" rel="noopener">https://www.goldenproportions.com/</a></li><li>Intrepy Healthcare Marketing: <a href="https://intrepy.com/" rel="noopener">https://intrepy.com/</a></li><li>Cardinal Digital Marketing: <a href="https://www.cardinaldigitalmarketing.com/" rel="noopener">https://www.cardinaldigitalmarketing.com/</a></li><li>Tebra marketing: <a href="https://www.tebra.com/marketing/" rel="noopener">https://www.tebra.com/marketing/</a></li><li>ProSites: <a href="https://www.prosites.com/" rel="noopener">https://www.prosites.com/</a></li><li>Scorpion healthcare: <a href="https://www.scorpion.co/healthcare" rel="noopener">https://www.scorpion.co/healthcare</a></li><li>Lucid: <a href="/specialty/dental">https://www.lucid.now/specialty/dental</a> , <a href="/pricing">https://www.lucid.now/pricing</a></li></ol>
+</div></section>
+<section class="spec-prose"><div class="wrap"><div class="prose spec-links">
+<details><summary>Related guides</summary><ul><li><a href="/guides/how-to-choose-a-medical-practice-consultant/">How do I choose a practice management consultant?</a></li><li><a href="/guides/best-practice-analytics-dashboards/">Best Financial Dashboard for a Medical Practice?</a></li><li><a href="/guides/chart-of-accounts-medical-practice/">What chart of accounts should a medical practice use?</a></li><li><a href="/guides/monthly-numbers-practice-owner-should-review/">Which numbers should a practice owner check every month?</a></li><li><a href="/guides/best-med-spa-marketing-agencies/">Which Med Spa Marketing Agencies Get Results?</a></li><li><a href="/guides/best-dental-practice-consultants/">Which dental practice consultants are worth the fee?</a></li></ul></details>
+</div></div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
