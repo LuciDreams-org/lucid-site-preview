@@ -1,0 +1,732 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Lease or Buy a Laser for Your Med Spa? | Lucid</title>
+<meta name="description" content="Lease or buy a laser for your med spa? Compare a loan, an operating lease and an FMV lease on a $120,000 laser: total cost, Section 179 and break-even."/>
+<link rel="canonical" href="https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Lease or Buy a Laser for Your Med Spa? | Lucid"/>
+<meta property="og:description" content="Lease or buy a laser for your med spa? Compare a loan, an operating lease and an FMV lease on a $120,000 laser: total cost, Section 179 and break-even."/>
+<meta property="og:url" content="https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Lease or Buy a Laser for Your Med Spa? | Lucid"/>
+<meta name="twitter:description" content="Lease or buy a laser for your med spa? Compare a loan, an operating lease and an FMV lease on a $120,000 laser: total cost, Section 179 and break-even."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","@id":"https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/#article","headline":"Should my med spa lease or buy a laser?","description":"Lease or buy a laser for your med spa? Compare a loan, an operating lease and an FMV lease on a $120,000 laser: total cost, Section 179 and break-even.","url":"https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/"},"datePublished":"2026-12-09","dateModified":"2026-12-09","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"inLanguage":"en-US","image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","@id":"https://www.lucid.now/blog/lease-or-buy-a-laser-med-spa/#faq","mainEntity":[{"@type":"Question","name":"Is it better to lease or buy medical equipment?","acceptedAnswer":{"@type":"Answer","text":"Buy if you'll use the equipment past the loan term and can book enough treatments to cover the payment. Lease if you expect to replace the model before it wears out, or you need to keep cash for the first months. Ask for both quotes on the same term so you can compare the totals."}},{"@type":"Question","name":"How many treatments a month does a laser need to pay for itself?","acceptedAnswer":{"@type":"Answer","text":"Divide your monthly laser cost, the payment plus the service plan, by what you keep from one treatment after tips, tech pay and card fees. In Example 2, that's 14 treatments at $300. Count the room's share of rent and staff too, and you need 25."}},{"@type":"Question","name":"What's the difference between a capital lease and an operating lease?","acceptedAnswer":{"@type":"Answer","text":"A capital lease, or finance lease, usually ends with you owning the equipment, often for $1, so your CPA will usually treat it like a loan on your return and you depreciate the laser. An operating lease ends with the leasing company owning it, and you deduct each payment as rent. Read the buyout terms in your contract to see which one you have."}},{"@type":"Question","name":"Can I deduct a laser in the year I buy it?","acceptedAnswer":{"@type":"Answer","text":"Yes, in most cases, if you own it and it's installed and ready to use before your tax year ends. You can use Section 179, up to your business income, or 100% bonus depreciation. You can deduct the full cost even if you financed it and have paid only part of the loan."}},{"@type":"Question","name":"What happens at the end of a laser lease?","acceptedAnswer":{"@type":"Answer","text":"On an operating lease, you return the laser, renew the lease or lease a newer model. On an FMV lease, you can also buy it for what it's worth then, and the leasing company usually sets that price. On a $1 buyout lease, you pay $1 and own it. Check the notice terms, since some leasing companies renew month to month unless you give written notice."}},{"@type":"Question","name":"Should I buy equipment in December for the tax deduction?","acceptedAnswer":{"@type":"Answer","text":"Only if you'd buy it anyway. When you buy in December, you move the deduction into this year, but you still spend the cash and you'll have less to deduct later. You'll also get the deduction this year only if the laser is installed and ready to use by December 31."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"Should my med spa lease or buy a laser?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+/* post 12: lease vs buy table stacked on phones; Example 1 kept as a table with tighter cells (Cora rec 1, REVIEW-CORA-12) */
+@media(max-width:640px){
+.article-body table.stack thead{display:none}
+.article-body table.stack tr{display:grid;grid-template-columns:1fr;border-bottom:1px solid var(--line)}
+.article-body table.stack td{border:0;padding:4px 12px}
+.article-body table.stack td:first-child{font-weight:700;padding-top:12px}
+.article-body table.stack td:nth-child(n+2)::before{content:attr(data-label);display:block;font-size:.8rem;color:var(--ink-soft)}
+.article-body table.stack td:last-child{padding-bottom:12px}}
+@media(max-width:640px){.article-body table:not(.stack) th,.article-body table:not(.stack) td{padding-left:8px;padding-right:8px}}
+@media(max-width:380px){.article-body table:not(.stack) th,.article-body table:not(.stack) td{padding-left:6px;padding-right:6px;font-size:.875rem}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Should my med spa lease or buy a laser?</h1>
+<div class="article-meta"><time datetime="2026-12-09">December 9, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 9, 2026</p>
+<!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No post goes live without this line. -->
+<div class="article-body">
+<p>Buy the laser, with cash or a loan, if you&#39;ll book enough treatments to cover the payment and you want to own it after five years. Lease it if you need to keep your cash or you plan to upgrade. Compare the total you&#39;ll pay, not the monthly payment, and don&#39;t buy only for the tax deduction.</p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>In Example 1, you pay $149,460 for a $120,000 laser on a 5-year loan at 9%, $138,000 on a 60-month lease you return, and $153,000 on a fair-market-value lease you buy out.</li>
+<li>If you own the laser and it&#39;s installed and ready to use in 2026, you can generally deduct the full cost that year under Section 179, up to $2,560,000.<!-- CPA CHECK: Section 179 definition, Publication 946 chapter 2; 2026 Section 179 limit, Rev. Proc. 2025-32 section 4.24; placed in service rule, Publication 946. --></li>
+<li>In Example 2, you need 14 treatments a month at $300 to cover the loan payment and service plan, and 25 once you count the room&#39;s share of rent and staff.</li>
+</ul>
+<h2 id="what-do-the-terms-on-a-laser-lease-or-loan-quote-mean">What do the terms on a laser lease or loan quote mean?</h2>
+<ul>
+<li><strong>An operating lease</strong> is a rental: you pay to use the laser for a set term, and the leasing company owns it at the end.</li>
+<li><strong>A fair-market-value lease</strong> is an operating lease that lets you buy the laser at the end for what it&#39;s worth then. Leasing companies often call it an FMV lease.</li>
+<li><strong>A capital lease</strong>, now usually called a finance lease in your books, is a lease that works like a loan: you&#39;ll usually own the laser at the end, often for $1, or your payments add up to nearly its full price.<!-- CPA CHECK: finance lease as the current term under ASC 842 for lessees. --></li>
+<li><strong>Residual value</strong> is what the laser is still worth at the end of the term.</li>
+<li><strong>Bonus depreciation</strong> is a second tax rule that lets you deduct the cost of most equipment in its first year, with no dollar cap.<!-- CPA CHECK: special depreciation allowance, Publication 946 chapter 3. --></li>
+</ul>
+<h2 id="how-do-leasing-and-buying-a-laser-compare">How do leasing and buying a laser compare?</h2>
+<p>When you buy, you pay more each month or up front, you own the laser, and you deduct its cost through depreciation. When you lease, you usually pay less each month, the leasing company owns it, and you deduct the payments as you make them.<!-- CPA CHECK: lease payments deductible as rent, Publication 334; no depreciation or Section 179 for the lessee, Publication 946. --></p>
+<div class="lc-table"><table class="stack">
+<thead>
+<tr>
+<th></th>
+<th>Buy with cash</th>
+<th>Buy with a loan or $1 buyout lease</th>
+<th>Operating or FMV lease</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="">Cash today</td>
+<td data-label="Buy with cash">The full price</td>
+<td data-label="Buy with a loan or $1 buyout lease">Often a down payment or the first payment</td>
+<td data-label="Operating or FMV lease">Often the first payment, sometimes the last one too</td>
+</tr>
+<tr>
+<td data-label="">Monthly cost</td>
+<td data-label="Buy with cash">None</td>
+<td data-label="Buy with a loan or $1 buyout lease">The loan payment</td>
+<td data-label="Operating or FMV lease">The lease payment, usually lower than a loan</td>
+</tr>
+<tr>
+<td data-label="">Who owns it at the end</td>
+<td data-label="Buy with cash">You</td>
+<td data-label="Buy with a loan or $1 buyout lease">You</td>
+<td data-label="Operating or FMV lease">The leasing company, unless you buy it at fair market value</td>
+</tr>
+<tr>
+<td data-label="">What hits the P&amp;L</td>
+<td data-label="Buy with cash">Depreciation each month</td>
+<td data-label="Buy with a loan or $1 buyout lease">Depreciation plus interest</td>
+<td data-label="Operating or FMV lease">The lease payment, as one expense</td>
+</tr>
+<tr>
+<td data-label="">What the tax rule is</td>
+<td data-label="Buy with cash">Section 179 or bonus depreciation in the year it&#39;s in service</td>
+<td data-label="Buy with a loan or $1 buyout lease">The same, plus the interest you pay</td>
+<td data-label="Operating or FMV lease">Payments deducted as rent, with no Section 179</td>
+</tr>
+<tr>
+<td data-label="">Upgrade path</td>
+<td data-label="Buy with cash">Sell it or trade it in</td>
+<td data-label="Buy with a loan or $1 buyout lease">Pay off the loan, then sell it or trade it in</td>
+<td data-label="Operating or FMV lease">Return it at the end and lease a newer model</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: the P&L row (ASC 842 lessee accounting, and tax-basis books) and the tax row (Publications 334 and 946). --><!-- CPA CHECK: $1 buyout lease treated as a purchase, Publication 334 Rent Expense. -->
+<h2 id="example-1-how-do-i-compare-a-loan-and-a-lease-on-a-120-000-laser">Example 1: how do I compare a loan and a lease on a $120,000 laser?</h2>
+<p>Add up every payment plus any buyout, then subtract what the laser will be worth at the end if you&#39;ll own it. Here, you pay the least by returning the operating lease and the most by buying out the FMV lease. Once you count what you can sell the laser for, the loan costs least.</p>
+<p><strong>Example numbers, not market rates.</strong> The $120,000 laser is installed in January, so you make 12 payments in the first tax year. The loan is 9% for 60 months with no down payment. Both leases are $2,300 a month for 60 months. The FMV buyout and the laser&#39;s residual value are both $15,000. You&#39;d pay the same service plan either way, so it&#39;s left out. You keep your books the same way as your tax return, so each lease payment is one expense on your P&amp;L.<!-- CPA CHECK: under ASC 842 GAAP books, a lease whose payments add up to about 92% of the laser's price is usually a finance lease, which shows depreciation and interest instead. --></p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Loan</th>
+<th align="right">Operating lease</th>
+<th align="right">FMV lease</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monthly payment</td>
+<td align="right">$2,491</td>
+<td align="right">$2,300</td>
+<td align="right">$2,300</td>
+</tr>
+<tr>
+<td>60 payments</td>
+<td align="right">$149,460</td>
+<td align="right">$138,000</td>
+<td align="right">$138,000</td>
+</tr>
+<tr>
+<td>At the end</td>
+<td align="right">You own it</td>
+<td align="right">You return it</td>
+<td align="right">You pay $15,000 to keep it</td>
+</tr>
+<tr>
+<td>Total you pay</td>
+<td align="right">$149,460</td>
+<td align="right">$138,000</td>
+<td align="right">$153,000</td>
+</tr>
+<tr>
+<td>Total, less what it&#39;s worth at the end</td>
+<td align="right">$134,460</td>
+<td align="right">$138,000</td>
+<td align="right">$138,000</td>
+</tr>
+<tr>
+<td>Monthly P&amp;L cost, first year</td>
+<td align="right">$2,833</td>
+<td align="right">$2,300</td>
+<td align="right">$2,300</td>
+</tr>
+<tr>
+<td>First-year tax deduction</td>
+<td align="right">$129,992</td>
+<td align="right">$27,600</td>
+<td align="right">$27,600</td>
+</tr>
+</tbody></table></div>
+<p>The loan&#39;s $2,833 is $2,000 of depreciation, if you spread the full $120,000 over five years in your books, with nothing left at the end, plus $833 of average monthly interest. Its $129,992 deduction, if your business income covers it, is the $120,000 cost under Section 179 plus the $9,992 of interest you pay in the first 12 months. On each lease, you deduct the 12 payments, $27,600.<!-- CPA CHECK: book depreciation with no salvage value; Section 179 on a financed purchase, interest deductible, Publication 334 Interest; lease payments deductible as rent; the $129,992 and $27,600 figures. --></p>
+<p>At an example combined tax rate of 35%, the loan&#39;s first-year deduction cuts your tax by about $45,500, while you&#39;ve paid $29,892 on the loan. In years 2 to 5, you keep paying $2,491 a month but deduct only the interest, so you&#39;ll pay more tax in those years than you would on the lease.<!-- CPA CHECK: 35% example rate, tax saved, later-year effect. --></p>
+<h2 id="example-2-how-many-treatments-a-month-do-i-need-to-cover-a-laser">Example 2: how many treatments a month do I need to cover a laser?</h2>
+<p>Divide what the laser costs you each month by what you keep from one treatment after its own costs. In this example, you need 14 treatments a month at $300 to cover the loan payment and service plan, and 25 once you also cover the room&#39;s share of rent and staff.</p>
+<p><strong>Example numbers, not market prices.</strong> One treatment is $300 and takes 45 minutes. You pay $12 for tips and gel, $40 to the laser tech and a 3% card fee. Your overhead comes to $150 per booked room hour. The service plan is $650 a month on either option.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Per treatment</th>
+<th align="right">Amount</th>
+<th>How you figure it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Price</td>
+<td align="right">$300.00</td>
+<td>Example price</td>
+</tr>
+<tr>
+<td>Tips, gel, tech pay, card fee</td>
+<td align="right">$61.00</td>
+<td>$12 plus $40 plus 3% of $300</td>
+</tr>
+<tr>
+<td>You keep</td>
+<td align="right">$239.00</td>
+<td>$300 minus $61</td>
+</tr>
+<tr>
+<td>Room share</td>
+<td align="right">$112.50</td>
+<td>45 minutes at $150 a room hour</td>
+</tr>
+<tr>
+<td>You keep after the room</td>
+<td align="right">$126.50</td>
+<td>$239 minus $112.50</td>
+</tr>
+</tbody></table></div>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Treatments a month</th>
+<th align="right">Loan</th>
+<th align="right">Lease</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Laser payment plus $650 service plan</td>
+<td align="right">$3,141</td>
+<td align="right">$2,950</td>
+</tr>
+<tr>
+<td>To cover the laser</td>
+<td align="right">14</td>
+<td align="right">13</td>
+</tr>
+<tr>
+<td>To cover the laser and the room</td>
+<td align="right">25</td>
+<td align="right">24</td>
+</tr>
+</tbody></table></div>
+<p>On the lease, you need only one fewer treatment a month, so don&#39;t let the payment decide it for you. What matters is whether you can book 25 laser clients a month from the start.</p>
+<section id="cta-example" class="article-cta">
+  <p>Before you buy, Lucid builds a payback model from your quote and financing terms.</p>
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p>For your own room-hour cost, see how to work out your med spa&#39;s profit margin on each treatment<!-- TODO: link "how to work out your med spa's profit margin on each treatment" to /blog/med-spa-profit-margin-by-treatment/ once that post is live. -->. If you&#39;ll book fewer at first, plan the cash for that gap before you sign: why a profitable practice can still run short on cash<!-- TODO: link "why a profitable practice can still run short on cash" to /blog/practice-profitable-but-no-cash/ once that post is live. -->.</p>
+<h2 id="can-i-deduct-the-whole-laser-in-the-year-i-buy-it">Can I deduct the whole laser in the year I buy it?</h2>
+<p>Usually, if you own it and it&#39;s installed and ready to use by December 31.<!-- CPA CHECK: placed in service means installed and ready to use, whether or not it has been used yet, Publication 946 chapter 1. --> For 2026, Section 179 lets you deduct up to $2,560,000 of equipment, and you can use bonus depreciation for 100% of most equipment acquired after January 19, 2025. You can&#39;t take either one on an operating lease.<!-- CPA CHECK: 2026 Section 179 limit, Rev. Proc. 2025-32; 100% bonus depreciation for property acquired after January 19, 2025, Publication 946; no deduction for leased property. --></p>
+<ul>
+<li><strong>The income limit.</strong> Your Section 179 deduction can&#39;t be more than your business&#39;s taxable income for the year, and you carry the rest to next year. The $2,560,000 limit shrinks once you place more than $4,090,000 of equipment in service.<!-- CPA CHECK: business income limit and carryover, Publication 946; phase-out, Rev. Proc. 2025-32 section 4.24. --></li>
+<li><strong>Bonus depreciation.</strong> You can take it with no business income limit, and you get it unless you elect out.<!-- CPA CHECK: no income limit, election out, Publication 946 chapter 3. --></li>
+<li><strong>The form.</strong> You claim either one on <a href="https://www.irs.gov/instructions/i4562">Form 4562</a>.<!-- CPA CHECK: Form 4562. --></li>
+<li><strong>Your state.</strong> Many states don&#39;t follow the federal rules, so your state deduction may be smaller.<!-- CPA CHECK: state conformity, no state named. --></li>
+<li><strong>Selling it later.</strong> If you sell or trade in the laser, you may have to report part of the deduction as income.<!-- CPA CHECK: depreciation recapture, Publication 946. --></li>
+</ul>
+<p>You can&#39;t count the delivery date. In <a href="https://www.irs.gov/publications/p946">Publication 946</a>, the IRS treats a machine delivered one year but not running until the next as placed in service the next year. If your installer sets up the laser on January 6, you&#39;ll deduct it in the new year.<!-- CPA CHECK: placed in service example, Publication 946 chapter 1. --> For other equipment and the rest of your deductions, see <a href="/guides/tax-deductions-for-medical-practice-owners/">tax deductions for medical practice owners</a>.</p>
+<h2 id="what-should-dermatology-and-plastic-surgery-practices-check">What should dermatology and plastic surgery practices check?</h2>
+<p>In a <a href="/specialty/dermatology">dermatology practice</a>, keep cosmetic and medical laser revenue on separate lines so you can see which side covers the payment. In a <a href="/specialty/plastic-surgery/">plastic surgery practice</a>, add the payment to your cash plan before you sign, since you won&#39;t get that cash back through the deduction.</p>
+<h2 id="what-to-ask-your-cpa-before-you-sign">What to ask your CPA before you sign</h2>
+<ul>
+<li>Will you treat this lease as rent or as a purchase on my return?</li>
+<li>Do I have enough business income this year to use Section 179, or should I use bonus depreciation?</li>
+<li>Does my state follow the federal deduction?</li>
+<li>What happens to the deduction if I sell or trade in the laser?</li>
+</ul>
+<h2 id="what-lucid-does-when-youre-deciding-on-a-laser">What Lucid does when you&#39;re deciding on a laser</h2>
+<p>Lucid (lucid.now) does <a href="/specialty/medical-spa">bookkeeping for med spas</a>. Before you buy, Lucid builds a payback model from your quote and financing terms. Afterward it reports profit by service. Lucid does not arrange financing. You also get a dedicated CPA.</p>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h2 id="faq">Questions med spa owners ask about leasing or buying a laser</h2>
+<h3 id="is-it-better-to-lease-or-buy-medical-equipment" data-faq-q>Is it better to lease or buy medical equipment?</h3>
+<p>Buy if you&#39;ll use the equipment past the loan term and can book enough treatments to cover the payment. Lease if you expect to replace the model before it wears out, or you need to keep cash for the first months. Ask for both quotes on the same term so you can compare the totals.</p>
+<h3 id="how-many-treatments-a-month-does-a-laser-need-to-pay-for-itself" data-faq-q>How many treatments a month does a laser need to pay for itself?</h3>
+<p>Divide your monthly laser cost, the payment plus the service plan, by what you keep from one treatment after tips, tech pay and card fees. In Example 2, that&#39;s 14 treatments at $300. Count the room&#39;s share of rent and staff too, and you need 25.</p>
+<h3 id="whats-the-difference-between-a-capital-lease-and-an-operating-lease" data-faq-q>What&#39;s the difference between a capital lease and an operating lease?</h3>
+<p>A capital lease, or finance lease, usually ends with you owning the equipment, often for $1, so your CPA will usually treat it like a loan on your return and you depreciate the laser. An operating lease ends with the leasing company owning it, and you deduct each payment as rent. Read the buyout terms in your contract to see which one you have.<!-- CPA CHECK: tax treatment of capital and operating leases, Publications 334 and 946. --></p>
+<h3 id="can-i-deduct-a-laser-in-the-year-i-buy-it" data-faq-q>Can I deduct a laser in the year I buy it?</h3>
+<p>Yes, in most cases, if you own it and it&#39;s installed and ready to use before your tax year ends. You can use Section 179, up to your business income, or 100% bonus depreciation. You can deduct the full cost even if you financed it and have paid only part of the loan.<!-- CPA CHECK: Section 179 business income limit, 100% bonus depreciation, full deduction on a financed purchase. --></p>
+<h3 id="what-happens-at-the-end-of-a-laser-lease" data-faq-q>What happens at the end of a laser lease?</h3>
+<p>On an operating lease, you return the laser, renew the lease or lease a newer model. On an FMV lease, you can also buy it for what it&#39;s worth then, and the leasing company usually sets that price. On a $1 buyout lease, you pay $1 and own it. Check the notice terms, since some leasing companies renew month to month unless you give written notice.</p>
+<h3 id="should-i-buy-equipment-in-december-for-the-tax-deduction" data-faq-q>Should I buy equipment in December for the tax deduction?</h3>
+<p>Only if you&#39;d buy it anyway. When you buy in December, you move the deduction into this year, but you still spend the cash and you&#39;ll have less to deduct later. You&#39;ll also get the deduction this year only if the laser is installed and ready to use by December 31.<!-- CPA CHECK: deduction timing, placed in service by year end. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/publications/p946">Publication 946 (2025), How to Depreciate Property</a> (chapters 1 to 3).</li>
+<li>IRS, <a href="https://www.irs.gov/irb/2025-45_IRB">Rev. Proc. 2025-32, section 4.24, in Internal Revenue Bulletin 2025-45</a>.</li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i4562">Instructions for Form 4562 (2025)</a>.</li>
+<li>IRS, <a href="https://www.irs.gov/publications/p334">Publication 334 (2025), Tax Guide for Small Business</a>.</li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
