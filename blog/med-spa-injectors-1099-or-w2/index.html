@@ -1,0 +1,732 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Should a Med Spa Pay Injectors on a 1099 or W-2? | Lucid</title>
+<meta name="description" content="Can a med spa pay nurse injectors on a 1099? The IRS control test, what a $90,000 injector costs on W-2 vs 1099, and the back taxes if you get it wrong."/>
+<link rel="canonical" href="https://www.lucid.now/blog/med-spa-injectors-1099-or-w2/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Should a Med Spa Pay Injectors on a 1099 or W-2? | Lucid"/>
+<meta property="og:description" content="Can a med spa pay nurse injectors on a 1099? The IRS control test, what a $90,000 injector costs on W-2 vs 1099, and the back taxes if you get it wrong."/>
+<meta property="og:url" content="https://www.lucid.now/blog/med-spa-injectors-1099-or-w2/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Should a Med Spa Pay Injectors on a 1099 or W-2? | Lucid"/>
+<meta name="twitter:description" content="Can a med spa pay nurse injectors on a 1099? The IRS control test, what a $90,000 injector costs on W-2 vs 1099, and the back taxes if you get it wrong."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"Can my med spa pay nurse injectors as 1099 contractors?","description":"Can a med spa pay nurse injectors on a 1099? The IRS control test, what a $90,000 injector costs on W-2 vs 1099, and the back taxes if you get it wrong.","url":"https://www.lucid.now/blog/med-spa-injectors-1099-or-w2/","datePublished":"2026-12-08","dateModified":"2026-12-08","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/med-spa-injectors-1099-or-w2/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can a nurse injector be a 1099 contractor?","acceptedAnswer":{"@type":"Answer","text":"Yes, if they really work for themselves. A nurse injector who sets their own hours, buys their own product, sets prices and works for several spas can pass the IRS test. Your state may still limit how they can work, so check with a healthcare attorney first."}},{"@type":"Question","name":"What makes someone an employee instead of a contractor?","acceptedAnswer":{"@type":"Answer","text":"Your right to control the work. If you can tell an injector when to work, which products to use and how to do each treatment, the IRS will likely see an employee, even if you never use that right. Calling them a contractor in a contract doesn't change that."}},{"@type":"Question","name":"What happens if I classify an injector wrong?","acceptedAnswer":{"@type":"Answer","text":"You'll owe the employment tax you should have paid, often at the reduced section 3509 rates, plus interest and penalties. Your state can bill you for unemployment tax and workers' comp too. If you think you've got it wrong, ask your CPA about the VCSP before the IRS contacts you."}},{"@type":"Question","name":"Can my medical director be a 1099 contractor?","acceptedAnswer":{"@type":"Answer","text":"Often, yes, under the same IRS test. If you pay a medical director $2,000 or more for 2026, the payment may go on Form 1099-MISC, box 6, for medical and health care payments, even when they bill through their own professional corporation. Ask a healthcare attorney about your state's supervision rules."}},{"@type":"Question","name":"Can I pay W-2 injectors on commission?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can pay an employee a commission per treatment, or a base rate plus commission, through payroll. You withhold tax on commissions as supplemental wages. Federal and state wage laws can still require minimum wage and overtime in slow weeks, so ask an attorney to check your pay plan."}},{"@type":"Question","name":"How do I move a contractor onto payroll?","acceptedAnswer":{"@type":"Answer","text":"Pick a switch date, collect a W-4 and an I-9, and add the injector to payroll and workers' comp. Ask your CPA about the VCSP first, since the IRS wants the application at least 120 days before the switch date. You'll give them a 1099-NEC for the months before the switch and a W-2 for the months after."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"Can my med spa pay nurse injectors as 1099 contractors?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+.lc-nb{white-space:nowrap;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+.article-cta a.btn{white-space:nowrap;}
+@media (max-width:400px){
+.article-wrap .article-title{text-wrap:pretty;font-size:1.75rem;}
+.article-body .lc-table table.lc-stack thead{display:none;}
+.article-body .lc-table table.lc-stack,.article-body .lc-table table.lc-stack tbody,.article-body .lc-table table.lc-stack tr,.article-body .lc-table table.lc-stack td{display:block;width:auto;}
+.article-body .lc-table table.lc-stack tr{border-bottom:1px solid var(--line);padding:10px 0;}
+.article-body .lc-table table.lc-stack tr:has(>td[rowspan]){border-bottom:0;padding-bottom:0;}
+.article-body .lc-table table.lc-stack td,.article-body .lc-table table.lc-stack td[align]{border:0;padding:3px 4px;text-align:left;white-space:normal;font-size:inherit;}
+.article-body table.lc-stack td:first-child:not(:has(strong)){font-weight:700;}
+.article-body table.lc-stack tr:has(>td[rowspan])+tr>td:first-child{font-weight:inherit;}
+.article-body table.lc-stack td[data-label]:not([data-label=""])::before{content:attr(data-label);display:block;font-size:.8rem;font-weight:600;color:var(--muted);text-wrap:balance;}
+.article-body table.lc-2col th:first-child,.article-body table.lc-2col td:first-child{min-width:var(--lc-c1);}
+.article-body .lc-table table.lc-stack td.lc-empty{display:none;}
+}
+@media (max-width:370px){.article-wrap .article-title{font-size:1.625rem;}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Can my med spa pay nurse injectors as 1099&nbsp;contractors?</h1>
+<div class="article-meta"><time datetime="2026-12-08">December 8, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 8,&nbsp;2026</p>
+<!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No post goes live without this line. -->
+<div class="article-body">
+<p>Only if the injector really runs their own business. The IRS looks at who controls the work, who controls the money side, and how the two of you treat the relationship. If you set the schedule, supply the product and room, and set the prices, the IRS will likely see an employee, and you could owe back payroll&nbsp;taxes.<!-- CPA CHECK: common-law control test, three categories, back employment taxes on misclassification, against the IRS independent contractor page and Publication 15-A. --></p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free <span class="lc-nb">30-minute</span> call and see what Lucid would cost for your&nbsp;practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on&nbsp;it.</em></p>
+<h2 id="key-points">Key&nbsp;points</h2>
+<ul>
+<li>In Example 1, an injector you pay $90,000 costs you $98,097 on payroll and $90,000 on a&nbsp;1099.</li>
+<li>In Example 2, if the IRS reclassifies that injector for one year, you could owe $9,612 in back federal tax, or $961.20 if you qualify for the IRS settlement program&nbsp;(VCSP).</li>
+<li>State rules can be stricter than the IRS&nbsp;test.</li>
+</ul>
+<!-- CPA CHECK: each key point, against the sections and sources below. --><!-- ATTORNEY CHECK: the state rules key point. -->
+<h2 id="whats-the-difference-between-a-w-2-injector-and-a-1099-injector">What&#39;s the difference between a <span class="lc-nb">W-2</span> injector and a 1099&nbsp;injector?</h2>
+<p>A <span class="lc-nb">W-2</span> injector is your employee: you withhold their taxes, pay your share of Social Security and Medicare, and report their pay on <a href="https://www.irs.gov/forms-pubs/about-form-w-2">Form <span class="lc-nb">W-2</span></a>. A 1099 injector is a contractor: you pay the full amount with nothing withheld, they pay their own taxes, and you report the payments on a Form&nbsp;1099.<!-- CPA CHECK: withholding and reporting for employees vs contractors, IRS Publication 15-A. --></p>
+<p><strong>A 1099 contractor</strong> is a <span class="lc-nb">self-employed</span> worker you pay without withholding, reported on <a href="https://www.irs.gov/forms-pubs/about-form-1099-nec">Form <span class="lc-nb">1099-NEC</span></a> once you pay them $2,000 or more in 2026. <strong><span class="lc-nb">Self-employment</span> tax</strong> is the 15.3% Social Security and Medicare tax a contractor pays on their own net&nbsp;earnings.<!-- CPA CHECK: the $2,000 reporting threshold for payments made after December 31, 2025, Instructions for Forms 1099-MISC and 1099-NEC, "What's New"; the 15.3% self-employment tax rate. --></p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>What you&#39;re&nbsp;comparing</th>
+<th><span class="lc-nb">W-2</span>&nbsp;employee</th>
+<th>1099&nbsp;contractor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="What you're comparing">How you&nbsp;pay</td>
+<td data-label="W-2 employee">Hourly, salary or commission through&nbsp;payroll</td>
+<td data-label="1099 contractor">A fee per job or per treatment, on an&nbsp;invoice</td>
+</tr>
+<tr>
+<td data-label="What you're comparing">Taxes you&nbsp;withhold</td>
+<td data-label="W-2 employee">Federal and state income tax, Social Security and&nbsp;Medicare</td>
+<td data-label="1099 contractor">None</td>
+</tr>
+<tr>
+<td data-label="What you're comparing">Taxes you&nbsp;pay</td>
+<td data-label="W-2 employee">Your 7.65% share, federal and state unemployment&nbsp;tax</td>
+<td data-label="1099 contractor">None</td>
+</tr>
+<tr>
+<td data-label="What you're comparing">Forms you collect or&nbsp;file</td>
+<td data-label="W-2 employee"><span class="lc-nb">W-4</span> and <span class="lc-nb">I-9</span> at hire, Form 941 each quarter, Form 940, <span class="lc-nb">W-2</span> by Feb 1,&nbsp;2027</td>
+<td data-label="1099 contractor"><span class="lc-nb">W-9</span> at the start, <span class="lc-nb">1099-NEC</span> by Feb 1,&nbsp;2027</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: the rates and forms in the table, IRS Publication 15 (2026); W-2 and 1099-NEC due February 1, 2027, since January 31, 2027 is a Sunday. -->
+<h2 id="how-does-the-irs-decide-if-an-injector-is-an-employee">How does the IRS decide if an injector is an&nbsp;employee?</h2>
+<p>The IRS uses the <span class="lc-nb">common-law</span> test. It sorts the facts into three groups, behavioral, financial and type of relationship, and weighs them all to judge your control over the work. No single fact decides it, and the IRS doesn&#39;t set a number of facts that&nbsp;does.<!-- CPA CHECK: the common-law rules and three categories, [IRS, Independent contractor (self-employed) or employee?](https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee). --></p>
+<p><strong>The <span class="lc-nb">common-law</span> test</strong> is the IRS rule that a worker is your employee if you have the right to control the details of how they do the work, even if you don&#39;t use that&nbsp;right.<!-- CPA CHECK: [IRS Publication 15-A](https://www.irs.gov/publications/p15a), "Common-Law Employees." --></p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>IRS&nbsp;group</th>
+<th>Points to employee at a med&nbsp;spa</th>
+<th>Points to contractor at a med&nbsp;spa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="IRS group">Behavioral</td>
+<td data-label="Points to employee at a med spa">You set shifts, book their clients and require your treatment&nbsp;methods</td>
+<td data-label="Points to contractor at a med spa">They set their own hours and book their own&nbsp;clients</td>
+</tr>
+<tr>
+<td data-label="IRS group">Financial</td>
+<td data-label="Points to employee at a med spa">You buy the product, supply the room and set the&nbsp;price</td>
+<td data-label="Points to contractor at a med spa">They buy product, set prices and can make or lose&nbsp;money</td>
+</tr>
+<tr>
+<td data-label="IRS group">Type of&nbsp;relationship</td>
+<td data-label="Points to employee at a med spa">Ongoing work with benefits, and injections are your main&nbsp;service</td>
+<td data-label="Points to contractor at a med spa">A written contract for set work, and they serve other&nbsp;spas</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: how each med spa fact maps to the IRS categories; the IRS lists who provides tools and supplies and how the worker is paid under financial control, and whether the work is a key aspect of the business under type of relationship. -->
+
+<p>Some control at a med spa comes from state rules, such as your medical director&#39;s protocols. Ask your CPA and a healthcare attorney how that&nbsp;weighs.<!-- ATTORNEY CHECK: whether state-required supervision counts as control for classification; scope of practice and supervision rules are set by each state's nursing and medical boards. --></p>
+<p>If you&#39;re still not sure, you or the injector can file <a href="https://www.irs.gov/forms-pubs/about-form-ss-8">Form <span class="lc-nb">SS-8</span></a>. <strong>Form <span class="lc-nb">SS-8</span></strong> is the form you file to ask the IRS to decide a worker&#39;s status, and a decision can take at least six&nbsp;months.<!-- CPA CHECK: Form SS-8 filed by either party; at least six months, IRS independent contractor page. --></p>
+<h2 id="do-state-rules-change-the-answer">Do state rules change the&nbsp;answer?</h2>
+<p>They can. Your state may use a stricter test for unemployment tax, workers&#39; comp or wage laws. Your state&#39;s nursing and medical boards decide who may inject, who must supervise and who may own the spa. An injector can pass the IRS test and still be an employee under state&nbsp;law.<!-- ATTORNEY CHECK: state classification tests, scope of practice, supervision and ownership rules; name no state. --></p>
+<p><strong>An ABC test</strong> is a stricter test some states use, under which a worker is an employee unless the business proves all three of the test&#39;s&nbsp;conditions.<!-- ATTORNEY CHECK: the ABC test definition and which laws use it; name no state unless the reviewer confirms it. --></p>
+<p>Federal wage law has its own test. The Department of Labor published a new rule for it on November 23, 2026. It takes effect January 22, 2027 and rescinds the 2024&nbsp;rule.<!-- ATTORNEY CHECK: the DOL final rule, 29 CFR Part 795, its publication and effective dates and the 2024 rule it rescinds, [DOL, Misclassification of Employees as Independent Contractors](https://www.dol.gov/agencies/whd/flsa/misclassification). --></p>
+<h2 id="what-does-one-injector-cost-you-on-a-w-2-vs-a-1099">What does one injector cost you on a <span class="lc-nb">W-2</span> vs a&nbsp;1099?</h2>
+<p>On payroll, you&#39;d pay about 9% on top of an injector&#39;s pay in taxes and insurance. In Example 1, a $90,000 injector costs you $98,097 a year as an employee and $90,000 as a contractor. As a contractor, the injector pays both halves of Social Security and&nbsp;Medicare.</p>
+<p><strong>Example 1: one injector paid $90,000 in 2026.</strong> State unemployment and workers&#39; comp are example rates; yours will&nbsp;differ.</p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Line</th>
+<th align="right"><span class="lc-nb">W-2</span>&nbsp;employee</th>
+<th align="right">1099&nbsp;contractor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Line">Pay</td>
+<td align="right" data-label="W-2 employee">$90,000</td>
+<td align="right" data-label="1099 contractor">$90,000</td>
+</tr>
+<tr>
+<td data-label="Line">Your Social Security,&nbsp;6.2%</td>
+<td align="right" data-label="W-2 employee">$5,580</td>
+<td align="right" data-label="1099 contractor">$0</td>
+</tr>
+<tr>
+<td data-label="Line">Your Medicare,&nbsp;1.45%</td>
+<td align="right" data-label="W-2 employee">$1,305</td>
+<td align="right" data-label="1099 contractor">$0</td>
+</tr>
+<tr>
+<td data-label="Line">Federal unemployment, 0.6% of the first&nbsp;$7,000</td>
+<td align="right" data-label="W-2 employee">$42</td>
+<td align="right" data-label="1099 contractor">$0</td>
+</tr>
+<tr>
+<td data-label="Line">State unemployment, Example: 2.7% of the first&nbsp;$10,000</td>
+<td align="right" data-label="W-2 employee">$270</td>
+<td align="right" data-label="1099 contractor">$0</td>
+</tr>
+<tr>
+<td data-label="Line">Workers&#39; comp, Example: 1% of&nbsp;pay</td>
+<td align="right" data-label="W-2 employee">$900</td>
+<td align="right" data-label="1099 contractor">$0</td>
+</tr>
+<tr>
+<td data-label="Line">Your total&nbsp;cost</td>
+<td align="right" data-label="W-2 employee">$98,097</td>
+<td align="right" data-label="1099 contractor">$90,000</td>
+</tr>
+<tr>
+<td data-label="Line">Social Security and Medicare the injector&nbsp;pays</td>
+<td align="right" data-label="W-2 employee">$6,885,&nbsp;withheld</td>
+<td align="right" data-label="1099 contractor">About $12,717 in <span class="lc-nb">self-employment</span>&nbsp;tax</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: 6.2% Social Security up to $184,500 and 1.45% Medicare for 2026, FUTA 6.0% on the first $7,000 less the 5.4% state credit, IRS Publication 15 (2026); self-employment tax of 15.3% on 92.35% of $90,000; the state unemployment and workers' comp lines are labelled examples, not rates. -->
+<h2 id="what-do-you-owe-if-the-irs-reclassifies-a-1099-injector">What do you owe if the IRS reclassifies a 1099&nbsp;injector?</h2>
+<p>You&#39;ll owe the employment tax you didn&#39;t pay. If the mistake wasn&#39;t intentional, you can usually use the reduced section 3509 rates, which are lower if you filed the 1099. You still owe your full share of Social Security and Medicare, and you can&#39;t collect the employee&#39;s share from the&nbsp;injector.<!-- CPA CHECK: section 3509 rates and conditions, IRS Publication 15 (2026), section 2. --></p>
+<p><strong>Section 3509 rates</strong> are reduced rates for the employee&#39;s share of Social Security and Medicare and for income tax withholding on a misclassified&nbsp;worker.<!-- CPA CHECK: not available for intentional disregard, Publication 15. --></p>
+<p><strong>Example 2: the same $90,000 injector, reclassified for 2026.</strong> The mistake wasn&#39;t intentional. Interest, penalties, federal unemployment and state taxes aren&#39;t&nbsp;included.</p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">You filed the&nbsp;1099</th>
+<th align="right">You didn&#39;t file&nbsp;it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Line">Social Security, 7.44% or&nbsp;8.68%</td>
+<td align="right" data-label="You filed the 1099">$6,696</td>
+<td align="right" data-label="You didn't file it">$7,812</td>
+</tr>
+<tr>
+<td data-label="Line">Medicare, 1.74% or&nbsp;2.03%</td>
+<td align="right" data-label="You filed the 1099">$1,566</td>
+<td align="right" data-label="You didn't file it">$1,827</td>
+</tr>
+<tr>
+<td data-label="Line">Federal income tax withholding, 1.5% or&nbsp;3.0%</td>
+<td align="right" data-label="You filed the 1099">$1,350</td>
+<td align="right" data-label="You didn't file it">$2,700</td>
+</tr>
+<tr>
+<td data-label="Line">Back tax for one&nbsp;year</td>
+<td align="right" data-label="You filed the 1099">$9,612</td>
+<td align="right" data-label="You didn't file it">$12,339</td>
+</tr>
+<tr>
+<td data-label="Line">If the IRS reviews three years at the same&nbsp;pay</td>
+<td align="right" data-label="You filed the 1099">$28,836</td>
+<td align="right" data-label="You didn't file it">$37,017</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: section 3509 rates with and without information returns, Publication 15 (2026); the three-year look-back as the general period to assess employment tax; interest, penalties and FUTA on reclassified wages. -->
+
+<p>Two IRS rules can lower this. <strong>Section 530 relief</strong> is a rule that can excuse you from the back tax if you had a reasonable basis for using a 1099, filed every 1099, and treated everyone in a similar job the same way. A reasonable basis can be a court case, a past IRS audit, your accountant&#39;s or lawyer&#39;s advice, or proof that a significant segment of your industry does the&nbsp;same.<!-- CPA CHECK: Section 530 requirements, [IRS Publication 1976](https://www.irs.gov/pub/irs-pdf/p1976.pdf). --></p>
+<p><strong>The Voluntary Classification Settlement Program (VCSP)</strong> is an IRS program that lets you move contractors onto payroll from now on and pay 10% of one year&#39;s back tax at the reduced rates. In Example 2, that&#39;s $961.20, and the IRS won&#39;t audit those workers&#39; classification for earlier years. You need their 1099s filed for the last three years and no employment tax audit&nbsp;open.<!-- CPA CHECK: VCSP payment, eligibility and Form 8952, [IRS VCSP page](https://www.irs.gov/businesses/small-businesses-self-employed/voluntary-classification-settlement-program). --></p>
+<section id="cta-example" class="article-cta">
+  <p>Book a free <span class="lc-nb">30-minute</span> call and see what Lucid would cost for your&nbsp;practice.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="how-do-you-move-an-injector-from-a-1099-to-payroll">How do you move an injector from a 1099 to&nbsp;payroll?</h2>
+<p>You can switch an injector any time of year. Ask your CPA first whether the VCSP fits, because the IRS wants the application at least 120 days before the switch. Then set them up like any new hire. For that year, you&#39;ll file a <span class="lc-nb">1099-NEC</span> for the contractor months and a <span class="lc-nb">W-2</span> for the&nbsp;rest.<!-- CPA CHECK: Form 8952 filed at least 120 days before the date you want to start treating the workers as employees, IRS VCSP page; a 1099-NEC and a W-2 for the same worker in one year. --></p>
+<ol>
+<li>Ask your CPA whether the VCSP or Section 530&nbsp;applies.</li>
+<li>Have an attorney write the employment&nbsp;agreement.<!-- ATTORNEY CHECK: employment agreement terms, pay and supervision. --></li>
+<li>Collect Form <span class="lc-nb">W-4</span> and Form <span class="lc-nb">I-9</span>, and report the new hire to your state&#39;s new hire&nbsp;registry.<!-- CPA CHECK: Form I-9 and state new hire reporting, Publication 15 (2026), Hiring New Employees. --></li>
+<li>Add the injector to payroll, workers&#39; comp and any benefits you&nbsp;offer.</li>
+<li>In January, file the <span class="lc-nb">1099-NEC</span> for the contractor months if they come to $2,000 or more, and the <span class="lc-nb">W-2</span> for the&nbsp;rest.</li>
+</ol>
+<!-- CPA CHECK: the steps and forms. -->
+<p>See <a href="/blog/payroll-tax-records-retention-rules-explained/">how long a practice keeps payroll tax records</a> and <a href="/guides/tax-deductions-for-medical-practice-owners/#staff-and-people-costs">tax deductions for medical practice&nbsp;owners</a>.</p>
+<h2 id="what-about-your-medical-director">What about your medical&nbsp;director?</h2>
+<p>Your medical director goes through the same IRS test. Many work as contractors because they set their own hours and serve more than one spa. If you pay yours as a contractor, see who gets a 1099 from a medical&nbsp;practice.<!-- TODO: link "who gets a 1099 from a medical practice" to `/blog/who-gets-a-1099-medical-practice-2027/` only once post 5 is live; until then it stays plain text. --><!-- CPA CHECK: medical director classification under the same common-law test. --></p>
+<p>Ownership and supervision are state questions; Lucid&#39;s guide to <a href="/guides/med-spa-mso-vs-medical-director-service/">a med spa MSO or medical director service</a> explains the&nbsp;setups.<!-- ATTORNEY CHECK: medical director ownership and supervision rules vary by state. --></p>
+<p>For what injector pay does to each treatment, see med spa profit margin by&nbsp;treatment.<!-- TODO: link "med spa profit margin by treatment" to `/blog/med-spa-profit-margin-by-treatment/` only once post 8 is live; until then it stays plain text. --></p>
+<h2 id="what-to-ask-your-cpa-and-attorney">What to ask your CPA and&nbsp;attorney</h2>
+<ul>
+<li>Under the IRS test, are any of my 1099 injectors really&nbsp;employees?</li>
+<li>Do I have a reasonable basis for Section 530 relief if the IRS&nbsp;asks?</li>
+<li>Do I qualify for the VCSP, and when do I have to&nbsp;apply?</li>
+<li>What test does my state use for unemployment tax and wage laws?&nbsp;(Attorney)</li>
+<li>What do my state&#39;s nursing and medical boards require for supervision?&nbsp;(Attorney)</li>
+</ul>
+<h2 id="what-lucid-does-for-med-spa-owners">What Lucid does for med spa&nbsp;owners</h2>
+<p>Lucid (lucid.now) does bookkeeping, taxes, tax credits and CFO reporting for med spas, with a dedicated CPA. Your CPA reviews <span class="lc-nb">W-2</span> versus 1099 injector pay, and you see profit by provider, room and service, and by location. See <a href="/specialty/medical-spa">bookkeeping for med spas</a>, Lucid&#39;s <a href="/guides/best-bookkeeping-for-med-spas/">guide to bookkeeping for med spas with several locations</a>, and <a href="/medical">bookkeeping for medical&nbsp;practices</a>.</p>
+<h2 id="faq">Questions med spa owners ask about 1099 and <span class="lc-nb">W-2</span>&nbsp;injectors</h2>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on&nbsp;it.</em></p>
+<h3 id="can-a-nurse-injector-be-a-1099-contractor" data-faq-q>Can a nurse injector be a 1099&nbsp;contractor?</h3>
+<p>Yes, if they really work for themselves. A nurse injector who sets their own hours, buys their own product, sets prices and works for several spas can pass the IRS test. Your state may still limit how they can work, so check with a healthcare attorney&nbsp;first.<!-- CPA CHECK: common-law test. --><!-- ATTORNEY CHECK: state nursing scope of practice and supervision. --></p>
+<h3 id="what-makes-someone-an-employee-instead-of-a-contractor" data-faq-q>What makes someone an employee instead of a&nbsp;contractor?</h3>
+<p>Your right to control the work. If you can tell an injector when to work, which products to use and how to do each treatment, the IRS will likely see an employee, even if you never use that right. Calling them a contractor in a contract doesn&#39;t change&nbsp;that.<!-- CPA CHECK: right to control, Publication 15-A; the label in a contract doesn't decide status. --></p>
+<h3 id="what-happens-if-i-classify-an-injector-wrong" data-faq-q>What happens if I classify an injector&nbsp;wrong?</h3>
+<p>You&#39;ll owe the employment tax you should have paid, often at the reduced section 3509 rates, plus interest and penalties. Your state can bill you for unemployment tax and workers&#39; comp too. If you think you&#39;ve got it wrong, ask your CPA about the VCSP before the IRS contacts&nbsp;you.<!-- CPA CHECK: section 3509, no recovery from the employee, VCSP. --><!-- ATTORNEY CHECK: state unemployment and workers' comp exposure. --></p>
+<h3 id="can-my-medical-director-be-a-1099-contractor" data-faq-q>Can my medical director be a 1099&nbsp;contractor?</h3>
+<p>Often, yes, under the same IRS test. If you pay a medical director $2,000 or more for 2026, the payment may go on Form <span class="lc-nb">1099-MISC</span>, box 6, for medical and health care payments, even when they bill through their own professional corporation. Ask a healthcare attorney about your state&#39;s supervision&nbsp;rules.<!-- CPA CHECK: Form 1099-MISC box 6 vs Form 1099-NEC box 1 for a medical director's fee; $2,000 threshold; the corporation exemption doesn't apply to medical and health care payments, Instructions for Forms 1099-MISC and 1099-NEC. --><!-- ATTORNEY CHECK: state medical director rules. --></p>
+<h3 id="can-i-pay-w-2-injectors-on-commission" data-faq-q>Can I pay <span class="lc-nb">W-2</span> injectors on&nbsp;commission?</h3>
+<p>Yes. You can pay an employee a commission per treatment, or a base rate plus commission, through payroll. You withhold tax on commissions as supplemental wages. Federal and state wage laws can still require minimum wage and overtime in slow weeks, so ask an attorney to check your pay&nbsp;plan.<!-- CPA CHECK: commissions as supplemental wages, Publication 15, section 7. --><!-- ATTORNEY CHECK: FLSA minimum wage, overtime and exemptions for nurses; state commission pay laws. --></p>
+<h3 id="how-do-i-move-a-contractor-onto-payroll" data-faq-q>How do I move a contractor onto&nbsp;payroll?</h3>
+<p>Pick a switch date, collect a <span class="lc-nb">W-4</span> and an <span class="lc-nb">I-9</span>, and add the injector to payroll and workers&#39; comp. Ask your CPA about the VCSP first, since the IRS wants the application at least 120 days before the switch date. You&#39;ll give them a <span class="lc-nb">1099-NEC</span> for the months before the switch and a <span class="lc-nb">W-2</span> for the months&nbsp;after.<!-- CPA CHECK: switch steps, VCSP timing, both forms in one year. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee">Independent contractor (<span class="lc-nb">self-employed</span>) or employee?</a> (<span class="lc-nb">common-law</span> rules, three categories, Form <span class="lc-nb">SS-8</span>, misclassification,&nbsp;VCSP)</li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15a">Publication <span class="lc-nb">15-A</span> (2026), Employer&#39;s Supplemental Tax Guide</a> (<span class="lc-nb">common-law</span> employees, misclassification,&nbsp;relief)</li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15">Publication 15 (2026), Employer&#39;s Tax Guide</a> (2026 Social Security and Medicare rates, FUTA, section 3509&nbsp;rates)</li>
+<li>IRS, <a href="https://www.irs.gov/pub/irs-pdf/p1976.pdf">Publication 1976, Section 530 Employment Tax Relief&nbsp;Requirements</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/voluntary-classification-settlement-program">Voluntary Classification Settlement&nbsp;Program</a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-ss-8">About Form&nbsp;<span class="lc-nb">SS-8</span></a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-1099-nec">About Form <span class="lc-nb">1099-NEC</span></a> and <a href="https://www.irs.gov/instructions/i1099mec">Instructions for Forms <span class="lc-nb">1099-MISC</span> and <span class="lc-nb">1099-NEC</span></a> ($2,000 threshold for 2026 payments, box 6 medical&nbsp;payments)</li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-w-2">About Form&nbsp;<span class="lc-nb">W-2</span></a></li>
+<li>U.S. Department of Labor, <a href="https://www.dol.gov/agencies/whd/flsa/misclassification">Misclassification of Employees as Independent Contractors Under the FLSA</a> (final rule published November 23, 2026, effective January 22,&nbsp;2027)</li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
