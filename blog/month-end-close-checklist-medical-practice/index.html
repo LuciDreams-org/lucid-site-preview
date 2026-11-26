@@ -1,0 +1,700 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Month-End Close Checklist for a Medical Practice | Lucid</title>
+<meta name="description" content="A month-end close checklist for a medical practice: 12 steps, who does each and by which business day, plus deposit matching and a cost split for two offices."/>
+<link rel="canonical" href="https://www.lucid.now/blog/month-end-close-checklist-medical-practice/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Month-End Close Checklist for a Medical Practice | Lucid"/>
+<meta property="og:description" content="A month-end close checklist for a medical practice: 12 steps, who does each and by which business day, plus deposit matching and a cost split for two offices."/>
+<meta property="og:url" content="https://www.lucid.now/blog/month-end-close-checklist-medical-practice/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Month-End Close Checklist for a Medical Practice | Lucid"/>
+<meta name="twitter:description" content="A month-end close checklist for a medical practice: 12 steps, who does each and by which business day, plus deposit matching and a cost split for two offices."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"What should my books look like at the end of every month?","description":"A month-end close checklist for a medical practice: 12 steps, who does each and by which business day, plus deposit matching and a cost split for two offices.","url":"https://www.lucid.now/blog/month-end-close-checklist-medical-practice/","datePublished":"2026-12-04","dateModified":"2026-12-04","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/month-end-close-checklist-medical-practice/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a month-end close?","acceptedAnswer":{"@type":"Answer","text":"A month-end close is the work you do after each month ends to make that month's books complete and correct, then lock them. For a practice, that means reconciling accounts, matching deposits, coding expenses and splitting shared costs. Once you've closed a month, you can compare its profit and loss with the month before."}},{"@type":"Question","name":"How long should a month-end close take for a practice?","acceptedAnswer":{"@type":"Answer","text":"Plan on a fixed sign-off day in the first two weeks of the next month; the checklist above signs off on business day 8. The hours depend on how many accounts, locations and transactions you have. If your close often runs past the 15th, ask your bookkeeper what's holding it up."}},{"@type":"Question","name":"How do I match insurance deposits to the payments in my practice software?","acceptedAnswer":{"@type":"Answer","text":"Match each insurance deposit to that payer's remittance advice by amount, then check that the payments posted in your practice software add up to the same total. One deposit can cover dozens of claims. If you can't find the remittance for a deposit, ask the payer or your billing company for it before anyone posts the payment."}},{"@type":"Question","name":"What's the difference between a bank reconciliation and a close?","acceptedAnswer":{"@type":"Answer","text":"A bank reconciliation is one step of the close: you check one account against one statement. The close covers every account, plus steps no bank statement shows, like coding expenses, recording payroll and splitting shared costs. You can have a reconciled bank account and still have a profit and loss that's wrong."}},{"@type":"Question","name":"What extra steps happen at year end?","acceptedAnswer":{"@type":"Answer","text":"At year end, you add a short list to the December close: payroll records for Forms W-2, contractor details for Forms 1099, a product count, the equipment list and old open items. Start in early December, since staff and contractors can take weeks to send you what you need."}},{"@type":"Question","name":"Who should do the close: the office manager, a bookkeeper or a CPA?","acceptedAnswer":{"@type":"Answer","text":"Usually all three, each on different steps. Your office manager closes out payments and pulls reports. A bookkeeper does the reconciling, coding and cost splitting. A CPA reviews the year and prepares the tax returns. Split the work so the person who records payments isn't the only one who checks them."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"What should my books look like at the end of every month?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">What should my books look like at the end of every month?</h1>
+<div class="article-meta"><time datetime="2026-12-04">December 4, 2026</time> &middot; 8 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 4, 2026</p>
+<div class="article-body">
+<p>At the end of each month, your books should agree with every bank and card statement, agree with what your practice software says you collected, and show each cost under the right location and provider. A month-end close is how you get there: 12 steps, each with a named person and a business day to finish by.</p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>You&#39;ll reconcile every account each month: checking, savings, payroll, credit cards and loans.</li>
+<li>You&#39;ll match insurance deposits to the payer&#39;s remittance advice, not to the day you posted the payment.</li>
+<li>In Example 1, a practice traces a $1,430 gap in one week to $250 of card fees and $1,180 of insurance timing.</li>
+<li>With more than one location, you&#39;ll split shared costs by one written rule, such as each office&#39;s share of visits.</li>
+</ul>
+<h2 id="whats-on-a-month-end-close-checklist-for-a-medical-practice">What&#39;s on a month-end close checklist for a medical practice?</h2>
+<p>A month-end close checklist for a practice has about 12 steps, from closing out the last day&#39;s payments to locking the month. Your office manager handles the first two on business day 1, your bookkeeper does the reconciling and coding by business day 6, and you review and sign off by business day 8.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Who</th>
+<th align="right">Business day</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Post the last day&#39;s payments and close the final card batch</td>
+<td>Office manager</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>2. Pull the practice software&#39;s month-end reports: payments, adjustments, refunds, aging</td>
+<td>Office manager or biller</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>3. Reconcile every bank account to its statement</td>
+<td>Bookkeeper</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>4. Reconcile every credit card and loan account to its statement</td>
+<td>Bookkeeper</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>5. Match deposits to collections: card batches, insurance payments, patient checks</td>
+<td>Bookkeeper</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>6. Record card processing fees and bank fees</td>
+<td>Bookkeeper</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>7. Code every expense and send the owner a list of unknown charges</td>
+<td>Bookkeeper</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>8. Record payroll from the payroll company&#39;s reports</td>
+<td>Bookkeeper</td>
+<td align="right">4</td>
+</tr>
+<tr>
+<td>9. Split loan payments into principal and interest; list new equipment</td>
+<td>Bookkeeper</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>10. Split shared costs across locations and providers</td>
+<td>Bookkeeper</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>11. Tie receivables in the books to the aging report; review refunds and credit balances</td>
+<td>Bookkeeper with the biller</td>
+<td align="right">6</td>
+</tr>
+<tr>
+<td>12. Review the reports against last month, sign off and lock the month</td>
+<td>Owner, then bookkeeper</td>
+<td align="right">8</td>
+</tr>
+</tbody></table></div>
+<p>Business day 1 is the first working day of the next month. You&#39;ll answer the step 7 questions by business day 5. If your bookkeeper finishes a step late, move the sign-off day back rather than skip a step. For step 11 in detail, see <a href="/blog/medical-receivables-aging-month-end-checklist/">the receivables part of the close</a>. If you&#39;re months behind, start with <a href="/guides/how-to-catch-up-bookkeeping-for-a-medical-practice/">how to catch up bookkeeping for a medical practice</a>.</p>
+<h2 id="what-is-a-month-end-close">What is a month-end close?</h2>
+<p>A month-end close is the set of steps you take after a month ends to check, correct and lock that month&#39;s books, so the reports you read are right. Every practice needs one, whether you keep the books in QuickBooks Online, Xero or another system.</p>
+<p>These are the terms you&#39;ll see in this post:</p>
+<ul>
+<li><strong>A bank reconciliation</strong> is the check that every transaction on a bank statement is in your books, and every bank transaction in your books is on the statement.</li>
+<li><strong>A card batch</strong> is the group of card payments your front desk settles at the end of a day, which your card processor deposits as one amount, minus fees.</li>
+<li><strong>A remittance advice</strong> is the payer&#39;s statement listing which claims one insurance payment covers. The electronic version is called an ERA.</li>
+<li><strong>An allocation</strong> is a written rule for splitting one shared cost between locations or providers.</li>
+<li><strong>An open-items list</strong> is the list of amounts nobody has explained yet, with the person checking each one and the day it&#39;s due.</li>
+<li><strong>Locking the month</strong> is setting a closing date in your accounting software, so nobody can change that month without a password.</li>
+</ul>
+<h2 id="how-do-i-match-my-bank-deposits-to-my-practice-softwares-collections-report">How do I match my bank deposits to my practice software&#39;s collections report?</h2>
+<p>Match by payment type, not by day. Your card processor deposits each batch minus fees, insurance payers deposit when they pay, often days after you post, and patient checks reach the bank when someone takes them. Once you&#39;ve matched each type, any gap left should be fees or timing you can name.</p>
+<p>Medicare pays claims by electronic funds transfer, and payers send the electronic remittance advice in a national format called the 835 (<a href="https://www.cms.gov/medicare/coding-billing/electronic-billing/electronic-funds-transfer">CMS, Electronic Funds Transfer</a>). Your bookkeeper matches each insurance deposit to its remittance advice by payer and amount, then lists what&#39;s left: deposits with no posting, and postings with no deposit.</p>
+<p><strong>Example 1: matching one week of deposits.</strong> A two-provider practice posts $24,530 of payments in its practice software for Monday, November 2 to Friday, November 6, 2026. The bank shows $23,100 of deposits for the same week.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Payment type</th>
+<th align="right">Practice software</th>
+<th align="right">Bank deposits</th>
+<th>Difference and why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Card batches</td>
+<td align="right">$8,420</td>
+<td align="right">$8,170</td>
+<td>$250 of processing fees, taken out before the deposit</td>
+</tr>
+<tr>
+<td>Insurance payments</td>
+<td align="right">$14,960</td>
+<td align="right">$13,780</td>
+<td>$1,180 from one payer, posted Friday and deposited the next Monday</td>
+</tr>
+<tr>
+<td>Patient checks</td>
+<td align="right">$1,150</td>
+<td align="right">$1,150</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Total</td>
+<td align="right">$24,530</td>
+<td align="right">$23,100</td>
+<td>$1,430, all of it named</td>
+</tr>
+</tbody></table></div>
+<p>Your bookkeeper records the $250 as a card fee expense and carries the $1,180 into the next week&#39;s match. Anything still unnamed goes on the open-items list for your office manager.</p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="how-should-a-practice-with-more-than-one-location-split-shared-costs">How should a practice with more than one location split shared costs?</h2>
+<p>Pick one written rule for each shared cost, such as each office&#39;s share of visits, revenue or square feet, and use it every month. Code direct costs, like each office&#39;s rent, straight to that office. Then you can read a profit and loss for each location and see which one is losing money.</p>
+<p><strong>Example 2: splitting shared costs between two offices.</strong> A primary care practice has two offices, north and south, with one provider in each and one office manager for both. The practice keeps one set of books in QuickBooks Online, with a location tag for each office. In November, the north office had 1,100 visits and the south office 900, so the bookkeeper splits two shared costs 55% and 45%.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Shared cost</th>
+<th align="right">November total</th>
+<th align="right">North office (55%)</th>
+<th align="right">South office (45%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Office manager&#39;s pay</td>
+<td align="right">$5,200</td>
+<td align="right">$2,860</td>
+<td align="right">$2,340</td>
+</tr>
+<tr>
+<td>Practice software</td>
+<td align="right">$900</td>
+<td align="right">$495</td>
+<td align="right">$405</td>
+</tr>
+<tr>
+<td>Total</td>
+<td align="right">$6,100</td>
+<td align="right">$3,355</td>
+<td align="right">$2,745</td>
+</tr>
+</tbody></table></div>
+<p>If the bookkeeper coded all $6,100 to the north office, the north office&#39;s profit and loss would carry $2,745 of the south office&#39;s costs, and the south office would look $2,745 more profitable than it is.</p>
+<p>Change the allocation only at the start of a year, so you can compare one month with the next. For more on groups, see <a href="/specialty/medical-group">accounting for practices with more than one location</a>. If each office is its own company with its own bank account, read <a href="/guides/how-to-keep-books-for-several-practices/">how to keep books for several practices</a>.</p>
+<h2 id="how-do-i-know-when-my-books-are-done-each-month">How do I know when my books are done each month?</h2>
+<p>Your books are done when your bookkeeper has finished all 12 steps, you&#39;ve signed off, and someone has locked the month in the accounting software. Pick a fixed sign-off day, such as business day 8, and ask for a short note listing anything still open.</p>
+<p>On sign-off day, ask for a reconciliation for every account, the open-items list and the reports. Then read the results with how to read a P&amp;L for your medical practice.<!-- TODO link held: "Then read the results with how to read a P&L for your medical practice." -> /blog/how-to-read-a-medical-practice-pl/. Note for Reid: link this only if post 1 is live on main when this post merges; otherwise drop the sentence. --></p>
+<p>Save each month&#39;s statements, reconciliations, reports and open-items list. The IRS says &quot;You must keep your records as long as needed to prove the income or deductions on a tax return&quot; (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/recordkeeping">IRS, Recordkeeping</a>).<!-- CPA CHECK: IRS recordkeeping period, quoted from the IRS Recordkeeping page. --></p>
+<h2 id="what-do-you-add-to-the-close-in-december">What do you add to the close in December?</h2>
+<p>The December close is a normal close plus a short year-end list: payroll and contractor records for Forms W-2 and 1099, a count of any product on the shelf, an updated list of equipment, and a clean-up of old open items. Your CPA will use all of it to prepare the year&#39;s tax returns.</p>
+<ul>
+<li><strong>Payroll and <a href="https://www.irs.gov/forms-pubs/about-form-w-2">Form W-2</a>:</strong> check each employee&#39;s name, address and year-to-date pay. For year-end bonuses, see how bonuses are taxed for practice owners<!-- TODO: link "how bonuses are taxed for practice owners" to /blog/how-are-bonuses-taxed-medical-practice/ once that post is live. -->.</li>
+<li><strong>Contractors and <a href="https://www.irs.gov/forms-pubs/about-form-1099-nec">Form 1099-NEC</a>:</strong> collect a <a href="https://www.irs.gov/forms-pubs/about-form-w-9">Form W-9</a> from each contractor you paid, and total what you paid each one.<!-- CPA CHECK: Form W-9 is the form a practice uses to collect a contractor's taxpayer ID for Form 1099-NEC. --> For who gets one, see who gets a 1099 from a medical practice in 2027<!-- TODO: link "who gets a 1099 from a medical practice in 2027" to /blog/who-gets-a-1099-medical-practice-2027/ once that post is live. -->.</li>
+<li><strong>Product count:</strong> count injectables, retail product and supplies on the shelf on December 31.</li>
+<li><strong>Equipment list:</strong> list each piece of equipment you bought during the year, with its date and cost, so your CPA can figure depreciation (<a href="https://www.irs.gov/publications/p946">IRS, Publication 946</a>).<!-- CPA CHECK: the fixed asset list (date placed in service and cost) as the input for depreciation under Publication 946. --></li>
+<li><strong>Old open items:</strong> clear or explain every uncleared check and old deposit before you lock December.</li>
+</ul>
+<p>Tax rules depend on your state and your numbers, so ask your CPA before you act on this.</p>
+<h2 id="what-to-ask-your-bookkeeper-or-cpa-about-your-close">What to ask your bookkeeper or CPA about your close</h2>
+<ul>
+<li>Which business day will my books be done each month?</li>
+<li>How do you match insurance deposits to the payments in my practice software?</li>
+<li>What rule do you use to split shared costs between my locations?</li>
+<li>What will you need from me for the December close?</li>
+</ul>
+<h2 id="what-lucid-does-for-your-month-end-close">What Lucid does for your month-end close</h2>
+<p>Lucid (lucid.now) offers &quot;Bookkeeping, taxes &amp; CFO support for growing practices.&quot; For practices with more than one location, Lucid says it &quot;reports live profit and loss and margin by location, plus cost and margin by provider.&quot; Lucid doesn&#39;t run billing or chase claims.</p>
+<p>Read <a href="/medical">how Lucid works with medical practices</a>.</p>
+<h2 id="faq">Questions practice owners ask about the month-end close</h2>
+<h3 id="what-is-a-month-end-close-2" data-faq-q>What is a month-end close?</h3>
+<p>A month-end close is the work you do after each month ends to make that month&#39;s books complete and correct, then lock them. For a practice, that means reconciling accounts, matching deposits, coding expenses and splitting shared costs. Once you&#39;ve closed a month, you can compare its profit and loss with the month before.</p>
+<h3 id="how-long-should-a-month-end-close-take-for-a-practice" data-faq-q>How long should a month-end close take for a practice?</h3>
+<p>Plan on a fixed sign-off day in the first two weeks of the next month; the checklist above signs off on business day 8. The hours depend on how many accounts, locations and transactions you have. If your close often runs past the 15th, ask your bookkeeper what&#39;s holding it up.</p>
+<h3 id="how-do-i-match-insurance-deposits-to-the-payments-in-my-practice-software" data-faq-q>How do I match insurance deposits to the payments in my practice software?</h3>
+<p>Match each insurance deposit to that payer&#39;s remittance advice by amount, then check that the payments posted in your practice software add up to the same total. One deposit can cover dozens of claims. If you can&#39;t find the remittance for a deposit, ask the payer or your billing company for it before anyone posts the payment.</p>
+<h3 id="whats-the-difference-between-a-bank-reconciliation-and-a-close" data-faq-q>What&#39;s the difference between a bank reconciliation and a close?</h3>
+<p>A bank reconciliation is one step of the close: you check one account against one statement. The close covers every account, plus steps no bank statement shows, like coding expenses, recording payroll and splitting shared costs. You can have a reconciled bank account and still have a profit and loss that&#39;s wrong.</p>
+<h3 id="what-extra-steps-happen-at-year-end" data-faq-q>What extra steps happen at year end?</h3>
+<p>At year end, you add a short list to the December close: payroll records for Forms W-2, contractor details for Forms 1099, a product count, the equipment list and old open items. Start in early December, since staff and contractors can take weeks to send you what you need.</p>
+<h3 id="who-should-do-the-close-the-office-manager-a-bookkeeper-or-a-cpa" data-faq-q>Who should do the close: the office manager, a bookkeeper or a CPA?</h3>
+<p>Usually all three, each on different steps. Your office manager closes out payments and pulls reports. A bookkeeper does the reconciling, coding and cost splitting. A CPA reviews the year and prepares the tax returns. Split the work so the person who records payments isn&#39;t the only one who checks them.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>CMS, <a href="https://www.cms.gov/medicare/coding-billing/electronic-billing/electronic-funds-transfer">Electronic Funds Transfer (EFT)</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/recordkeeping">Recordkeeping</a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-w-2">About Form W-2, Wage and Tax Statement</a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-1099-nec">About Form 1099-NEC, Nonemployee Compensation</a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-w-9">About Form W-9, Request for Taxpayer Identification Number and Certification</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p946">Publication 946, How to Depreciate Property</a></li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
