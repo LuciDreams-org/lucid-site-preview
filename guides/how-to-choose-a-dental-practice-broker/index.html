@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>How do I choose a dental practice broker?</title>
+<meta name="description" content="How to choose a dental practice broker: fees as published, seller-only vs dual representation, confidentiality, the listing process and questions to ask." />
+<link rel="canonical" href="https://www.lucid.now/guides/how-to-choose-a-dental-practice-broker/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="How do I choose a dental practice broker?" />
+<meta property="og:description" content="How to choose a dental practice broker: fees as published, seller-only vs dual representation, confidentiality, the listing process and questions to ask." />
+<meta property="og:url" content="https://www.lucid.now/guides/how-to-choose-a-dental-practice-broker/" />
+<meta name="twitter:title" content="How do I choose a dental practice broker?" />
+<meta name="twitter:description" content="How to choose a dental practice broker: fees as published, seller-only vs dual representation, confidentiality, the listing process and questions to ask." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"How do I choose a dental practice broker?","description":"How to choose a dental practice broker: fees as published, seller-only vs dual representation, confidentiality, the listing process and questions to ask.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/how-to-choose-a-dental-practice-broker/","publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"How do I choose a dental practice broker?","item":"https://www.lucid.now/guides/how-to-choose-a-dental-practice-broker/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+.guide a.btn{text-decoration:none;}.guide a.btn-primary{color:#fff;}.guide .g-cta{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px;}.guide .g-cta .btn{text-align:center;}.guide p.verdict{font-size:1.06rem;line-height:1.6;}.guide .choose{background:#f5f3ff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:0 0 14px;}.guide .choose h3{margin:0 0 8px;}.guide ul.why{list-style:none;padding-left:0;}.guide ul.why li{border-left:3px solid var(--brand);padding:2px 0 2px 12px;margin:0 0 10px;}
+.spec-prose{padding:30px 0;}
+.spec-prose .prose{max-width:860px;margin:0 auto;padding:0 16px;overflow-wrap:anywhere;}
+.spec-links summary{cursor:pointer;font-weight:700;color:var(--ink);padding:6px 0;}
+.spec-links ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+.spec-links li{margin:0;}
+.spec-links li a{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;}
+.guide table{max-width:none;}
+.guide-quote{margin:22px 0;padding:18px 20px;border-left:4px solid var(--brand);background:var(--bg-soft);border-radius:0 12px 12px 0;}
+.guide-quote blockquote{margin:0 0 8px;color:var(--ink);font-style:italic;}
+.guide-quote blockquote p{margin:0;}
+.guide-quote figcaption{font-weight:700;color:var(--ink);font-size:.92rem;}
+@media (max-width:640px){.guide{padding:24px 0 4px;}.guide h2{font-size:1.3rem;margin:26px 0 10px;}.spec-faq .faq details{padding:14px 0;}.spec-faq .faq summary{font-size:1rem;}.spec-prose{padding:20px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"How do I choose a dental practice broker?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":8,"itemListElement":[{"@type":"ListItem","position":1,"name":"Henry Schein Dental Practice Transitions","url":"https://www.henryscheindpt.com/"},{"@type":"ListItem","position":2,"name":"ADS Transitions","url":"https://www.adstransitions.com/"},{"@type":"ListItem","position":3,"name":"DDSmatch","url":"https://www.ddsmatch.com/"},{"@type":"ListItem","position":4,"name":"PARAGON","url":"https://www.paragon.us.com/benefits-of-dual-representation"},{"@type":"ListItem","position":5,"name":"McLerran and Associates","url":"https://dentaltransitions.com/articles/how-to-choose-dental-broker"},{"@type":"ListItem","position":6,"name":"Tusk Practice Sales","url":"https://tuskpracticesales.com/"},{"@type":"ListItem","position":7,"name":"Legacy Practice Transitions","url":"https://blog.lptsoutheast.com/how-to-choose-a-dental-practice-broker"},{"@type":"ListItem","position":8,"name":"Carroll and Company","url":"https://carrollandcompany.com/what-we-do"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does a dental practice broker charge?","acceptedAnswer":{"@type":"Answer","text":"Published guidance puts most dental broker commissions at about 6% to 12% of the sale price, usually paid at closing. DDSmatch South cites an 8% to 12% range from the ADA practice transitions guide. Few brokers publish their own rate, so get it in writing."}},{"@type":"Question","name":"What is dual representation?","acceptedAnswer":{"@type":"Answer","text":"It means one broker works for both the buyer and the seller in the same sale. PARAGON uses this model, while Henry Schein DPT, McLerran and Tusk say they represent the seller only. Ask which model a broker uses before you sign."}},{"@type":"Question","name":"How many brokers should I interview?","acceptedAnswer":{"@type":"Answer","text":"DDSmatch South suggests three or four. That is enough to compare fees, valuation methods and buyer reach without slowing you down."}},{"@type":"Question","name":"Do I need a broker if my associate wants to buy?","acceptedAnswer":{"@type":"Answer","text":"Not always, but you still need a valuation, an attorney and clean books. Some brokers offer a reduced fee for deal management when you bring the buyer."}},{"@type":"Question","name":"How long does it take to sell a dental practice?","acceptedAnswer":{"@type":"Answer","text":"It depends on the practice, market and buyer type. McLerran describes a 45 to 60 day marketing process, and DDSmatch South tells owners to plan on working with a broker for 6 to 12 months."}},{"@type":"Question","name":"How are dental practices valued?","acceptedAnswer":{"@type":"Answer","text":"Brokers start with collections and adjusted earnings, often adjusted EBITDA for larger practices or seller's discretionary earnings for smaller solo practices. Overhead, payer mix, equipment and lease terms move the number. See how is a medical practice valued."}},{"@type":"Question","name":"How will my buyer pay for the practice?","acceptedAnswer":{"@type":"Answer","text":"Most private buyers borrow, so the lender also reviews your financials. See best dental practice loans to understand what your buyer's lender will look for."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>How do I choose a dental practice broker?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your Lucid price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / How do I choose a dental practice broker?</nav>
+<h2 id="short-answer">Short answer</h2>
+<p>Choose a dental-only broker with recent sales like yours, a fee in writing and a clear answer on whom it represents. Large networks such as Henry Schein Dental Practice Transitions, ADS Transitions, DDSmatch and PARAGON cover most states, while firms such as Tusk Practice Sales, McLerran and Associates and Legacy Practice Transitions describe seller-only models. Published guidance puts dental broker commissions at roughly 6% to 12% of the sale price, usually paid at closing. Interview three or four brokers, and compare how each values, markets and protects your practice before you sign.</p>
+<h2 id="dental-brokers-compared">Dental brokers compared</h2>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Dental brokers compared"><table style="min-width:480px"><thead><tr><th scope="col">Firm</th><th scope="col">Focus and region</th><th scope="col">Representation, as stated</th></tr></thead><tbody><tr><td>Henry Schein Dental Practice Transitions</td><td>Dental only; 40 plus local consultants, valuations in all 50 states</td><td>Never both sides of a deal</td></tr><tr><td>ADS Transitions</td><td>National network of independent dental brokers</td><td>Not stated on homepage</td></tr><tr><td>DDSmatch</td><td>Sales, associate placement, partnerships and DSO sale representation</td><td>Not stated on homepage</td></tr><tr><td>PARAGON</td><td>Sales, mergers, associateships and buy ins; consultants nationwide</td><td>Dual representation</td></tr><tr><td>McLerran and Associates</td><td>Dental only, 35 years, CPA-led valuation</td><td>Seller only</td></tr><tr><td>Tusk Practice Sales</td><td>Healthcare sell side advisor, Charlotte base, US wide</td><td>Seller only</td></tr><tr><td>Legacy Practice Transitions</td><td>National firm; Southeast office covers NC, SC, GA and FL</td><td>Seller only (Southeast office)</td></tr><tr><td>Carroll and Company</td><td>Dental sales and appraisals; Northern California</td><td>Not stated</td></tr></tbody></table></div>
+<p>Each row comes from the firm&#x27;s own website, read November 26, 2026. None of these firms publishes a commission rate on the pages read, so ask each for its fee in writing.</p>
+<h2 id="henry-schein-dental-practice-transitions">Henry Schein Dental Practice Transitions</h2>
+<p>Henry Schein Dental Practice Transitions (DPT) is a dental brokerage and valuation firm and part of Henry Schein. It says more than 40 transition consultants live and work in the markets they serve, valuations are available in all 50 states, and sellers reach more than 36,000 registered purchasers. DPT states that it never represents both sides of a transaction. It has worked on dental transitions since 1993 and operates under licensed real estate broker entities.</p>
+<p>Good fit: an owner who wants a local consultant backed by a large buyer database.</p>
+<h2 id="ads-transitions">ADS Transitions</h2>
+<p>ADS Transitions is a national network of independent dental brokers. Its site lists hundreds of practices for sale nationwide, offers valuations from a broker, and helps owners weigh a DSO sale against other options. The model pairs local brokers with national marketing and a shared buyer database.</p>
+<p>Good fit: an owner who wants a local broker with national listing exposure.</p>
+<h2 id="ddsmatch">DDSmatch</h2>
+<p>DDSmatch covers dental practice sales, associate placement, partnerships, transition planning and sell side DSO representation. It also runs a practice preparation program for owners who plan to sell later. DDSmatch works through regional teams, such as DDSmatch South in the Southeast.</p>
+<p>Good fit: an owner who may want an associate or partner first and a sale later.</p>
+<h2 id="paragon">PARAGON</h2>
+<p>PARAGON helps dentists sell, buy and merge practices, and also handles valuations, equity associateships and partnership buy ins and buy outs. Its consultants have worked together since 1988. PARAGON describes its model as dual representation: one consultant guides both the buyer and the seller toward a deal both sides accept. It reports closing 95% of the deals it takes part in, which is the firm&#x27;s own figure.</p>
+<p>Good fit: an owner selling to a private buyer who prefers a cooperative, one-consultant process.</p>
+<h2 id="mclerran-and-associates">McLerran and Associates</h2>
+<p>McLerran and Associates runs the Dental Transitions website and says it has 35 years of dental-only experience. It describes a CPA-led valuation, a structured 45 to 60 day multi-buyer process, and seller-only representation, with separate pools of private buyers and DSOs.</p>
+<p>Good fit: an owner who wants a competitive process that tests private and DSO buyers side by side.</p>
+<h2 id="tusk-practice-sales">Tusk Practice Sales</h2>
+<p>Tusk Practice Sales is a healthcare sell side advisor based in Charlotte, North Carolina, serving owners across the United States. It describes itself as an exclusive sell side advisor for dental practices and says its analytics team rebuilds financials from the general ledger up to find add backs.</p>
+<p>Good fit: a larger dental practice or group that expects DSO or private equity interest.</p>
+<h2 id="legacy-practice-transitions">Legacy Practice Transitions</h2>
+<p>Legacy Practice Transitions is a national firm that reports more than 30 years in business and over 3,000 completed transitions. Its Southeast office, led by a former practicing dentist, covers North Carolina, South Carolina, Georgia and Florida. It says it works only for the seller and matches buyers on fit before price, keeping private buyers and associates on the table alongside DSOs.</p>
+<p>Good fit: an owner in the Southeast who wants a private buyer who will keep the team in place.</p>
+<h2 id="carroll-and-company">Carroll and Company</h2>
+<p>Carroll and Company has provided dental practice sales and appraisals since 1963, with a Northern California focus. Its services include buyer screening and practice matching, help arranging financing, and contract coordination.</p>
+<p>Good fit: a Northern California owner looking for a long-established local firm.</p>
+<h2 id="broker-dso-advisor-or-selling-direct">Broker, DSO advisor or selling direct</h2>
+<ol><li>Dental broker. Values the practice, markets it, screens buyers and helps close. Best for selling to another dentist or a small group.</li><li>Sell side advisor for a DSO sale. Runs a process with several DSOs or private equity backed groups and compares cash, equity and your employment terms. DDSmatch and Tusk both describe this work. McLerran notes that up to 40% of a DSO deal can be paid in equity rather than cash. For the wider choice, see the guide on whether to sell your dental practice to a DSO, coming soon on this site.</li><li>Selling direct. Works when you already have a buyer, such as your associate. DDSmatch South notes that some brokers offer reduced fees for deal management when you bring the buyer.</li></ol>
+<p>For the DSO path, read <a href="/guides/should-i-sell-my-dental-practice-to-a-dso/">Should I sell my dental practice to a DSO?</a>. To compare advisors for a larger sale, read <a href="/guides/how-to-choose-a-healthcare-m-and-a-advisor/">How do I choose an M&amp;A advisor for my practice?</a></p>
+<h2 id="how-the-listing-process-works">How the listing process works</h2>
+<ol><li>Valuation. The broker reviews collections, overhead, patient base, staff, equipment, payer mix and local market, as Henry Schein DPT lists. Ask whether the valuation is done in house or by an outside firm.</li><li>Listing agreement. Sets the fee, the exclusive period, the tail clause and how you can end it.</li><li>Confidential marketing. A blind profile first, with an NDA before buyers see financials.</li><li>Offers and letter of intent. Compare price, cash at closing, any equity, your time commitment and the noncompete.</li><li>Due diligence and closing. The buyer and its lender review your books, contracts and lease.</li></ol>
+<p>Read <a href="/guides/how-to-prepare-a-medical-practice-for-sale/">how to prepare a medical practice for sale</a>, which applies to dental practices as well, before you call a broker.</p>
+<h2 id="seller-only-or-dual-representation">Seller only or dual representation</h2>
+<p>This is the biggest difference between dental brokers. Henry Schein DPT, McLerran, Tusk and the Legacy Southeast office all say they represent the seller only. PARAGON states that it represents both the buyer and the seller in one process. Each firm explains why it uses its model. Ask every broker which model it uses, who pays its fee, and whether it accepts any payment from buyers. Get the answers in the listing agreement.</p>
+<h2 id="confidentiality">Confidentiality</h2>
+<p>Staff who hear about a sale from a rumor can unsettle a practice fast. Ask the broker to describe its steps: a blind profile, an NDA before financials, and your approval before any buyer learns your name. Henry Schein DPT and Legacy Practice Transitions both describe confidential marketing as standard. Agree in advance when and how your team and patients will be told.</p>
+<h2 id="fees-in-plain-numbers">Fees, in plain numbers</h2>
+<ol><li>Commission. McLerran puts most sell side dental broker commissions at roughly 6% to 12% of the final deal value (August 22, 2026). DDSmatch South cites the ADA practice transitions guide at 8% to 12% (July 16, 2025).</li><li>When it is earned. Ask whether the fee is earned at letter of intent or at closing. Many sellers prefer closing.</li><li>Extra fees. DDSmatch South says some brokers charge for valuations, marketing materials or advertising. Elias Partners publishes $3,500 for a formal written valuation, with a free verbal range when you list (2026 site).</li><li>Negotiation. Legacy Practice Transitions notes that some fee structures are negotiable, especially on larger multi-dentist practices.</li></ol>
+<h2 id="questions-to-ask-before-you-sign">Questions to ask before you sign</h2>
+<ol><li>How many practices like mine have you sold in the last two years, and can I call two of those sellers?</li><li>Do you represent only me, or the buyer as well?</li><li>Do you accept any referral fee or payment from buyers or DSOs?</li><li>What is your commission, when is it earned, and are there extra fees?</li><li>How long is the exclusive, what does the tail clause cover, and how do I end the agreement?</li><li>Who does the valuation, and how do you handle add backs a buyer may challenge?</li><li>Which buyers will you reach: private dentists, associates, groups or DSOs?</li><li>What is your license, and in which states? DDSmatch South notes dental brokers typically need a real estate license.</li></ol>
+<h2 id="how-to-choose-by-practice-type">How to choose by practice type</h2>
+<ol><li>Solo general dentist retiring and selling to a private buyer. A local consultant from a national network (Henry Schein DPT, ADS, DDSmatch, PARAGON) or a regional firm such as Carroll and Company.</li><li>Practice with DSO interest. A seller-only firm that runs a multi-buyer process, such as McLerran or Tusk, and compare private and DSO offers side by side.</li><li>Owner who wants an associate or partner first. DDSmatch or PARAGON, both of which list associateship and partnership work.</li><li>Southeast owner focused on legacy and team. Legacy Practice Transitions Southeast.</li><li>Already have a buyer. A broker for deal management only, plus an attorney and clean books.</li></ol>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Frequently asked questions</h2></div>
+<div class="faq"><details><summary>How much does a dental practice broker charge?</summary><p>Published guidance puts most dental broker commissions at about 6% to 12% of the sale price, usually paid at closing. DDSmatch South cites an 8% to 12% range from the ADA practice transitions guide. Few brokers publish their own rate, so get it in writing.</p></details><details><summary>What is dual representation?</summary><p>It means one broker works for both the buyer and the seller in the same sale. PARAGON uses this model, while Henry Schein DPT, McLerran and Tusk say they represent the seller only. Ask which model a broker uses before you sign.</p></details><details><summary>How many brokers should I interview?</summary><p>DDSmatch South suggests three or four. That is enough to compare fees, valuation methods and buyer reach without slowing you down.</p></details><details><summary>Do I need a broker if my associate wants to buy?</summary><p>Not always, but you still need a valuation, an attorney and clean books. Some brokers offer a reduced fee for deal management when you bring the buyer.</p></details><details><summary>How long does it take to sell a dental practice?</summary><p>It depends on the practice, market and buyer type. McLerran describes a 45 to 60 day marketing process, and DDSmatch South tells owners to plan on working with a broker for 6 to 12 months.</p></details><details><summary>How are dental practices valued?</summary><p>Brokers start with collections and adjusted earnings, often adjusted EBITDA for larger practices or seller&#x27;s discretionary earnings for smaller solo practices. Overhead, payer mix, equipment and lease terms move the number. See <a href="/guides/how-is-a-medical-practice-valued/">how is a medical practice valued</a>.</p></details><details><summary>How will my buyer pay for the practice?</summary><p>Most private buyers borrow, so the lender also reviews your financials. See <a href="/guides/best-dental-practice-loans/">best dental practice loans</a> to understand what your buyer&#x27;s lender will look for.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2>
+<p>Brokers price a dental practice on collections and adjusted cash flow, and buyers and their lenders test both. Lucid is bookkeeping, taxes, tax credits and CFO services for dental and other private practices, with a dedicated CPA on every account. Lucid makes your practice ready for a broker and a buyer&#x27;s review:</p>
+<ol><li>CPA led monthly books, reconciled and closed, with production and collections tracked, so your P&amp;L ties to your tax returns.</li><li>A clean P&amp;L with owner costs kept apart from practice costs, and a documented add back file.</li><li>Reporting by location and provider, including payer mix and AR aging reports.</li><li>CFO planning: cash forecasting, a custom financial model and scenario planning, so you can compare a private offer and a DSO offer on cash at closing, equity and your income after the sale.</li><li>Year round tax planning, so you and your CPA can see your after tax proceeds before you sign.</li></ol>
+<p>Lucid does not broker the sale, value the practice or give legal advice. Your broker, valuation firm and attorney do that, working from the numbers Lucid keeps. Most practices are live in about 24 hours. If your books are behind, Lucid scopes the catch up work first and gives a fixed price. Support is 24/7.</p>
+<p>Lucid starts from $130 a month. See your price on the <a href="/pricing">pricing page</a> calculator. Month to month, no setup fee. See how Lucid works for <a href="/specialty/dental">dental practices</a>.</p>
+<!-- GATE:testimonial -->
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2>
+<ol><li>Henry Schein Dental Practice Transitions: <a href="https://www.henryscheindpt.com/" rel="noopener">https://www.henryscheindpt.com/</a></li><li>ADS Transitions: <a href="https://www.adstransitions.com/" rel="noopener">https://www.adstransitions.com/</a></li><li>DDSmatch: <a href="https://www.ddsmatch.com/" rel="noopener">https://www.ddsmatch.com/</a></li><li>PARAGON, Benefits of dual representation: <a href="https://www.paragon.us.com/benefits-of-dual-representation" rel="noopener">https://www.paragon.us.com/benefits-of-dual-representation</a></li><li>McLerran and Associates, How to choose a dental practice broker (August 22, 2026): <a href="https://dentaltransitions.com/articles/how-to-choose-dental-broker" rel="noopener">https://dentaltransitions.com/articles/how-to-choose-dental-broker</a></li><li>Tusk Practice Sales: <a href="https://tuskpracticesales.com/" rel="noopener">https://tuskpracticesales.com/</a> , <a href="https://tuskpracticesales.com/sell-your-dental-practice" rel="noopener">https://tuskpracticesales.com/sell-your-dental-practice</a> , <a href="https://tuskpracticesales.com/educational-resources/faqs" rel="noopener">https://tuskpracticesales.com/educational-resources/faqs</a></li><li>Legacy Practice Transitions Southeast, How to choose a dental practice broker in 2026 (July 16, 2026): <a href="https://blog.lptsoutheast.com/how-to-choose-a-dental-practice-broker" rel="noopener">https://blog.lptsoutheast.com/how-to-choose-a-dental-practice-broker</a></li><li>Carroll and Company: <a href="https://carrollandcompany.com/what-we-do" rel="noopener">https://carrollandcompany.com/what-we-do</a></li><li>DDSmatch South, Questions to ask when interviewing a dental practice broker (July 16, 2025): <a href="https://ddsmatchsouth.com/interviewing-a-dental-practice-broker" rel="noopener">https://ddsmatchsouth.com/interviewing-a-dental-practice-broker</a></li><li>Elias Partners, Selling your practice: <a href="https://www.elias-partners.com/sellers" rel="noopener">https://www.elias-partners.com/sellers</a></li><li>Lucid: <a href="/pricing">https://www.lucid.now/pricing</a> , <a href="/specialty/dental">https://www.lucid.now/specialty/dental</a></li></ol>
+</div></section>
+<section class="spec-prose"><div class="wrap"><div class="prose spec-links">
+<details><summary>Related guides</summary><ul><li><a href="/guides/how-to-prepare-a-medical-practice-for-sale/">How do I prepare my practice for sale?</a></li><li><a href="/guides/how-is-a-medical-practice-valued/">How is a medical practice valued, and what is mine worth?</a></li><li><a href="/guides/best-dental-practice-loans/">Best Dental Practice Loans and Lenders?</a></li><li><a href="/guides/should-i-sell-my-dental-practice-to-a-dso/">Should I sell my dental practice to a DSO?</a></li><li><a href="/guides/how-to-choose-a-healthcare-m-and-a-advisor/">How do I choose an M&amp;A advisor for my practice?</a></li><li><a href="/guides/best-medical-practice-brokers/">Which medical practice brokers sell small practices?</a></li><li><a href="/guides/who-is-buying-behavioral-health-practices/">Who is buying behavioral health practices?</a></li><li><a href="/guides/who-is-buying-med-spas/">Who is buying med spas, and for what multiple?</a></li><li><a href="/guides/best-medical-practice-valuation-firms/">Which firms value medical practices, and at what cost?</a></li></ul></details>
+</div></div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>

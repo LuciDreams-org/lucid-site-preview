@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Who is buying med spas, and for what multiple?</title>
+<meta name="description" content="Who is buying med spas in 2026: PE backed aesthetics platforms, cosmetic chains and individual buyers, published multiples by size and how to compare." />
+<link rel="canonical" href="https://www.lucid.now/guides/who-is-buying-med-spas/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Who is buying med spas, and for what multiple?" />
+<meta property="og:description" content="Who is buying med spas in 2026: PE backed aesthetics platforms, cosmetic chains and individual buyers, published multiples by size and how to compare." />
+<meta property="og:url" content="https://www.lucid.now/guides/who-is-buying-med-spas/" />
+<meta name="twitter:title" content="Who is buying med spas, and for what multiple?" />
+<meta name="twitter:description" content="Who is buying med spas in 2026: PE backed aesthetics platforms, cosmetic chains and individual buyers, published multiples by size and how to compare." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Who is buying med spas, and for what multiple?","description":"Who is buying med spas in 2026: PE backed aesthetics platforms, cosmetic chains and individual buyers, published multiples by size and how to compare.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/who-is-buying-med-spas/","publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"Who is buying med spas, and for what multiple?","item":"https://www.lucid.now/guides/who-is-buying-med-spas/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+.guide a.btn{text-decoration:none;}.guide a.btn-primary{color:#fff;}.guide .g-cta{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px;}.guide .g-cta .btn{text-align:center;}.guide p.verdict{font-size:1.06rem;line-height:1.6;}.guide .choose{background:#f5f3ff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:0 0 14px;}.guide .choose h3{margin:0 0 8px;}.guide ul.why{list-style:none;padding-left:0;}.guide ul.why li{border-left:3px solid var(--brand);padding:2px 0 2px 12px;margin:0 0 10px;}
+.spec-prose{padding:30px 0;}
+.spec-prose .prose{max-width:860px;margin:0 auto;padding:0 16px;overflow-wrap:anywhere;}
+.spec-links summary{cursor:pointer;font-weight:700;color:var(--ink);padding:6px 0;}
+.spec-links ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+.spec-links li{margin:0;}
+.spec-links li a{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;}
+.guide table{max-width:none;}
+.guide-quote{margin:22px 0;padding:18px 20px;border-left:4px solid var(--brand);background:var(--bg-soft);border-radius:0 12px 12px 0;}
+.guide-quote blockquote{margin:0 0 8px;color:var(--ink);font-style:italic;}
+.guide-quote blockquote p{margin:0;}
+.guide-quote figcaption{font-weight:700;color:var(--ink);font-size:.92rem;}
+@media (max-width:640px){.guide{padding:24px 0 4px;}.guide h2{font-size:1.3rem;margin:26px 0 10px;}.spec-faq .faq details{padding:14px 0;}.spec-faq .faq summary{font-size:1rem;}.spec-prose{padding:20px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"Who is buying med spas, and for what multiple?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":8,"itemListElement":[{"@type":"ListItem","position":1,"name":"Advanced MedAesthetic Partners","url":"https://www.weramp.com/"},{"@type":"ListItem","position":2,"name":"Alpha Aesthetics Partners","url":"https://www.alphaaestheticspartners.com/"},{"@type":"ListItem","position":3,"name":"Empower Aesthetics"},{"@type":"ListItem","position":4,"name":"Princeton Medspa Partners"},{"@type":"ListItem","position":5,"name":"MedSpa Partners","url":"https://www.medspapartners.com/"},{"@type":"ListItem","position":6,"name":"Aesthetic Partners","url":"https://www.aestheticpartners.com/"},{"@type":"ListItem","position":7,"name":"SkinSpirit","url":"https://www.skinspirit.com/"},{"@type":"ListItem","position":8,"name":"LaserAway","url":"https://www.laseraway.com/"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Who is buying med spas right now?","acceptedAnswer":{"@type":"Answer","text":"Mostly private equity backed platforms such as Advanced MedAesthetic Partners, Alpha Aesthetics Partners, Empower Aesthetics, Princeton Medspa Partners, MedSpa Partners and Aesthetic Partners. Large chains, plastic surgery platforms, strategic investors such as L'Oreal and individual buyers are also active."}},{"@type":"Question","name":"What multiple do med spas sell for?","acceptedAnswer":{"@type":"Answer","text":"AmSpa and Xite report about 3 to 6 times EBITDA for med spas under $4 million of revenue, 5 to 8 times at $4 million to $20 million and 7 to 12 times above $20 million, for 2025 deals. Small single sites are priced on SDE, at about 2 to 4 times per CT Acquisitions."}},{"@type":"Question","name":"What can a two location med spa get?","acceptedAnswer":{"@type":"Answer","text":"CT Acquisitions (June 2026) puts 2 to 5 site chains with $1 million to $3 million of EBITDA at 5 to 7 times EBITDA. Olympic M&A cites 7 to 9 times for multi provider practices of that size with recurring revenue. Provider depth and memberships decide where you land."}},{"@type":"Question","name":"How much of the price is paid in cash?","acceptedAnswer":{"@type":"Answer","text":"For 2025 deals, AmSpa and Xite report 60% to 80% cash at closing, with the rest in rollover equity, sometimes with earnouts or holdbacks."}},{"@type":"Question","name":"What if I am the main injector?","acceptedAnswer":{"@type":"Answer","text":"Expect a lower multiple and a longer earnout. CT Acquisitions suggests building an injector bench before going to market."}},{"@type":"Question","name":"How do I prepare my med spa for a buyer?","acceptedAnswer":{"@type":"Answer","text":"Start 12 to 24 months ahead with clean monthly books, a documented add back file, membership and package revenue tracked correctly, profit by provider and service, and medical director and supervision paperwork in order."}},{"@type":"Question","name":"Can Lucid help me sell my med spa?","acceptedAnswer":{"@type":"Answer","text":"Lucid gets your books ready for a buyer's review and models offers. It does not run the deal, value the med spa or give legal advice."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>Who is buying med spas, and for what multiple?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your Lucid price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / Who is buying med spas, and for what multiple?</nav>
+<h2 id="short-answer">Short answer</h2>
+<p>Most med spa buyers are private equity backed aesthetics platforms such as Advanced MedAesthetic Partners, Alpha Aesthetics Partners, Empower Aesthetics, Princeton Medspa Partners, MedSpa Partners and Aesthetic Partners, alongside large chains like SkinSpirit and LaserAway, plastic surgery platforms and individual buyers. Published 2025 ranges from the American Med Spa Association and Xite run from about 3 to 6 times EBITDA for med spas under $4 million of revenue to 7 to 12 times for regional platforms above $20 million. A small single site is usually priced on SDE, at about 2 to 4 times per CT Acquisitions (June 2026). Most deals pay 60% to 80% cash at closing with the rest in rollover equity, so compare the full structure, not only the multiple.</p>
+<h2 id="the-market-in-numbers">The market in numbers</h2>
+<p>Med spa buying is active but early. Olympic M&amp;A&#x27;s Q3 2026 report (September 2026), citing HealthFMV and Scope Research, counts more than 50 announced aesthetics deals in each of 2023 and 2024, and 42 in 2025. Private owner to owner sales are mostly unreported, so real volume is higher.</p>
+<p>The same report says more than 90% of US med spas are still independently owned, and that six of the ten most recent deals it tracked were by sponsor backed platforms. Florida, Texas and California remain the busiest states, with platforms now expanding into secondary metros.</p>
+<p>Strategic money is arriving too. L&#x27;Oreal holds a 36.13% stake in SkinSpirit, per CEW&#x27;s November 18, 2026 news roundup, and Beauty Independent (November 16, 2026) reported its stakes in med spa operators in the US and China.</p>
+<h2 id="most-active-buyers">Most active buyers</h2>
+<p>Ownership and size are as published by each group or by the sources listed. Footprints are self reported and change often.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Most active buyers"><table style="min-width:480px"><thead><tr><th scope="col">Buyer</th><th scope="col">Backers</th><th scope="col">Footprint, per source</th></tr></thead><tbody><tr><td>Advanced MedAesthetic Partners</td><td>Leon Capital Group</td><td>77 locations, 21 states (Oct 2026)</td></tr><tr><td>Alpha Aesthetics Partners</td><td>Thurston Group</td><td>36 locations, 12 states (Sep 2026)</td></tr><tr><td>Empower Aesthetics</td><td>Shore Capital</td><td>National platform (Sep 2026)</td></tr><tr><td>Princeton Medspa Partners</td><td>Princeton Equity Group</td><td>$120M growth financing (2024)</td></tr><tr><td>MedSpa Partners</td><td>Not named in sources</td><td>US and Canada clinics (own site)</td></tr><tr><td>Aesthetic Partners</td><td>Norwest Venture Partners</td><td>Surgery, derm and med spa brands</td></tr><tr><td>SkinSpirit</td><td>KKR (minority, 2022), L&#x27;Oreal</td><td>7 new clinics in 2026</td></tr><tr><td>LaserAway</td><td>Ares and Seidler Equity</td><td>219 locations (Jun 2026)</td></tr></tbody></table></div>
+<h2 id="the-buyers-one-by-one">The buyers, one by one</h2>
+<p><strong>Advanced MedAesthetic Partners (AMP).</strong> Leon Capital Group lists AMP as an operating subsidiary. Prospyr (October 2, 2026) reports AMP&#x27;s site shows 20 plus brands, 77 locations and 21 states, with partners including EVER/BODY. AMP describes three tiers, from vendor access with no equity transfer to growth capital and a full joint venture, and says each brand keeps its name and clinical autonomy.</p>
+<p><strong>Alpha Aesthetics Partners.</strong> Backed by Thurston Group, Alpha reported 36 locations across 12 states in Olympic M&amp;A&#x27;s September 2026 report, with recent partnerships in Colorado, California and Massachusetts. Per Prospyr, Alpha pays owners upfront cash and makes them owners in Alpha, while its central team covers finance, HR, IT and marketing.</p>
+<p><strong>Empower Aesthetics.</strong> Shore Capital backed, described by Olympic M&amp;A as a national platform built through practitioner led add ons, including a Waco, Texas practice listed among its recent deals.</p>
+<p><strong>Princeton Medspa Partners.</strong> Backed by Princeton Equity Group. Prospyr reports a $120 million growth financing in 2024 and acquisitions in Kansas, New York, North Dakota and Alabama, with centralized marketing, purchasing, recruiting, HR and accounting.</p>
+<p><strong>MedSpa Partners.</strong> An acquirer of aesthetics practices across the US and Canada. Prospyr notes its published process: NDA, basic financials, normalized EBITDA, a clinic visit, a letter of intent, diligence including a third party quality of earnings review, then closing. It names EBITDA, growth rate and operational efficiency as the main price drivers.</p>
+<p><strong>Aesthetic Partners.</strong> Miami based, backed by Norwest Venture Partners per Olympic M&amp;A. Per Prospyr, it works with founder led plastic surgery, dermatology and med spa brands, lets founders roll equity, and usually asks partnering surgeons and providers to commit to at least two years.</p>
+<p><strong>SkinSpirit.</strong> KKR took a minority stake in October 2022, and L&#x27;Oreal now holds a stake as well. SkinSpirit said it opened seven new clinics in 2026 (November 12, 2026 release). It grows mostly by opening clinics, which makes it a reference point for valuations more than a frequent buyer.</p>
+<p><strong>LaserAway.</strong> Backed by Ares Management and Seidler Equity Partners, with 219 locations per Reuters (June 4, 2026). CT Acquisitions lists it among active buyers, alongside Ideal Image (L Catterton, with TPG investing in 2021).</p>
+<p><strong>Other active platforms.</strong> Olympic M&amp;A also lists Olympus Cosmetic Group (VSS, now in nine states), Inspire Aesthetics (Hidden Harbor), AYA Medical Spa (Eagle Merchant Partners), Vos Collection (Persistence Capital Partners), MD Esthetics (New Harbor Capital), Elase Med Spas (Imperial Capital), Skin and Aesthetic Centers (Abacus Investments) and Formula Wellness (Trive Capital). Prospyr adds Spa Medicca, which reports 60 to 90 days from letter of intent to closing, and Aviva Aesthetics, a model where owners keep their practice equity and become shareholders in the platform.</p>
+<p><strong>Dermatology and plastic surgery buyers.</strong> Several of the platforms above, including AMP, Olympus and Aesthetic Partners, combine surgery, cosmetic dermatology and med spa services. For a medical director led med spa, a dermatology platform can be a natural buyer.</p>
+<p><strong>Individual and search fund buyers.</strong> For small single sites, the buyer is often a nurse practitioner, injector or first time owner using an SBA loan, or a search fund or family office. CT Acquisitions&#x27; 2026 multiples report cites Main Street Index data showing small owner run spas listed for sale asking about 2.92 times SDE, an asking price rather than a closing price.</p>
+<p>For the dermatology platforms, read <a href="/guides/who-is-buying-dermatology-practices/">Who is buying dermatology practices in 2027?</a></p>
+<h2 id="how-these-deals-are-structured">How these deals are structured</h2>
+<p>Most platform deals use an MSO model. In many states the platform&#x27;s management company owns the business side while a licensed medical entity owns the clinical side, with a medical director and supervision agreements. See <a href="/guides/med-spa-mso-vs-medical-director-service/">med spa MSO vs medical director service</a>.</p>
+<p>Published multiples by size, with sources and dates:</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="How these deals are structured"><table style="min-width:0"><thead><tr><th scope="col">Profile</th><th scope="col">Published range</th></tr></thead><tbody><tr><td>Single site under $500K SDE</td><td>2x to 4x SDE (CT, Jun 2026)</td></tr><tr><td>Under $4M revenue</td><td>3x to 6x EBITDA (AmSpa and Xite, 2025 deals)</td></tr><tr><td>2 to 5 sites, $1M to $3M EBITDA</td><td>5x to 7x EBITDA (CT, Jun 2026)</td></tr><tr><td>$4M to $20M revenue</td><td>5x to 8x EBITDA (AmSpa and Xite)</td></tr><tr><td>Above $20M revenue</td><td>7x to 12x EBITDA (AmSpa and Xite)</td></tr></tbody></table></div>
+<p>Olympic M&amp;A adds that multi provider practices with recurring revenue and $1 million to $3 million of EBITDA have been benchmarked at 7 to 9 times. The AmSpa and Xite bands, published May 15, 2026 and cited by both CT Acquisitions and Olympic M&amp;A, are set by revenue, so two spas with the same revenue but different margins sit in the same band at very different values.</p>
+<p>On payment terms, AmSpa and Xite report 2025 deals ran from about 60% cash at closing and 40% rollover equity to 80% cash and 20% rollover, with earnouts or holdbacks on top where provider transition matters. CT Acquisitions (June 2026) adds that when the owner is the main injector and 60% or more of revenue runs through them, sellers should expect a 12 to 24 month earnout. Treat all of these as ranges, not quotes. See <a href="/guides/how-is-a-medical-practice-valued/">how a medical practice is valued</a>.</p>
+<h2 id="what-med-spa-buyers-look-for">What med spa buyers look for</h2>
+<p>Olympic M&amp;A&#x27;s report and CT Acquisitions&#x27; sell side guide list the same drivers:</p>
+<ol><li>Recurring revenue. Neurotoxins, filler maintenance, laser series, skincare and memberships. CT Acquisitions says documented recurring revenue above 25% earns a premium.</li><li>Low owner and provider concentration. Revenue spread across several productive injectors, with reasons to stay after closing.</li><li>Clean adjusted EBITDA. Normalized owner pay, provider labor, marketing, device leases and add backs that hold up in diligence.</li><li>Retention without discounting. Rebooking, referrals and membership penetration, not patients bought again through paid ads.</li><li>Real infrastructure. Centralized finance, HR and standard procedures, not founder run clinics.</li><li>A clean clinical and legal structure. Ownership, delegation, medical direction and drug sourcing that a buyer can inherit.</li></ol>
+<p>PitchBook (October 23, 2026) adds that buyers of cash pay healthcare look for growing same store sales, patient count and ticket size, and providers who stay.</p>
+<p>Most of that list lives in the books: membership and package revenue recognized correctly, injectable and product costs matched to the treatments, and profit by provider, room and service. See <a href="/guides/how-to-prepare-a-medical-practice-for-sale/">how to prepare a medical practice for sale</a> and <a href="/guides/quality-of-earnings-report-practice-sale/">what a quality of earnings report is</a>.</p>
+<h2 id="how-to-compare-offers">How to compare offers</h2>
+<p>Olympic M&amp;A&#x27;s example shows why: two offers at 7 times on $1.5 million of EBITDA are both $10.5 million on paper, but a 60/40 split and an 80/20 split differ by $2.1 million at closing. Line offers up on the same page:</p>
+<ol><li>Cash at closing, after fees, debt payoff and taxes.</li><li>Rollover equity: how much, at what value, the platform&#x27;s debt, and who controls the next sale.</li><li>Earnouts and holdbacks: the targets, the time frame and who controls the numbers that decide them.</li><li>Your role after the sale: title, pay, required hours, term and what happens if you leave early.</li><li>Non compete radius and length.</li><li>Medical director and entity ownership in your state.</li><li>Your team: pay, benefits and planned staffing changes, plus which systems change in the first 90 days.</li></ol>
+<p>Model each offer over five years with your CPA, and have a healthcare attorney read the paperwork. CT Acquisitions says a competitive process with several buyers is worth 1 to 3 turns of EBITDA over a single bidder.</p>
+<p>For the wider decision, read <a href="/guides/should-i-sell-my-practice-to-private-equity/">Should I sell my practice to private equity?</a> and <a href="/guides/how-to-choose-a-healthcare-m-and-a-advisor/">How do I choose an M&amp;A advisor for my practice?</a>.</p>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Frequently asked questions</h2></div>
+<div class="faq"><details><summary>Who is buying med spas right now?</summary><p>Mostly private equity backed platforms such as Advanced MedAesthetic Partners, Alpha Aesthetics Partners, Empower Aesthetics, Princeton Medspa Partners, MedSpa Partners and Aesthetic Partners. Large chains, plastic surgery platforms, strategic investors such as L&#x27;Oreal and individual buyers are also active.</p></details><details><summary>What multiple do med spas sell for?</summary><p>AmSpa and Xite report about 3 to 6 times EBITDA for med spas under $4 million of revenue, 5 to 8 times at $4 million to $20 million and 7 to 12 times above $20 million, for 2025 deals. Small single sites are priced on SDE, at about 2 to 4 times per CT Acquisitions.</p></details><details><summary>What can a two location med spa get?</summary><p>CT Acquisitions (June 2026) puts 2 to 5 site chains with $1 million to $3 million of EBITDA at 5 to 7 times EBITDA. Olympic M&amp;A cites 7 to 9 times for multi provider practices of that size with recurring revenue. Provider depth and memberships decide where you land.</p></details><details><summary>How much of the price is paid in cash?</summary><p>For 2025 deals, AmSpa and Xite report 60% to 80% cash at closing, with the rest in rollover equity, sometimes with earnouts or holdbacks.</p></details><details><summary>What if I am the main injector?</summary><p>Expect a lower multiple and a longer earnout. CT Acquisitions suggests building an injector bench before going to market.</p></details><details><summary>How do I prepare my med spa for a buyer?</summary><p>Start 12 to 24 months ahead with clean monthly books, a documented add back file, membership and package revenue tracked correctly, profit by provider and service, and medical director and supervision paperwork in order.</p></details><details><summary>Can Lucid help me sell my med spa?</summary><p>Lucid gets your books ready for a buyer&#x27;s review and models offers. It does not run the deal, value the med spa or give legal advice.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2>
+<p>Every buyer starts with your financials. Lucid is bookkeeping, taxes, tax credits and CFO services for medical and private practices, with a dedicated CPA on every account, and it makes a med spa ready for a buyer&#x27;s review:</p>
+<ol><li>CPA led monthly books, reconciled and closed, that tie to your tax returns.</li><li>Membership and package revenue recognized correctly, so recurring revenue holds up in a quality of earnings review.</li><li>Injectable and product costs matched to treatments, with profit by provider, room and service.</li><li>POS and deposit reconciliation, so card and financing deposits tie to the bank.</li><li>Marketing cost per paid patient and device payback modelling, two numbers buyers test.</li><li>A documented add back file and owner costs kept apart from practice costs.</li><li>CFO planning: cash forecasting, a custom financial model, budget versus actuals and scenario planning to compare cash at closing, rollover equity, earnouts and your pay after the sale.</li></ol>
+<p>Lucid does not run the deal, value the med spa or give legal advice. Your advisor, valuation firm and attorney do that, working from the numbers Lucid keeps. Most practices are live in about 24 hours. If your books are behind, Lucid scopes the catch up work first and gives a fixed price. Support is 24/7.</p>
+<p>Lucid starts from $130 a month. See your price on the <a href="/pricing">pricing page</a> calculator. Month to month, no setup fee. See <a href="/specialty/medical-spa">Lucid for med spas</a> and <a href="/guides/best-bookkeeping-for-med-spas/">best bookkeeping for med spas</a>.</p>
+<!-- GATE:testimonial -->
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2>
+<ol><li>Olympic M&amp;A, Q3 2026 Medical Aesthetic Industry Insider Report (September 2026; cites AmSpa, Xite, HealthFMV, Scope Research): <a href="https://olympicma.com/q3-2026-medical-aesthetic-industry-insider-report/" rel="noopener">https://olympicma.com/q3-2026-medical-aesthetic-industry-insider-report/</a></li><li>CT Acquisitions, How to sell a MedSpa (updated June 6, 2026): <a href="https://ctacquisitions.com/how-to-sell-a-medspa" rel="noopener">https://ctacquisitions.com/how-to-sell-a-medspa</a></li><li>CT Acquisitions, Med Spa Valuation and M&amp;A Multiples Report 2026 (May 2026; cites AmSpa and Xite, May 15, 2026, and Main Street Index): <a href="https://ctacquisitions.com/guides/med-spa-ma-multiples-2026/" rel="noopener">https://ctacquisitions.com/guides/med-spa-ma-multiples-2026/</a></li><li>Prospyr, Private equity in med spas: 7 platforms buying practices (updated October 2, 2026): <a href="https://prospyrmed.com/blog/post/med-spa-private-equity-platforms" rel="noopener">https://prospyrmed.com/blog/post/med-spa-private-equity-platforms</a></li><li>Leon Capital Group, Advanced MedAesthetic Partners: <a href="https://www.leoncapitalgroup.com/operating-subsidiaries/advanced-medaesthetic-partners" rel="noopener">https://www.leoncapitalgroup.com/operating-subsidiaries/advanced-medaesthetic-partners</a></li><li>Business Wire, SkinSpirit announces investment from KKR (October 20, 2022): <a href="https://www.businesswire.com/news/home/20221020005320/en/SkinSpirit-Announces-Investment-from-KKR" rel="noopener">https://www.businesswire.com/news/home/20221020005320/en/SkinSpirit-Announces-Investment-from-KKR</a></li><li>CEW, Beauty&#x27;s top headlines (November 18, 2026): <a href="https://cew.org/beauty_news/beautys-top-headlines-november-18-2026" rel="noopener">https://cew.org/beauty_news/beautys-top-headlines-november-18-2026</a> ; Beauty Independent, L&#x27;Oreal quietly buys into med spas: <a href="https://www.beautyindependent.com/loreal-buys-into-med-spas" rel="noopener">https://www.beautyindependent.com/loreal-buys-into-med-spas</a></li><li>PR Newswire, SkinSpirit named Storefront Retailer of the Year (November 12, 2026): <a href="https://www.prnewswire.com/news-releases/skinspirit-named-storefront-retailer-of-the-year-in-the-2026-beauty-innovation-awards-302937043.html" rel="noopener">https://www.prnewswire.com/news-releases/skinspirit-named-storefront-retailer-of-the-year-in-the-2026-beauty-innovation-awards-302937043.html</a></li><li>Reuters, LaserAway explores sale: <a href="https://www.reuters.com/legal/transactional/ares-backed-medical-spa-chain-laseraway-explores-sale-sources-say-2026-06-04" rel="noopener">https://www.reuters.com/legal/transactional/ares-backed-medical-spa-chain-laseraway-explores-sale-sources-say-2026-06-04</a></li><li>TPG, TPG invests in Ideal Image (May 11, 2021): <a href="https://www.tpg.com/news-and-insights/tpg-invests-ideal-image-north-americas-leading-aesthetics-brand" rel="noopener">https://www.tpg.com/news-and-insights/tpg-invests-ideal-image-north-americas-leading-aesthetics-brand</a></li><li>PitchBook, PE goes out of network in healthcare: <a href="https://pitchbook.com/news/articles/pe-goes-out-of-network-in-healthcare-for-some-cash-injection" rel="noopener">https://pitchbook.com/news/articles/pe-goes-out-of-network-in-healthcare-for-some-cash-injection</a></li><li>Buyer sites: <a href="https://www.weramp.com/" rel="noopener">https://www.weramp.com/</a> , <a href="https://www.alphaaestheticspartners.com/" rel="noopener">https://www.alphaaestheticspartners.com/</a> , <a href="https://www.medspapartners.com/" rel="noopener">https://www.medspapartners.com/</a> , <a href="https://www.aestheticpartners.com/" rel="noopener">https://www.aestheticpartners.com/</a> , <a href="https://www.skinspirit.com/" rel="noopener">https://www.skinspirit.com/</a> , <a href="https://www.laseraway.com/" rel="noopener">https://www.laseraway.com/</a> , <a href="https://www.idealimage.com/" rel="noopener">https://www.idealimage.com/</a></li><li>Lucid: <a href="/">https://www.lucid.now/</a> , <a href="/pricing">https://www.lucid.now/pricing</a> , <a href="/specialty/medical-spa">https://www.lucid.now/specialty/medical-spa</a></li></ol>
+</div></section>
+<section class="spec-prose"><div class="wrap"><div class="prose spec-links">
+<details><summary>Related guides</summary><ul><li><a href="/guides/best-bookkeeping-for-med-spas/">Best Bookkeeping for a Med Spa With Several Locations?</a></li><li><a href="/guides/med-spa-mso-vs-medical-director-service/">Med spa MSO or medical director service: which?</a></li><li><a href="/guides/how-to-prepare-a-medical-practice-for-sale/">How do I prepare my practice for sale?</a></li><li><a href="/guides/quality-of-earnings-report-practice-sale/">What is a quality of earnings report for a practice sale?</a></li><li><a href="/guides/how-is-a-medical-practice-valued/">How is a medical practice valued, and what is mine worth?</a></li><li><a href="/guides/should-i-sell-my-practice-to-private-equity/">Should I sell my practice to private equity?</a></li><li><a href="/guides/how-to-choose-a-healthcare-m-and-a-advisor/">How do I choose an M&amp;A advisor for my practice?</a></li><li><a href="/guides/who-is-buying-dermatology-practices/">Who is buying dermatology practices in 2027?</a></li><li><a href="/guides/best-medical-practice-brokers/">Which medical practice brokers sell small practices?</a></li><li><a href="/guides/how-to-choose-a-dental-practice-broker/">How do I choose a dental practice broker?</a></li><li><a href="/guides/who-is-buying-behavioral-health-practices/">Who is buying behavioral health practices?</a></li><li><a href="/guides/best-medical-practice-valuation-firms/">Which firms value medical practices, and at what cost?</a></li></ul></details>
+</div></div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
