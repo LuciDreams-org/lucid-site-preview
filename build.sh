@@ -21,8 +21,10 @@ LIVE_DOMAIN=$(cat CNAME | tr -d '[:space:]')
 # contact.lucid.now is the CTA intake-forwarding endpoint script.js routes
 # every button to (see the 'BASE' const there) - a separate live service,
 # not a stale canonical/content reference, so it belongs here too.
+# get.lucid.now appears only in tracking-config comments (separate mirror site).
 ALLOWED_OTHER_DOMAINS="ingest.lucid.now
-contact.lucid.now"
+contact.lucid.now
+get.lucid.now"
 mapfile -t BAD_DOMAIN_FILES < <(grep -rlE "[a-z0-9-]+\.lucid\.now" --include="*.html" . \
   | xargs grep -lE "[a-z0-9-]+\.lucid\.now" \
   | while read -r f; do

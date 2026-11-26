@@ -21,7 +21,9 @@ head_region_re = re.compile(re.escape(HEAD_START) + r".*?" + re.escape(HEAD_END)
 body_region_re = re.compile(re.escape(BODY_START) + r".*?" + re.escape(BODY_END), re.DOTALL)
 
 changed = []
-for path in sorted(p for p in glob.glob("**/*.html", recursive=True) if not p.startswith("partials/")):
+# intro.html is managed by hand (Crisp deliberately removed 2026-11-24); never re-inject.
+SKIP_FILES = {"intro.html"}
+for path in sorted(p for p in glob.glob("**/*.html", recursive=True) if not p.startswith("partials/") and p not in SKIP_FILES):
     with open(path) as f:
         html = f.read()
     original = html
