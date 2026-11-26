@@ -1,0 +1,686 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How to Pay Yourself From Your Medical Practice | Lucid</title>
+<meta name="description" content="How to pay yourself from a medical practice: owner's draws, partner guaranteed payments, S corp salary plus distributions, and a $180,000 worked example."/>
+<link rel="canonical" href="https://www.lucid.now/blog/how-to-pay-yourself-from-your-medical-practice/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How to Pay Yourself From Your Medical Practice | Lucid"/>
+<meta property="og:description" content="How to pay yourself from a medical practice: owner's draws, partner guaranteed payments, S corp salary plus distributions, and a $180,000 worked example."/>
+<meta property="og:url" content="https://www.lucid.now/blog/how-to-pay-yourself-from-your-medical-practice/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Pay Yourself From Your Medical Practice | Lucid"/>
+<meta name="twitter:description" content="How to pay yourself from a medical practice: owner's draws, partner guaranteed payments, S corp salary plus distributions, and a $180,000 worked example."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"How do I pay myself from my medical practice?","description":"How to pay yourself from a medical practice: owner's draws, partner guaranteed payments, S corp salary plus distributions, and a $180,000 worked example.","url":"https://www.lucid.now/blog/how-to-pay-yourself-from-your-medical-practice/","datePublished":"2026-12-03","dateModified":"2026-12-03","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/how-to-pay-yourself-from-your-medical-practice/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I pay myself a salary from my PLLC?","acceptedAnswer":{"@type":"Answer","text":"Only if your PLLC is taxed as a corporation, usually after an S corp election on Form 2553. Taxed by default, you're not its employee, so you take draws or guaranteed payments. A fixed monthly draw still has no tax withheld."}},{"@type":"Question","name":"What's the difference between an owner's draw and a salary?","acceptedAnswer":{"@type":"Answer","text":"A salary is wages: the practice withholds Social Security, Medicare and income tax and reports it on a W-2. A draw is a transfer of profit with nothing withheld, so you pay the tax later through estimates. A salary is a business expense; a draw doesn't lower the practice's profit."}},{"@type":"Question","name":"How do partners in a medical practice get paid?","acceptedAnswer":{"@type":"Answer","text":"Most practices pay each partner a guaranteed payment for their work and split the remaining profit by the operating agreement, with draws against that share during the year. At year end, each partner gets a Schedule K-1 showing both, and pays tax on the full amount even if some stays in the practice."}},{"@type":"Question","name":"How much should I pay myself from my practice?","acceptedAnswer":{"@type":"Answer","text":"Start with what the practice can spare after its bills, loan payments, tax set-asides and a cash cushion for slow months. If you're an S corp, set your salary first with your CPA, then take distributions from what's left and review it each quarter."}},{"@type":"Question","name":"Do I pay tax on money I leave in the practice?","acceptedAnswer":{"@type":"Answer","text":"Yes, unless your practice is a C corp. As a sole owner, a partner or an S corp owner, you pay income tax on your share of the profit whether you take it out or not. Profit you leave in raises your basis, so you usually won't pay tax on it again later."}},{"@type":"Question","name":"How do I record owner pay in my books?","acceptedAnswer":{"@type":"Answer","text":"Record draws and distributions in an equity account for each owner, never as an expense. Record an S corp salary as wages through payroll, and guaranteed payments as their own expense line. Your P&L then shows real profit, and each equity account shows what that owner took."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"How do I pay myself from my medical practice?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+@media (max-width:640px){.article-body table.stack thead{display:none}.article-body table.stack tr{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}.article-body table.stack td{border:0;padding:4px 12px}.article-body table.stack td:first-child{grid-column:1/-1;font-weight:700;padding-top:12px}.article-body table.stack td:nth-child(n+2)::before{content:attr(data-label);display:block;font-size:.8rem;color:var(--ink-soft)}.article-body table.stack td:last-child{padding-bottom:12px}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How do I pay myself from my medical practice?</h1>
+<div class="article-meta"><time datetime="2026-12-03">December 3, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 3, 2026</p>
+<!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No post goes live without this line. -->
+<div class="article-body">
+<p>It depends on how the IRS taxes your practice. As the only owner of a PLLC taxed by default, you take draws. Partners take guaranteed payments and draws. An S corp owner takes a salary through payroll, then distributions. A C corp owner takes a salary and dividends. Nobody withholds tax from draws, so you pay quarterly estimates.<!-- CPA CHECK: the four ways to pay yourself by tax type, including "taxed by default" in sentence 2 (a one-owner PLLC that elected S corp tax takes a salary), and no withholding on draws, against IRS Publications 334 and 541, the IRS "Paying yourself" page and the Instructions for Form 1120-S. --></p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30‑minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>As the only owner of a PLLC taxed by default, you can&#39;t pay yourself a W-2 salary. You take draws and pay 15.3% self-employment tax on most of your profit.</li>
+<li>An S corp owner who works in the practice takes a reasonable salary through payroll before any distributions.</li>
+<li>You owe income tax on your share of profit even if you leave it in the practice.</li>
+</ul>
+<!-- CPA CHECK: each key point, against the sections below and their sources. -->
+<h2 id="what-do-the-words-for-owner-pay-mean">What do the words for owner pay mean?</h2>
+<p><strong>An owner&#39;s draw</strong> is profit you move from the practice to yourself, with no tax withheld. <strong>A guaranteed payment</strong> is a set amount a partnership pays a partner for their work, whatever the practice earns. <strong>A distribution</strong> is profit an S corp or partnership pays its owners, separate from wages. <strong>Self-employment tax</strong> is the 15.3% Social Security and Medicare tax you pay on your own business earnings. <strong>A reasonable salary</strong> is the W-2 pay an S corp owner takes for their work in the practice. <strong>Basis</strong> is your tax investment in the practice: what you put in plus your share of profit, minus losses and what you&#39;ve taken out.<!-- CPA CHECK: each definition, against Publications 334 and 541 and the Instructions for Forms 1120-S and 7203. --></p>
+<h2 id="which-way-can-you-pay-yourself-by-type-of-practice">Which way can you pay yourself, by type of practice?</h2>
+<p>It depends on how the IRS taxes your practice. By default, the IRS taxes a one-owner PLLC like a sole proprietorship and a PLLC with two or more owners like a partnership. A PLLC can elect corporate tax, and a professional corporation is a C corp unless it elects S corp tax.</p>
+<div class="lc-table"><table class="stack">
+<thead>
+<tr>
+<th>How the IRS taxes your practice</th>
+<th>How you pay yourself</th>
+<th>Tax taken out when you&#39;re paid</th>
+<th>What reports it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="How the IRS taxes your practice">One-owner PLLC, taxed by default</td>
+<td data-label="How you pay yourself">Owner&#39;s draw</td>
+<td data-label="Tax taken out when you're paid">None; you pay quarterly estimates</td>
+<td data-label="What reports it">Schedule C and Schedule SE on your Form 1040</td>
+</tr>
+<tr>
+<td data-label="How the IRS taxes your practice">PLLC with two or more owners, taxed by default</td>
+<td data-label="How you pay yourself">Guaranteed payments and draws</td>
+<td data-label="Tax taken out when you're paid">None; you pay quarterly estimates</td>
+<td data-label="What reports it">Schedule K-1 (Form 1065)</td>
+</tr>
+<tr>
+<td data-label="How the IRS taxes your practice">PLLC or professional corporation taxed as an S corp</td>
+<td data-label="How you pay yourself">Salary through payroll, plus distributions</td>
+<td data-label="Tax taken out when you're paid">Payroll tax and income tax on the salary only</td>
+<td data-label="What reports it">Form W-2 and Schedule K-1 (Form 1120-S)</td>
+</tr>
+<tr>
+<td data-label="How the IRS taxes your practice">Professional corporation taxed as a C corp</td>
+<td data-label="How you pay yourself">Salary through payroll, plus dividends</td>
+<td data-label="Tax taken out when you're paid">Payroll tax and income tax on the salary only</td>
+<td data-label="What reports it">Form W-2 and Form 1099-DIV</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: LLC default classification and Form 8832 ([IRS, Limited liability company](https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc)); each row's pay type, withholding and reporting form; state rules on which entity a medical practice may use, name no state without sign-off. -->
+<h2 id="how-do-you-pay-yourself-from-a-one-owner-pllc">How do you pay yourself from a one-owner PLLC?</h2>
+<p>You move money from the practice account to your own and record it as a draw. A draw isn&#39;t an expense, and nobody withholds tax from it. You pay self-employment tax and income tax on the whole profit, however much you draw, through quarterly estimates.<!-- CPA CHECK: owner's draws not deductible, Publication 334; tax on all profit regardless of draws. --></p>
+<p>The IRS says that as a sole proprietor, &quot;you are not an employee of the business&quot; (<a href="https://www.irs.gov/publications/p334">IRS Publication 334</a>). So you can&#39;t put yourself on payroll.<!-- CPA CHECK: the quote, Publication 334, "Employees' Pay". --></p>
+<p>You pay self-employment tax on 92.35% of your profit (<a href="https://www.irs.gov/publications/p334">IRS Publication 334</a>): 12.4% for Social Security on the first $184,500 of earnings in 2026, and 2.9% for Medicare on all of it, plus 0.9% over $200,000 if you&#39;re single (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employment-tax-social-security-and-medicare-taxes">IRS, Self-employment tax</a>).<!-- CPA CHECK: the 92.35% factor, Publication 334; 15.3% split, $184,500 for 2026 and 0.9% thresholds. --></p>
+<p>You&#39;ll generally pay estimated tax if you expect to owe $1,000 or more after withholding. The 2026 payments are due April 15, June 15, September 15 and January 15, 2027 (<a href="https://www.irs.gov/publications/p505">IRS Publication 505</a>).<!-- CPA CHECK: the $1,000 rule and the 2026 due dates. --> To keep the penalty off, see <a href="/blog/estimated-tax-safe-harbors-medical-practice-owners/">estimated tax safe harbors for practice owners</a>.</p>
+<h2 id="how-do-partners-in-a-practice-pay-themselves">How do partners in a practice pay themselves?</h2>
+<p>Partners usually take guaranteed payments for their work and draws against their share of profit. The partnership deducts guaranteed payments. Nobody withholds tax from either, and no partner gets a W-2. Each partner gets a Schedule K-1 and pays estimates (<a href="https://www.irs.gov/publications/p541">IRS Publication 541</a>).<!-- CPA CHECK: guaranteed payments deductible on Form 1065, line 10, and not subject to income tax withholding; partners not employees and no W-2, IRS "Paying yourself". --></p>
+<p>If partners take different amounts, write down why in your operating agreement: each guaranteed payment, how you split the rest, and when you draw it.<!-- CPA CHECK: the operating agreement sets guaranteed payments and profit shares, Publication 541. --></p>
+<p>Partners who work in the practice generally pay self-employment tax on their guaranteed payments and their share of profit (<a href="https://www.irs.gov/instructions/i1040sse">Instructions for Schedule SE</a>).<!-- CPA CHECK: self-employment tax on guaranteed payments for services and on a working member's distributive share; the rules for LLC members aren't settled for every case. --> You generally don&#39;t pay tax again on a cash draw up to your basis; anything over it is a gain.<!-- CPA CHECK: gain on money distributed over the partner's adjusted basis, Publication 541, "Partner's Gain or Loss". --></p>
+<h2 id="how-do-you-pay-yourself-from-an-s-corp">How do you pay yourself from an S corp?</h2>
+<p>You put yourself on payroll at a reasonable salary, with Social Security, Medicare and income tax withheld like any employee. Then you can take the rest of the profit as distributions, with no Social Security or Medicare tax. You still owe income tax on the whole profit. (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues">IRS, S corporation compensation</a>)<!-- CPA CHECK: reasonable compensation before distributions; no employment tax on distributions; shareholder taxed on the pro rata share of income, Instructions for Form 1120-S. --></p>
+<p>If your accountant says you&#39;re an S corp but you&#39;ve never run payroll for yourself, fix that this year. The IRS says officer payments &quot;must be treated as wages to the extent the amounts are reasonable compensation&quot; (<a href="https://www.irs.gov/instructions/i1120s">Instructions for Form 1120-S</a>, lines 7 and 8), and it can reclassify distributions as wages (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues">IRS, S corporation compensation</a>).<!-- CPA CHECK: the quote; IRS authority to reclassify, S corporation compensation page. --></p>
+<p>The IRS doesn&#39;t publish a percentage for a reasonable salary. To set and document yours, see <a href="/guides/s-corp-salary-for-medical-practice-owners/">how to set a reasonable S corp salary</a>.<!-- CPA CHECK: no IRS percentage or safe harbor for reasonable compensation. --></p>
+<p>You don&#39;t pay tax again on distributions up to your stock basis; you report anything over it as a capital gain (<a href="https://www.irs.gov/instructions/i7203">Instructions for Form 7203</a>). With several owners, you pay distributions in proportion to shares (<a href="https://www.irs.gov/instructions/i2553">Instructions for Form 2553</a>).<!-- CPA CHECK: distributions over stock basis as capital gain; one class of stock and pro rata distributions, Instructions for Form 2553. --> Before you settle your salary, read <a href="/guides/qbi-deduction-for-medical-practice-owners/">the QBI deduction for practice owners</a>.</p>
+<h2 id="what-if-your-practice-is-taxed-as-a-c-corp">What if your practice is taxed as a C corp?</h2>
+<p>You take a salary through payroll, and the practice deducts it. Profit you take out beyond that is usually a dividend. The practice pays 21% tax on its profit (<a href="https://www.irs.gov/publications/p542">IRS Publication 542</a>) and can&#39;t deduct dividends, and you pay tax on the dividends again (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/corporations">IRS, Corporations</a>).<!-- CPA CHECK: the 21% rate, IRS Publication 542; double tax and no deduction for dividends. --></p>
+<h2 id="how-much-tax-do-you-pay-on-180-000-of-owner-pay">How much tax do you pay on $180,000 of owner pay?</h2>
+<p>If you take $180,000 of profit as draws from a one-owner PLLC, you pay $25,433 of self-employment tax. As an S corp with an assumed $100,000 salary, you and the practice pay $15,300 of Social Security and Medicare, and you pay none on the $72,350 distribution. You owe income tax either way.</p>
+<p><strong>Example 1: $180,000 taken as draws.</strong> You&#39;re the only owner of a PLLC taxed by default, single, with no other wages. The practice earns $180,000 of profit in 2026 and you draw $15,000 a month. Income tax isn&#39;t shown.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Amount</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Profit, all drawn at $15,000 a month</td>
+<td align="right">$180,000.00</td>
+</tr>
+<tr>
+<td>Earnings subject to self-employment tax (92.35%)</td>
+<td align="right">$166,230.00</td>
+</tr>
+<tr>
+<td>Social Security, 12.4%</td>
+<td align="right">$20,612.52</td>
+</tr>
+<tr>
+<td>Medicare, 2.9%</td>
+<td align="right">$4,820.67</td>
+</tr>
+<tr>
+<td>Self-employment tax</td>
+<td align="right">$25,433.19</td>
+</tr>
+<tr>
+<td>Tax withheld from your draws</td>
+<td align="right">$0.00</td>
+</tr>
+<tr>
+<td>Self-employment tax part of each quarterly estimate</td>
+<td align="right">$6,358.30</td>
+</tr>
+</tbody></table></div>
+<p>You add income tax to each estimate and deduct half the self-employment tax, $12,716.60, on your return.<!-- CPA CHECK: every figure in Example 1 and the half self-employment tax deduction; $180,000 is under the $200,000 added Medicare threshold. --></p>
+<p><strong>Example 2: the same $180,000 as an S corp.</strong> Your practice is taxed as an S corp and earns $180,000 before your pay. Your CPA sets a $100,000 salary; that&#39;s an assumption for the arithmetic, not a suggested salary. You take the rest as distributions.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Salary (assumed)</th>
+<th align="right">Distribution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Amount</td>
+<td align="right">$100,000</td>
+<td align="right">$72,350</td>
+</tr>
+<tr>
+<td>Your Social Security and Medicare, 7.65%</td>
+<td align="right">$7,650</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>The practice&#39;s Social Security and Medicare, 7.65%</td>
+<td align="right">$7,650</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>Total Social Security and Medicare</td>
+<td align="right">$15,300</td>
+<td align="right">$0</td>
+</tr>
+</tbody></table></div>
+<p>The distribution is $180,000 minus the salary and the practice&#39;s $7,650 share. That&#39;s $10,133 less Social Security and Medicare than Example 1, before the cost of payroll and Form 1120-S.<!-- CPA CHECK: every figure in Example 2, the employer share as a deduction, the $72,350 K-1 amount, and the comparison with Example 1. --></p>
+<h2 id="how-do-you-keep-owner-pay-clean-in-your-books">How do you keep owner pay clean in your books?</h2>
+<p>Pay yourself on a schedule, from the practice account only, and record each transfer by type: draw, guaranteed payment, payroll or distribution. Draws and distributions go to an equity account, not an expense. Then each month, compare what you&#39;ve taken with profit so far this year. Your monthly checklist:</p>
+<ol>
+<li>Pay yourself on the same day each month. Don&#39;t pay personal bills with the practice card.</li>
+<li>Record each transfer by type. As an S corp, run your salary through payroll first.</li>
+<li>If you have partners, pay each one the amounts your operating agreement sets.</li>
+<li>Move money for your quarterly estimates into a separate savings account the same day.</li>
+</ol>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30‑minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<!-- CPA CHECK: draws and distributions as equity; S corp salary as wages on the P&L. -->
+<p>To see where owner pay shows up each month, read how to read a P&amp;L for your medical practice.<!-- TODO link held: "To see where owner pay shows up each month, read how to read a P&L for your medical practice." -> /blog/how-to-read-a-medical-practice-pl/. Note for Reid: post 1 publishes December 2; keep this link only once it's live on origin/main. --></p>
+<h2 id="what-should-group-practice-and-med-spa-owners-watch-for">What should group practice and med spa owners watch for?</h2>
+<ul>
+<li><strong>Group practice owners:</strong> if you pay partners by production, put the formula in the operating agreement. See <a href="/specialty/medical-group">accounting for medical groups</a>.</li>
+<li><strong>Med spa owners:</strong> if you run the business but don&#39;t treat patients, your S corp salary still covers the management work. See <a href="/specialty/medical-spa">bookkeeping for med spas</a>.</li>
+</ul>
+<!-- CPA CHECK: reasonable compensation covers management work as well as patient care. -->
+<h2 id="what-to-ask-your-cpa-about-paying-yourself">What to ask your CPA about paying yourself</h2>
+<ul>
+<li>How does the IRS tax my practice, and is that still right?</li>
+<li>As an S corp, what salary can I support, and how do I document it?</li>
+<li>How much should I set aside each month for estimates?</li>
+<li>Do I have enough basis for the distributions I plan this year?</li>
+</ul>
+<h2 id="what-lucid-does-for-owner-pay">What Lucid does for owner pay</h2>
+<p>Lucid (lucid.now) does bookkeeping and taxes for <a href="/medical">medical practices</a> and med spas. Lucid&#39;s experts handle quarterly estimates and &quot;S-corp strategy,&quot; with year-round tax planning, and you get &quot;a dedicated CPA who knows your specialty.&quot;</p>
+<h2 id="faq">Questions practice owners ask about paying themselves</h2>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h3 id="can-i-pay-myself-a-salary-from-my-pllc" data-faq-q>Can I pay myself a salary from my PLLC?</h3>
+<p>Only if your PLLC is taxed as a corporation, usually after an S corp election on Form 2553. Taxed by default, you&#39;re not its employee, so you take draws or guaranteed payments. A fixed monthly draw still has no tax withheld.<!-- CPA CHECK: Form 2553; no W-2 for a sole proprietor or partner. --></p>
+<h3 id="whats-the-difference-between-an-owners-draw-and-a-salary" data-faq-q>What&#39;s the difference between an owner&#39;s draw and a salary?</h3>
+<p>A salary is wages: the practice withholds Social Security, Medicare and income tax and reports it on a W-2. A draw is a transfer of profit with nothing withheld, so you pay the tax later through estimates. A salary is a business expense; a draw doesn&#39;t lower the practice&#39;s profit.<!-- CPA CHECK: wages vs draws; withholding; deductibility. --></p>
+<h3 id="how-do-partners-in-a-medical-practice-get-paid" data-faq-q>How do partners in a medical practice get paid?</h3>
+<p>Most practices pay each partner a guaranteed payment for their work and split the remaining profit by the operating agreement, with draws against that share during the year. At year end, each partner gets a Schedule K-1 showing both, and pays tax on the full amount even if some stays in the practice.<!-- CPA CHECK: guaranteed payments and distributive shares on Schedule K-1, Publication 541. --></p>
+<h3 id="how-much-should-i-pay-myself-from-my-practice" data-faq-q>How much should I pay myself from my practice?</h3>
+<p>Start with what the practice can spare after its bills, loan payments, tax set-asides and a cash cushion for slow months. If you&#39;re an S corp, set your salary first with your CPA, then take distributions from what&#39;s left and review it each quarter.<!-- CPA CHECK: salary before distributions for an S corp. --></p>
+<h3 id="do-i-pay-tax-on-money-i-leave-in-the-practice" data-faq-q>Do I pay tax on money I leave in the practice?</h3>
+<p>Yes, unless your practice is a C corp. As a sole owner, a partner or an S corp owner, you pay income tax on your share of the profit whether you take it out or not. Profit you leave in raises your basis, so you usually won&#39;t pay tax on it again later.<!-- CPA CHECK: pass-through taxation of undistributed profit; basis increase; C corp exception. --></p>
+<h3 id="how-do-i-record-owner-pay-in-my-books" data-faq-q>How do I record owner pay in my books?</h3>
+<p>Record draws and distributions in an equity account for each owner, never as an expense. Record an S corp salary as wages through payroll, and guaranteed payments as their own expense line. Your P&amp;L then shows real profit, and each equity account shows what that owner took.<!-- CPA CHECK: equity accounts for draws and distributions; guaranteed payments as a deductible expense. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/publications/p334">Publication 334 (2025), Tax Guide for Small Business</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p541">Publication 541 (12/2025), Partnerships</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1120s">Instructions for Form 1120-S</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i7203">Instructions for Form 7203</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues">S corporation compensation and medical insurance issues</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/paying-yourself">Paying yourself</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employment-tax-social-security-and-medicare-taxes">Self-employment tax (Social Security and Medicare taxes)</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p505">Publication 505 (2026), Tax Withholding and Estimated Tax</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p542">Publication 542, Corporations</a> and <a href="https://www.irs.gov/businesses/small-businesses-self-employed/corporations">Corporations</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc">Limited liability company (LLC)</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1040sse">Instructions for Schedule SE (Form 1040)</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i2553">Instructions for Form 2553</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1099div">Instructions for Forms 1099-DIV</a></li>
+</ul>
+<p>[Post shell closing box (<code>div.article-cta</code>, &quot;Ready to simplify your practice finances?&quot;), Lucid&#39;s copy unchanged; change its one Get Started href from <code>/pricing</code> to <code>/book?cta=GetStarted</code>.]</p>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
