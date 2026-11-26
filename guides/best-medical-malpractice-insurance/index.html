@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Which malpractice insurance is best for a group practice?</title>
+<meta name="description" content="Compare malpractice carriers for group practices: occurrence vs claims-made, tail cost, risk retention groups and published premiums by state." />
+<link rel="canonical" href="https://www.lucid.now/guides/best-medical-malpractice-insurance/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Which malpractice insurance is best for a group practice?" />
+<meta property="og:description" content="Compare malpractice carriers for group practices: occurrence vs claims-made, tail cost, risk retention groups and published premiums by state." />
+<meta property="og:url" content="https://www.lucid.now/guides/best-medical-malpractice-insurance/" />
+<meta name="twitter:title" content="Which malpractice insurance is best for a group practice?" />
+<meta name="twitter:description" content="Compare malpractice carriers for group practices: occurrence vs claims-made, tail cost, risk retention groups and published premiums by state." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Which malpractice insurance is best for a group practice?","description":"Compare malpractice carriers for group practices: occurrence vs claims-made, tail cost, risk retention groups and published premiums by state.","datePublished":"2026-11-26","dateModified":"2026-11-26","mainEntityOfPage":"https://www.lucid.now/guides/best-medical-malpractice-insurance/","publisher":{"@type":"Organization","name":"Lucid","url":"https://www.lucid.now/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"Which malpractice insurance is best for a group practice?","item":"https://www.lucid.now/guides/best-medical-malpractice-insurance/"}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+.guide{padding:36px 0 8px;}
+.guide .gwrap{max-width:860px;margin:0 auto;padding:0 16px;min-width:0;}
+.guide .crumbs{font-size:.88rem;color:var(--muted);margin:0 0 14px;}
+.guide .crumbs a{color:var(--muted);text-decoration:underline;}
+.guide h2{font-size:1.5rem;margin:34px 0 12px;line-height:1.25;}
+.guide h3{font-size:1.15rem;margin:24px 0 8px;}
+.guide p,.guide li{color:var(--ink-soft,#334155);line-height:1.65;overflow-wrap:anywhere;}
+.guide p{margin:0 0 12px;}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:22px;}
+.guide li{margin:0 0 6px;}
+.guide a{color:var(--brand);text-decoration:underline;}
+.guide .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 20px;border:1px solid var(--line);border-radius:12px;max-width:100%;}
+.guide .table-scroll table{border-collapse:collapse;min-width:720px;width:100%;}
+.guide .table-scroll th,.guide .table-scroll td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:.9rem;line-height:1.5;}
+.guide .table-scroll th{background:#f5f3ff;color:var(--ink);font-weight:700;white-space:nowrap;}
+.guide .table-scroll td:first-child{font-weight:700;color:var(--ink);}
+.guide .updated{color:var(--muted);font-size:.95rem;margin:10px 0 0;}
+.guide-faq .gwrap{max-width:860px;margin:0 auto;padding:0 16px;}
+.spec-hero .updated{color:var(--muted);margin:8px 0 0;font-size:.95rem;}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+.guide a.btn{text-decoration:none;}.guide a.btn-primary{color:#fff;}.guide .g-cta{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px;}.guide .g-cta .btn{text-align:center;}.guide p.verdict{font-size:1.06rem;line-height:1.6;}.guide .choose{background:#f5f3ff;border:1px solid var(--line);border-radius:12px;padding:12px 16px 4px;margin:0 0 14px;}.guide .choose h3{margin:0 0 8px;}.guide ul.why{list-style:none;padding-left:0;}.guide ul.why li{border-left:3px solid var(--brand);padding:2px 0 2px 12px;margin:0 0 10px;}
+.spec-prose{padding:30px 0;}
+.spec-prose .prose{max-width:860px;margin:0 auto;padding:0 16px;overflow-wrap:anywhere;}
+.spec-links summary{cursor:pointer;font-weight:700;color:var(--ink);padding:6px 0;}
+.spec-links ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+.spec-links li{margin:0;}
+.spec-links li a{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;}
+.guide table{max-width:none;}
+.guide-quote{margin:22px 0;padding:18px 20px;border-left:4px solid var(--brand);background:var(--bg-soft);border-radius:0 12px 12px 0;}
+.guide-quote blockquote{margin:0 0 8px;color:var(--ink);font-style:italic;}
+.guide-quote blockquote p{margin:0;}
+.guide-quote figcaption{font-weight:700;color:var(--ink);font-size:.92rem;}
+@media (max-width:640px){.guide{padding:24px 0 4px;}.guide h2{font-size:1.3rem;margin:26px 0 10px;}.spec-faq .faq details{padding:14px 0;}.spec-faq .faq summary{font-size:1rem;}.spec-prose{padding:20px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"Which malpractice insurance is best for a group practice?","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":8,"itemListElement":[{"@type":"ListItem","position":1,"name":"MedPro Group (Berkshire Hathaway)","url":"https://www.medpro.com/about"},{"@type":"ListItem","position":2,"name":"TDC"},{"@type":"ListItem","position":3,"name":"CNA","url":"https://www.cna.com/industries/affinity/allied-healthcare"},{"@type":"ListItem","position":4,"name":"MagMutual","url":"https://www.magmutual.com/company-overview"},{"@type":"ListItem","position":5,"name":"ProAssurance"},{"@type":"ListItem","position":6,"name":"Coverys","url":"https://www.coverys.com/"},{"@type":"ListItem","position":7,"name":"Curi","url":"https://curi.com/about-us"},{"@type":"ListItem","position":8,"name":"Chubb","url":"https://www.chubb.com/us-en/business-insurance/industries/healthcare-organization-insurance.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is claims-made or occurrence better for a group practice?","acceptedAnswer":{"@type":"Answer","text":"Claims-made is cheaper in the early years and is what most groups buy. Occurrence costs more but never needs tail. If your group has frequent turnover, claims-made plus clear tail rules in your paperwork is the common answer."}},{"@type":"Question","name":"How much does tail coverage cost?","acceptedAnswer":{"@type":"Answer","text":"Published guidance ranges from about one and a half to three times the annual premium, paid once. Free tail at retirement is common after five or more years with one carrier."}},{"@type":"Question","name":"Who pays tail when a clinician leaves?","acceptedAnswer":{"@type":"Answer","text":"It depends on the employment agreement. Common terms are the employer pays, the clinician pays, or the cost is split based on years of service or the reason for leaving."}},{"@type":"Question","name":"What limits does a practice need?","acceptedAnswer":{"@type":"Answer","text":"$1 million per claim and $3 million aggregate is the most common limit and a typical starting point. Surgeons and proceduralists, and some hospital credentialing rules, may call for more."}},{"@type":"Question","name":"Is a risk retention group safe?","acceptedAnswer":{"@type":"Answer","text":"Many are well run, but RRGs are not covered by state guaranty funds. Review the group's financial statements, rating and reinsurance, and compare with a licensed carrier quote."}},{"@type":"Question","name":"Why did my premium go up when I did not have a claim?","acceptedAnswer":{"@type":"Answer","text":"Premiums follow state and specialty trends, and the AMA reports seven straight years of rising premiums through 2025. A claims-made policy also steps up as it matures over its early years."}},{"@type":"Question","name":"Should the practice entity have its own coverage?","acceptedAnswer":{"@type":"Answer","text":"Yes, in most cases. A suit can name the practice as well as the clinician, so confirm the entity is covered and whether it shares limits with the clinicians."}},{"@type":"Question","name":"Do I need a broker?","acceptedAnswer":{"@type":"Answer","text":"A broker who writes several malpractice carriers can compare quotes, entity terms and tail options. Some carriers also sell directly."}}]}
+</script>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>Which malpractice insurance is best for a group practice?</h1>
+    <p class="updated">Updated November 26, 2026</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">See your Lucid price</a>
+    </div>
+    <p class="cta-note"><span class="ri">Free 30-min consult</span> <span class="ri">Month-to-month, cancel anytime</span></p>
+  </div>
+</section>
+<section class="guide"><div class="gwrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/guides/">Guides</a> / Which malpractice insurance is best for a group practice?</nav>
+<h2 id="short-answer">Short answer</h2>
+<p>There is no single best malpractice carrier: the right one depends on your state, specialty and group size. The largest national options are MedPro Group (Berkshire Hathaway), TDC (which completed its purchase of ProAssurance in June 2026), CNA, MagMutual, Coverys, Curi and Chubb, with strong regional and specialty carriers such as MLMIC in New York and TDIC for dental. Most groups choose claims-made coverage with a plan for tail, compare entity coverage and shared or separate limits, and get quotes through a broker who writes several carriers. Premiums vary more by county and specialty than by carrier, so compare like for like quotes.</p>
+<h2 id="the-main-carriers-at-a-glance">The main carriers at a glance</h2>
+<p>Market share is from NAIC data for 2025, published by the Insurance Information Institute (Triple-I).</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="The main carriers at a glance"><table style="min-width:480px"><thead><tr><th scope="col">Carrier</th><th scope="col">2025 share</th><th scope="col">Note</th></tr></thead><tbody><tr><td>MedPro Group (Berkshire Hathaway)</td><td>15.8%</td><td>Largest group, national</td></tr><tr><td>TDC</td><td>9.7%</td><td>Member-owned; now includes ProAssurance</td></tr><tr><td>CNA</td><td>5.9%</td><td>Allied health and small practices</td></tr><tr><td>MagMutual</td><td>5.0%</td><td>Mutual, risk tools</td></tr><tr><td>ProAssurance</td><td>4.8%</td><td>Now part of TDC</td></tr><tr><td>Coverys</td><td>3.2%</td><td>45 plus years in healthcare</td></tr><tr><td>Curi</td><td>3.0%</td><td>Insurance plus advisory</td></tr><tr><td>Chubb</td><td>1.9%</td><td>Broad commercial lines</td></tr></tbody></table></div>
+<p>The Triple-I top 10 also lists Liberty Mutual (3.8%) and MCIC Vermont (3.3%). Shares are of direct premiums written before reinsurance. Source: Triple-I, accessed November 26, 2026.</p>
+<h2 id="occurrence-vs-claims-made">Occurrence vs claims-made</h2>
+<p>This is the first decision, and it shapes cost for years.</p>
+<ol><li>Occurrence. Covers incidents that happen while the policy is in force, no matter when the claim is filed, per the Texas Department of Insurance. You never need tail. Premiums start higher.</li><li>Claims-made. Covers claims reported during the policy term for incidents after the retroactive date. TDC notes that claims-made policies are initially less expensive than occurrence policies. Premiums usually step up over the first several years as the policy matures.</li><li>The catch. When a claims-made policy ends, you need tail coverage or prior acts (nose) coverage from the next carrier, or incidents from your covered years are left exposed.</li></ol>
+<p>Most private practices buy claims-made because the early years cost less. Groups that hire and lose clinicians often should, because the tail question comes up every time someone leaves.</p>
+<h2 id="tail-coverage-the-cost-owners-forget">Tail coverage: the cost owners forget</h2>
+<p>Tail, formally an extended reporting period endorsement, lets you report claims after a claims-made policy ends, for incidents that happened while it was active.</p>
+<p>What it costs, as published:</p>
+<ol><li>The Texas Department of Insurance says tail may cost one and a half to three times an annual premium.</li><li>AMA guidance on renewals puts it at two to three times the premium.</li><li>AMA Insurance says it can cost as much as two times the annual premium, usually as a one-time charge.</li></ol>
+<p>Ways to avoid or reduce it:</p>
+<ol><li>Free tail at retirement. Many insurers offer it after continuous coverage for a stated period, usually five or more years, per the Texas Department of Insurance. TDC says it offers free tail to qualified members at retirement, disability or death.</li><li>Prior acts coverage. Your new carrier sets a retroactive date that reaches back to your first policy, so no tail is needed from the old one.</li><li>Paperwork terms. Who pays tail when a clinician leaves depends on the employment agreement. AMA Insurance lists employer pays, employee pays, or a split based on years of service.</li></ol>
+<p>Tail is a real liability at a sale, a merger or a partner exit. Buyers ask who pays it. See <a href="/guides/how-to-prepare-a-medical-practice-for-sale/">how to prepare a medical practice for sale</a>.</p>
+<h2 id="what-malpractice-costs-as-published">What malpractice costs, as published</h2>
+<p>The best public benchmark is the Medical Liability Monitor annual rate survey, as analyzed by the AMA in April 2026. These are manual (list) premiums from one insurer per area, for $1 million per claim and $3 million annual aggregate limits, for 2025. Your quote can be higher or lower.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="What malpractice costs, as published"><table><thead><tr><th scope="col">Area (2025)</th><th scope="col">Internal medicine</th><th scope="col">General surgery</th><th scope="col">OB/GYN</th></tr></thead><tbody><tr><td>Los Angeles and Orange, CA</td><td>$8,274</td><td>$41,775</td><td>$49,804</td></tr><tr><td>New York (Nassau, Suffolk)</td><td>$34,178</td><td>$155,509</td><td>$176,358</td></tr><tr><td>Illinois (Cook and nearby)</td><td>$47,787</td><td>$139,284</td><td>$207,907</td></tr><tr><td>Florida (Miami-Dade)</td><td>$59,736</td><td>$243,988</td><td>$243,988</td></tr></tbody></table></div>
+<p>Source: AMA Policy Research Perspectives, Exhibit 4, from Medical Liability Monitor data, accessed November 26, 2026.</p>
+<p>State caveats:</p>
+<ol><li>California has a cap on non-economic damages, and the AMA says its premiums were considerably lower than in other states.</li><li>Six states (Indiana, Kansas, Louisiana, Nebraska, New Mexico and Pennsylvania) run a Patient Compensation Fund with a surcharge on top of the premium.</li><li>Connecticut figures in the survey use $1 million and $4 million limits.</li><li>Trend: the AMA reports that almost 40% of reported premiums rose in 2025, the seventh year in a row of increases. Pennsylvania had the largest share of increases above 10%.</li></ol>
+<h2 id="the-carriers-one-by-one">The carriers, one by one</h2>
+<h3 id="medpro-group">MedPro Group</h3>
+<p>MedPro calls itself a Berkshire Hathaway company and says it has written malpractice insurance since 1899. It lists coverage across the spectrum of healthcare, from solo practitioners to large groups, and cites an A++ rating from AM Best and a pure consent provision that lets you refuse to settle a claim. Best for: groups that want the largest carrier and national reach.</p>
+<h3 id="tdc">TDC</h3>
+<p>TDC describes itself as the largest malpractice insurer in the country owned by its member clinicians and says it is rated A+ by AM Best and A by Fitch. It completed its acquisition of ProAssurance on June 26, 2026, so ProAssurance and NORCAL policyholders now sit in the same group. Its Tribute Plan pays a loyalty award to members who retire at 55 or older after at least five years of continuous coverage. Best for: practices that value consent to settle and a retirement benefit.</p>
+<h3 id="cna">CNA</h3>
+<p>CNA says it is a leading provider of professional liability for allied healthcare professionals, small businesses and practices, and it also writes for larger healthcare organizations. Best for: practices with nurse practitioners, therapists and other allied staff who want one carrier across roles.</p>
+<h3 id="magmutual">MagMutual</h3>
+<p>MagMutual says it has provided medical liability insurance for more than four decades, with risk management, defense and learning tools for members. It ranked fourth in 2025 by premium. Best for: groups in its core states that want a mutual with strong risk education.</p>
+<h3 id="coverys">Coverys</h3>
+<p>Coverys says it has more than 45 years of experience protecting healthcare and is rated A (Excellent) by AM Best. Best for: groups and facilities that want a healthcare-only carrier with risk analytics.</p>
+<h3 id="curi">Curi</h3>
+<p>Curi runs two businesses: Curi Insurance for malpractice and general liability, and Curi Advisory for business and clinical consulting. It also lists alternative insurance options for larger groups. Best for: practices that want insurance and practice advisory from one relationship.</p>
+<h3 id="chubb">Chubb</h3>
+<p>Chubb writes healthcare liability for hospitals, health systems and providers alongside property, cyber and other commercial lines. Best for: larger groups that want malpractice and business coverage from one global insurer.</p>
+<h3 id="regional-and-specialty-carriers">Regional and specialty carriers</h3>
+<ol><li>MLMIC. Part of the Berkshire Hathaway family and, by its own description, the largest malpractice insurer in New York, covering medical practices, dentists and hospitals.</li><li>TDIC. Founded by dentists, insures only dentists, with more than 24,000 dentist policyholders. A natural first quote for dental groups. See our <a href="/specialty/dental">dental page</a>.</li><li>State and specialty mutuals. Many states have a local mutual with deep courtroom history in that state. A broker can tell you which ones write your specialty.</li></ol>
+<h2 id="risk-retention-groups-and-group-options">Risk retention groups and group options</h2>
+<h3 id="risk-retention-groups-rrgs">Risk retention groups (RRGs)</h3>
+<p>An RRG is a liability insurer owned by its members, formed under the federal Liability Risk Retention Act of 1986, per the NAIC. It is licensed in one state and can write in others.</p>
+<p>Two things to know:</p>
+<ol><li>No guaranty fund. The NAIC says the law specifically precludes RRGs from state guaranty funds. In Texas, for example, a licensed insurer&#x27;s claims are backed by the guaranty association for up to $300,000 per claim if the carrier fails; an RRG&#x27;s are not.</li><li>Less rate regulation. The Texas Department of Insurance notes that RRG rates and policy forms are not regulated there.</li></ol>
+<p>RRGs can be a good fit for a specialty that the standard market prices high. Check the RRG&#x27;s financial statements, rating and reinsurance before you buy.</p>
+<h3 id="group-policies-and-entity-coverage">Group policies and entity coverage</h3>
+<p>A group can insure each clinician separately or buy one group policy. Points to compare in every quote:</p>
+<ol><li>Entity coverage. The practice itself can be named in a suit. Make sure the corporation or LLC is covered, not only the clinicians.</li><li>Shared or separate limits. With shared limits, one large claim can use up the limit for everyone. Separate limits cost more but protect each clinician.</li><li>Defense costs. The AMA notes that some carriers put defense costs inside the $1 million and $3 million limits. Outside is better.</li><li>Consent to settle. Both the AMA and TDC advise looking for it.</li><li>Financial strength. The AMA suggests at least an A minus rating from AM Best.</li><li>Captives. Large groups sometimes retain part of the risk through a captive or a self-insured retention. That needs actuarial and legal help.</li></ol>
+<h2 id="how-to-choose">How to choose</h2>
+<ol><li>Small group in one state. Get three quotes through a broker: one national carrier, one regional mutual, and one specialty option.</li><li>Group that hires often. Claims-made with prior acts for new hires, and clear tail terms in every employment agreement.</li><li>Surgical and procedural groups. Look at higher limits and defense outside limits. See our <a href="/specialty/orthopedics">orthopedics page</a>.</li><li>Dental groups. Start with TDIC and a dental program from a national carrier.</li><li>Several locations or states. Check that the carrier writes every state you work in, and that the entity is covered at each site. See our <a href="/specialty/medical-group">medical group page</a>.</li><li>Primary care. Premiums are lower than surgical lines, so service, consent and tail terms often matter more than price. See our <a href="/specialty/primary-care">primary care page</a>.</li><li>Planning a sale or merger. Price tail for every owner before you sign a letter of intent.</li></ol>
+<p>Start the process early. The AMA suggests three to four months before renewal; the Texas Department of Insurance says about six.</p>
+<p>Malpractice is one policy of several. For general liability, property, cyber, workers comp and owner coverage, see <a href="/guides/medical-practice-business-insurance/">What insurance does a medical practice need?</a> Running a med spa? See <a href="/guides/best-med-spa-insurance/">What is the best med spa insurance, and what does it cost?</a></p>
+</div></section>
+<section class="spec-faq" id="faq"><div class="wrap"><div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Frequently asked questions</h2></div>
+<div class="faq"><details><summary>Is claims-made or occurrence better for a group practice?</summary><p>Claims-made is cheaper in the early years and is what most groups buy. Occurrence costs more but never needs tail. If your group has frequent turnover, claims-made plus clear tail rules in your paperwork is the common answer.</p></details><details><summary>How much does tail coverage cost?</summary><p>Published guidance ranges from about one and a half to three times the annual premium, paid once. Free tail at retirement is common after five or more years with one carrier.</p></details><details><summary>Who pays tail when a clinician leaves?</summary><p>It depends on the employment agreement. Common terms are the employer pays, the clinician pays, or the cost is split based on years of service or the reason for leaving.</p></details><details><summary>What limits does a practice need?</summary><p>$1 million per claim and $3 million aggregate is the most common limit and a typical starting point. Surgeons and proceduralists, and some hospital credentialing rules, may call for more.</p></details><details><summary>Is a risk retention group safe?</summary><p>Many are well run, but RRGs are not covered by state guaranty funds. Review the group&#x27;s financial statements, rating and reinsurance, and compare with a licensed carrier quote.</p></details><details><summary>Why did my premium go up when I did not have a claim?</summary><p>Premiums follow state and specialty trends, and the AMA reports seven straight years of rising premiums through 2025. A claims-made policy also steps up as it matures over its early years.</p></details><details><summary>Should the practice entity have its own coverage?</summary><p>Yes, in most cases. A suit can name the practice as well as the clinician, so confirm the entity is covered and whether it shares limits with the clinicians.</p></details><details><summary>Do I need a broker?</summary><p>A broker who writes several malpractice carriers can compare quotes, entity terms and tail options. Some carriers also sell directly.</p></details></div></div></section>
+<section class="guide"><div class="gwrap">
+<h2 id="where-lucid-fits">Where Lucid fits</h2>
+<p>Lucid is not an insurer or a broker. Malpractice is one of the largest fixed costs in a practice, and that is where Lucid comes in.</p>
+<ol><li>Premiums booked correctly. Annual premiums paid up front are recorded as a prepaid expense and spread across the months they cover, so your monthly profit is not distorted in the month you pay.</li><li>Cash forecast. Lucid CFO services include cashflow forecasting, so a large annual premium or a renewal increase is planned for months ahead.</li><li>Tail in deal models. In buy-ins, partner exits and sales, Lucid builds tail cost into the model, so it is not a surprise at closing. See <a href="/guides/practice-partner-buy-in-loans/">practice partner buy-in loans</a> and <a href="/guides/practice-acquisition-loans/">practice acquisition loans</a>.</li><li>The CFO view. Budget vs actuals and a KPI dashboard show insurance as a share of revenue by location, next to your other overhead. See <a href="/guides/overhead-percentage-medical-practice/">overhead percentage for a medical practice</a>.</li><li>A dedicated CPA on your account, and 24/7 support in a shared Slack channel.</li></ol>
+<figure class="guide-quote"><blockquote><p>A sports-medicine surgeon running a portfolio of healthcare businesses - he leans on Lucid for real-time books, taxes, and CFO insight across every entity.</p></blockquote><figcaption>Dr. Frank McCormick, M.D., Founder, Sigma</figcaption></figure>
+<p>Lucid starts from $130 a month. See your price on the <a href="/pricing">pricing page</a> calculator. Month to month, no setup fee. See the <a href="/medical">medical practices page</a>.</p>
+<h2 id="sources-accessed-november-26-2026">Sources (accessed November 26, 2026)</h2>
+<ol><li>Triple-I, top 10 writers of medical professional liability insurance by direct premiums written, 2025: <a href="https://www.iii.org/table-chart/top-10-writers-of-medical-professional-liability-insurance-by-direct-premiums-written-2025" rel="noopener">https://www.iii.org/table-chart/top-10-writers-of-medical-professional-liability-insurance-by-direct-premiums-written-2025</a></li><li>AMA Policy Research Perspectives, medical liability premiums 2016 to 2025 (April 2026): <a href="https://www.ama-assn.org/system/files/prp-mlm-premiums-2026.pdf" rel="noopener">https://www.ama-assn.org/system/files/prp-mlm-premiums-2026.pdf</a></li><li>AMA, seventh straight year of premium increases (May 4, 2026): <a href="https://www.ama-assn.org/practice-management/sustainability/7th-straight-year-medical-liability-insurance-premiums-climb" rel="noopener">https://www.ama-assn.org/practice-management/sustainability/7th-straight-year-medical-liability-insurance-premiums-climb</a></li><li>AMA, malpractice coverage renewal, what to consider: <a href="https://www.ama-assn.org/practice-management/sustainability/medical-malpractice-coverage-renewal-what-consider" rel="noopener">https://www.ama-assn.org/practice-management/sustainability/medical-malpractice-coverage-renewal-what-consider</a></li><li>Texas Department of Insurance, medical liability insurance shopping guide: <a href="https://www.tdi.texas.gov/commercial/pcmedmal.html" rel="noopener">https://www.tdi.texas.gov/commercial/pcmedmal.html</a></li><li>AMA Insurance, what is tail coverage (May 21, 2026): <a href="https://amainsure.com/advice-resources/our-thinking/what-is-medical-malpractice-tail-coverage" rel="noopener">https://amainsure.com/advice-resources/our-thinking/what-is-medical-malpractice-tail-coverage</a></li><li>NAIC, risk retention groups (updated October 13, 2025): <a href="https://content.naic.org/insurance-topics/risk-retention-groups" rel="noopener">https://content.naic.org/insurance-topics/risk-retention-groups</a></li><li>TDC, completes acquisition of ProAssurance (June 26, 2026): <a href="https://www.thedoctors.com/about-the-doctors-company/newsroom/press-releases/2026/the-doctors-companycompletes-acquisitionofproassurance-corporation" rel="noopener">https://www.thedoctors.com/about-the-doctors-company/newsroom/press-releases/2026/the-doctors-companycompletes-acquisitionofproassurance-corporation</a></li><li>TDC, guide to selecting a malpractice insurer: <a href="https://www.thedoctors.com/articles/a-doctors-guide-to-selecting-a-medical-malpractice-insurer" rel="noopener">https://www.thedoctors.com/articles/a-doctors-guide-to-selecting-a-medical-malpractice-insurer</a></li><li>TDC, Tribute Plan summary: <a href="https://www.thedoctors.com/about-the-doctors-company/The-Tribute-Plan/tribute-plan-summary" rel="noopener">https://www.thedoctors.com/about-the-doctors-company/The-Tribute-Plan/tribute-plan-summary</a></li><li>MedPro Group, about: <a href="https://www.medpro.com/about" rel="noopener">https://www.medpro.com/about</a></li><li>MedPro Group, what makes MedPro different: <a href="https://www.medpro.com/what-makes-us-different" rel="noopener">https://www.medpro.com/what-makes-us-different</a></li><li>CNA, allied healthcare insurance: <a href="https://www.cna.com/industries/affinity/allied-healthcare" rel="noopener">https://www.cna.com/industries/affinity/allied-healthcare</a></li><li>MagMutual, company overview: <a href="https://www.magmutual.com/company-overview" rel="noopener">https://www.magmutual.com/company-overview</a></li><li>Coverys: <a href="https://www.coverys.com/" rel="noopener">https://www.coverys.com/</a></li><li>Curi, about us: <a href="https://curi.com/about-us" rel="noopener">https://curi.com/about-us</a></li><li>Chubb, healthcare organization insurance: <a href="https://www.chubb.com/us-en/business-insurance/industries/healthcare-organization-insurance.html" rel="noopener">https://www.chubb.com/us-en/business-insurance/industries/healthcare-organization-insurance.html</a></li><li>MLMIC: <a href="https://www.mlmic.com/" rel="noopener">https://www.mlmic.com/</a></li><li>TDIC, about us: <a href="https://www.tdicinsurance.com/Meet-TDIC/About-Us" rel="noopener">https://www.tdicinsurance.com/Meet-TDIC/About-Us</a></li><li>Lucid pricing and services: <a href="/pricing">https://www.lucid.now/pricing</a> and <a href="/medical">https://www.lucid.now/medical</a></li></ol>
+</div></section>
+<section class="spec-prose"><div class="wrap"><div class="prose spec-links">
+<details><summary>Related guides</summary><ul><li><a href="/guides/how-to-prepare-a-medical-practice-for-sale/">How do I prepare my practice for sale?</a></li><li><a href="/guides/practice-partner-buy-in-loans/">How Do I Finance a Practice Partner Buy-In?</a></li><li><a href="/guides/overhead-percentage-medical-practice/">What overhead percentage is normal for a medical practice?</a></li><li><a href="/guides/practice-acquisition-loans/">How Do I Finance Buying a Medical Practice?</a></li><li><a href="/guides/medical-practice-business-insurance/">What insurance does a medical practice need?</a></li><li><a href="/guides/best-med-spa-insurance/">What is the best med spa insurance, and what does it cost?</a></li></ul></details>
+</div></div></section>
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
