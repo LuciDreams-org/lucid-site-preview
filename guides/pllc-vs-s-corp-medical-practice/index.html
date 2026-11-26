@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>PLLC vs S Corp for a Medical Practice | Lucid</title>
+<meta name="description" content="How a PLLC, a professional corporation and an S corp election differ for a medical practice or med spa, what each costs in tax, and when the switch pays." />
+<link rel="canonical" href="https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="PLLC vs S Corp for a Medical Practice | Lucid" />
+<meta property="og:description" content="How a PLLC, a professional corporation and an S corp election differ for a medical practice or med spa, what each costs in tax, and when the switch pays." />
+<meta property="og:url" content="https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","@id":"https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/#article","headline":"PLLC vs S corp for a medical practice","description":"How a PLLC, a professional corporation and an S corp election differ for a medical practice or med spa, what each costs in tax, and when the switch pays.","url":"https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/","datePublished":"2026-11-26","dateModified":"2026-11-26","author":{"@id":"https://www.lucid.now/#organization"},"publisher":{"@id":"https://www.lucid.now/#organization"},"mainEntityOfPage":"https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/"},{"@type":"FAQPage","@id":"https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/#faq","mainEntity":[{"@type":"Question","name":"Is a PLLC an S corp?","acceptedAnswer":{"@type":"Answer","text":"No. A PLLC is a legal form your state creates, and an S corp is a way the IRS taxes a business. By default, the IRS taxes a one-owner PLLC like a sole proprietor and a multi-owner PLLC like a partnership. If you file Form 2553 on time, you can have your PLLC taxed as an S corp."}},{"@type":"Question","name":"Should my medical practice be an LLC or an S corp?","acceptedAnswer":{"@type":"Answer","text":"You can be both. In most states, you'd form a PLLC (or a PC), then decide whether to elect S corp tax. If your profit is modest or uneven, the default is usually simpler. If your profit is steadily well above a salary you could defend, ask your CPA to run the numbers both ways, as in Example 1."}},{"@type":"Question","name":"At what income does an S corp make sense for a practice owner?","acceptedAnswer":{"@type":"Answer","text":"The IRS sets no income level. You'd compare the payroll tax you'd save on distributions with the yearly cost of payroll, the extra return and state fees. In Example 1, an owner with $150,000 of profit and a $90,000 salary saves about $4,400 after costs."}},{"@type":"Question","name":"Can someone without a medical license own a med spa?","acceptedAnswer":{"@type":"Answer","text":"It depends on your state. Many states don't let someone without a medical license own the part of a med spa that does medical treatments. Owners in that position often own a management company that runs the business side under contract with a clinician-owned practice. Have a healthcare attorney in your state review the setup before you open."}},{"@type":"Question","name":"What is the 2% rule for S corps?","acceptedAnswer":{"@type":"Answer","text":"If you own more than 2% of an S corp, the IRS treats the health insurance the practice pays for you as wages on your W-2, usually without Social Security or Medicare tax. You then deduct the premiums on your personal return. A 2% owner also can't join a small employer health reimbursement arrangement (QSEHRA)."}},{"@type":"Question","name":"Can I switch my practice to an S corp this year, and what is the deadline?","acceptedAnswer":{"@type":"Answer","text":"Usually, yes. To be an S corp for all of 2027, you'll file Form 2553 by March 15, 2027. A new practice has 2 months and 15 days from the day its tax year starts. If you've missed the date, the IRS may still accept a late election under Rev. Proc. 2013-30 if you have a reasonable cause."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"PLLC vs S corp for a medical practice","item":"https://www.lucid.now/guides/pllc-vs-s-corp-medical-practice/"}]}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+</style>
+<style id="lc-page">
+.lc-sec{padding:6px 0 0;}
+.lc-sec .article-wrap{margin:0 auto;}
+.lc-sec .article-body h2{margin-top:34px;scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.lc-intro{padding-top:22px;}
+.lc-intro .article-body > :first-child,.lc-intro.article-body > :first-child{margin-top:0;}
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li,.spec-sub,.spec-faq summary,.spec-faq details p{text-wrap:pretty;}
+.article-body a.btn,.article-body a.btn:hover{text-decoration:none;}
+.article-body a.btn-primary,.article-body a.btn-primary:hover{color:var(--cta-ink);}
+.article-body a.btn-ghost{color:var(--brand-ink);}
+.article-body .article-cta{margin:32px 0;}
+.article-body .article-cta p:last-of-type{margin-bottom:18px;}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-soon{color:var(--muted);font-style:italic;}
+.spec-hero .lc-price{margin:-8px auto 20px;font-size:.98rem;}
+.spec-hero .lc-price a{color:var(--brand-ink);text-decoration:underline;}
+.spec-hero .lc-byline{color:var(--muted);font-size:.92rem;margin:16px auto 0;max-width:58ch;}
+.spec-hero .lc-byline a{color:inherit;}
+.spec-faq{padding:56px 0;}
+.spec-faq .lc-faq-intro{max-width:780px;margin:18px auto 0;color:var(--muted);font-size:.95rem;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+.spec-faq .faq details a{color:var(--brand-ink);text-decoration:underline;}
+@media (max-width:640px){
+.lc-sec .article-body h2{font-size:1.4rem;}
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+.spec-faq{padding:40px 0;}
+}
+.lc-cite{font-size:.9em;}
+.article-body .article-cta a.btn{color:var(--cta-ink);text-decoration:none}
+</style>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>PLLC vs S corp for a<span class="grad"> medical practice</span></h1>
+    <p class="spec-sub">Most owners choose S corp tax once the payroll tax they&#39;d save is clearly more than the extra cost of running one. A PLLC and a professional corporation (PC) are legal forms your state lets a medical practice use. An S corp is a tax choice you make with the IRS, and a PLLC or a PC can make it.<!-- CPA CHECK: a PLLC or PC can elect S corp tax; the trade-off as stated. --></p>
+    <div class="spec-hero-cta">
+      <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a> <a href="/pricing" class="btn btn-ghost">See your price</a>
+    </div>
+    <p class="cta-note"><span class="ri">✓ Free 30-min consult</span> <span class="ri">✓ Month-to-month, cancel anytime</span></p>
+    <p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed November 26, 2026</p>
+    <!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No page goes live without this line. -->
+  </div>
+</section>
+
+<section class="lc-sec lc-intro">
+  <div class="wrap article-wrap article-body">
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="key-points">
+  <div class="wrap article-wrap article-body">
+<h2>Key points</h2>
+<ul>
+<li>In Example 1, an owner with $150,000 of profit and a $90,000 salary saves about $4,400 after costs.</li>
+<li>A PLLC isn&#39;t an S corp. You choose S corp tax by filing Form 2553 with the IRS.</li>
+<li>As an S corp owner, you pay Social Security and Medicare tax only on the reasonable salary you pay yourself through payroll.</li>
+<li>For 2026, you pay the 12.4% Social Security part only on the first $184,500 of your earnings, so the saving doesn&#39;t keep growing as your profit grows.</li>
+<li>To be taxed as an S corp for all of 2027, you&#39;ll generally file Form 2553 by March 15, 2027.</li>
+</ul>
+<!-- CPA CHECK: each key point, against the sections below and their sources, including the Example 1 figure standing on its own as the first key point. -->
+  </div>
+</section>
+
+<section class="lc-sec" id="whats-the-difference-between-a-pllc-a-pc-and-an-s-corp">
+  <div class="wrap article-wrap article-body">
+<h2>What&#39;s the difference between a PLLC, a PC and an S corp?</h2>
+<p>A PLLC and a PC are set up under state law; an S corp is a federal tax status. Your state decides which legal form a licensed medical practice can use. The IRS then taxes that form by default, unless you choose S corp or C corp tax instead.<!-- CPA CHECK: legal form vs tax status; default classification. --></p>
+<p><strong>A PLLC (professional limited liability company)</strong> is an LLC that your state reserves for licensed professionals. <strong>A professional corporation (PC)</strong> is a corporation your state reserves for licensed professionals. <strong>Self-employment tax</strong> is the 15.3% Social Security and Medicare tax you pay on your own business profit. <strong>A reasonable salary</strong> is the pay an S corp owner gives themselves through payroll for the work they do.<!-- CPA CHECK: each definition. --><!-- ATTORNEY CHECK: PLLC and PC definitions; some states call them PLLC, PC or PSC, and some don't offer a PLLC. --></p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Legal form</th>
+<th>How the IRS taxes it by default</th>
+<th>Federal return</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sole proprietor (no company)</td>
+<td>Your personal return</td>
+<td>Form 1040 with Schedule C</td>
+</tr>
+<tr>
+<td>PLLC with one owner</td>
+<td>As if there were no company</td>
+<td>Form 1040 with Schedule C, or Form 1120-S as an S corp</td>
+</tr>
+<tr>
+<td>PLLC with more than one owner</td>
+<td>As a partnership</td>
+<td>Form 1065, or Form 1120-S as an S corp</td>
+</tr>
+<tr>
+<td>Professional corporation (PC)</td>
+<td>As a C corp</td>
+<td>Form 1120, or Form 1120-S as an S corp</td>
+</tr>
+</tbody></table></div>
+<p>The IRS explains the default rules on its <a href="https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc">LLC page</a>.<!-- CPA CHECK: every row of this table, again: it's now 3 columns, with the "Can it choose S corp tax?" column dropped, so the Federal return column alone shows which forms can file Form 1120-S. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="how-does-an-s-corp-lower-a-practice-owners-tax">
+  <div class="wrap article-wrap article-body">
+<h2>How does an S corp lower a practice owner&#39;s tax?</h2>
+<p>As a default PLLC owner, you pay self-employment tax on nearly all of your profit. As an S corp owner, you pay Social Security and Medicare tax only on your salary, and you take the rest of the profit as distributions without that tax. Your income tax changes less, though your QBI deduction can shift, as explained below.<!-- CPA CHECK: self-employment tax on PLLC profit; no Social Security or Medicare tax on distributions; income tax effect. --></p>
+<p>Self-employment tax is 12.4% for Social Security and 2.9% for Medicare. For 2026, you pay the Social Security part only on the first $184,500 of combined wages and self-employment earnings. You also pay an extra 0.9% Medicare tax above $200,000 if you&#39;re single, or $250,000 married filing jointly (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employment-tax-social-security-and-medicare-taxes">IRS, self-employment tax</a>).<!-- CPA CHECK: the 15.3% split, the 2026 wage base of $184,500 and the 0.9% thresholds. --></p>
+<p><strong>Example 1: one owner, two profit levels.</strong> A single owner runs a PLLC, has no other wages and uses 2026 rates. Self-employment tax applies to 92.35% of profit. The salaries are assumptions, not a guide to what you should pay yourself. The table leaves out income tax.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Example</th>
+<th align="right">$150,000 profit</th>
+<th align="right">$350,000 profit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Self-employment tax plus the 0.9% added Medicare tax, as a default PLLC</td>
+<td align="right">$21,194</td>
+<td align="right">$33,361</td>
+</tr>
+<tr>
+<td>Salary the owner pays themselves as an S corp</td>
+<td align="right">$90,000</td>
+<td align="right">$180,000</td>
+</tr>
+<tr>
+<td>Payroll tax on that salary (both halves)</td>
+<td align="right">$13,770</td>
+<td align="right">$27,540</td>
+</tr>
+<tr>
+<td>Tax saved before costs</td>
+<td align="right">$7,424</td>
+<td align="right">$5,821</td>
+</tr>
+<tr>
+<td>Assumed yearly cost to run the S corp</td>
+<td align="right">$3,000</td>
+<td align="right">$3,000</td>
+</tr>
+<tr>
+<td>Saved after costs</td>
+<td align="right">$4,424</td>
+<td align="right">$2,821</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: every figure in Example 1, including the 92.35% factor, the 0.9% added Medicare tax in the $350,000 column ($1,109 of the $33,361) and the $3,000 assumed running cost. -->
+
+<p>In this example, the owner with more profit saves less. At $180,000, the salary is close to the $184,500 Social Security limit, so the owner saves mostly the Medicare part on the distributions. The bigger the salary you can justify, the smaller the saving.<!-- CPA CHECK: why the saving narrows near the wage base. --></p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-does-it-cost-to-run-a-practice-as-an-s-corp">
+  <div class="wrap article-wrap article-body">
+<h2>What does it cost to run a practice as an S corp?</h2>
+<p>As an S corp, you&#39;ll run payroll for yourself, file a separate business return on Form 1120-S, and pay any fees your state charges S corps. Your CPA&#39;s fee for the extra return and your payroll service are the main new costs, and you&#39;ll pay them every year, including the years profit is low.<!-- CPA CHECK: the added filing and payroll duties. --></p>
+<ul>
+<li><strong>Payroll for yourself:</strong> you&#39;ll file Form 941 each quarter (<a href="https://www.irs.gov/publications/p15">IRS Publication 15</a>).</li>
+<li><strong>A business return:</strong> you&#39;ll file <a href="https://www.irs.gov/instructions/i1120s">Form 1120-S</a> by March 15, with a Schedule K-1 for each owner.</li>
+<li><strong>State costs:</strong> some states charge S corps a minimum tax or fee, and some cities don&#39;t recognize S corp status.</li>
+</ul>
+<!-- CPA CHECK: Form 941 duty for owner salary, Form 1120-S due date and K-1s, state and city S corp treatment; name no state without sign-off. -->
+  </div>
+</section>
+
+<section class="lc-sec" id="at-what-profit-does-an-s-corp-start-to-pay-off">
+  <div class="wrap article-wrap article-body">
+<h2>At what profit does an S corp start to pay off?</h2>
+<p>No single profit number fits every practice. You&#39;ll save roughly 15.3% of the profit you take as distributions, up to the Social Security limit, and only 2.9% to 3.8% above it. When those costs eat most of the saving, S corp tax isn&#39;t worth it yet.<!-- CPA CHECK: the saving rates and the method. Brief rule: no break-even figure without CPA sign-off. --></p>
+<p>To estimate your own, with your CPA:</p>
+<ol>
+<li>Estimate the practice&#39;s yearly profit before you pay yourself.</li>
+<li>Subtract a salary you could defend for your clinical and management work.</li>
+<li>Figure the payroll and self-employment tax both ways, as in Example 1.</li>
+<li>Subtract the yearly cost of payroll, the extra return and state fees.</li>
+</ol>
+<p>A lower salary raises the saving on paper, but the IRS can treat distributions as wages if your salary is too low for the work you do (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues">IRS, S corporation compensation</a>). For how owners set that salary, read <a href="/blog/medical-s-corps-set-reasonable-owner-salaries/">how medical S corps set reasonable owner salaries</a>.<!-- CPA CHECK: the IRS can recharacterize distributions as wages. --></p>
+<p>S corp tax also changes the 20% qualified business income (QBI) deduction. <strong>The QBI deduction</strong> is a deduction of up to 20% of business profit for owners of pass-through businesses. Health care is a specified service, so you lose some or all of it above an income threshold the IRS sets each year, and your S corp salary doesn&#39;t count as QBI (<a href="https://www.irs.gov/instructions/i8995">Instructions for Form 8995</a>).<!-- CPA CHECK: health care is a specified service; the 2026 thresholds and phase-in range; S corp salary is not QBI. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-s-corp-rules-does-a-practice-owner-have-to-follow">
+  <div class="wrap article-wrap article-body">
+<h2>What S corp rules does a practice owner have to follow?</h2>
+<p>The IRS lets a business be an S corp only if it has 100 or fewer shareholders, one class of stock, and no nonresident alien or business-entity shareholders. As an S corp owner, you&#39;ll also follow special rules on your own health insurance and on ending the election (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporations">IRS, S corporations</a>).<!-- CPA CHECK: S corp eligibility tests. --></p>
+<p><strong>The 2% rule.</strong> If you own more than 2% of an S corp, the practice adds the health insurance it pays for you to your W-2 wages, and you deduct it on your personal return.<!-- CPA CHECK: the 2% shareholder health insurance treatment and its conditions. --></p>
+<p><strong>Example 2: the 2% rule.</strong> An S corp practice pays $14,400 a year for its sole owner&#39;s health insurance under a plan for its employees, with the policy in the owner&#39;s name or the practice&#39;s.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Where the $14,400 shows up</th>
+<th align="right">Amount</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The S corp&#39;s deduction, as wages</td>
+<td align="right">$14,400</td>
+</tr>
+<tr>
+<td>The owner&#39;s W-2, Box 1 (wages for income tax)</td>
+<td align="right">$14,400</td>
+</tr>
+<tr>
+<td>The owner&#39;s W-2, Boxes 3 and 5 (Social Security and Medicare wages)</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>The owner&#39;s self-employed health insurance deduction on Form 1040</td>
+<td align="right">Up to $14,400</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: every row of Example 2, against the IRS page on S corporation compensation and medical insurance, including its condition that the practice pays the premiums under a plan for all or a class of its employees. -->
+
+<p><strong>The five-year rule.</strong> If you end your S corp election, you&#39;ll generally need IRS consent to choose S corp tax again before the fifth tax year after it ended (<a href="https://www.irs.gov/instructions/i2553">Instructions for Form 2553</a>).<!-- CPA CHECK: five-year rule, Regulations section 1.1362-5. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="how-and-when-can-a-practice-switch-to-s-corp-tax">
+  <div class="wrap article-wrap article-body">
+<h2>How and when can a practice switch to S corp tax?</h2>
+<p>You switch by filing Form 2553, signed by every owner. You&#39;ll file it no later than 2 months and 15 days after the start of the tax year you want it to cover, or at any time in the year before. For a calendar year 2027 election, that&#39;s Monday, March 15, 2027.<!-- CPA CHECK: Form 2553 timing, owner signatures and the March 15, 2027 date. --></p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>When you want S corp tax to start</th>
+<th>You file Form 2553 by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>January 1, 2027, for a practice already open</td>
+<td>March 15, 2027</td>
+</tr>
+<tr>
+<td>July 1, 2027, for a new PLLC that opens that day</td>
+<td>September 15, 2027</td>
+</tr>
+<tr>
+<td>A date you&#39;ve already missed</td>
+<td>Ask your CPA about late election relief</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: both computed dates under the 2-month and 15-day rule. -->
+
+<p>A PLLC doesn&#39;t need a separate form to be treated as a corporation first; the IRS treats a timely Form 2553 as that choice. Every 2027 filing date is in the 2027 tax deadlines for medical practices guide.<!-- TODO: link "2027 tax deadlines for medical practices" to /guides/medical-practice-tax-deadlines-2027/ once that guide is live. --> <!-- CPA CHECK: Form 2553 standing in for Form 8832. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="should-a-medical-practice-be-a-c-corp-instead">
+  <div class="wrap article-wrap article-body">
+<h2>Should a medical practice be a C corp instead?</h2>
+<p>Few practice owners choose C corp tax. A C corp pays a flat 21% federal tax on its profit, and you pay tax again when it pays you dividends. Most owners take the profit as salary to avoid that, which leaves little profit in the company.<!-- CPA CHECK: the 21% flat rate under the Instructions for Form 1120; double tax on dividends; qualified personal service corporation treatment. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="who-can-own-a-med-spa-if-you-arent-a-licensed-clinician">
+  <div class="wrap article-wrap article-body">
+<h2>Who can own a med spa if you aren&#39;t a licensed clinician?</h2>
+<p>In many states, only a licensed medical professional can own the part of a med spa that does medical treatments. If you aren&#39;t one, you can&#39;t simply own the whole med spa as one PLLC. Owners in that position often set up two companies instead.<!-- ATTORNEY CHECK: ownership rules vary by state; name no state without a healthcare attorney's sign-off. --></p>
+<p><strong>Corporate practice of medicine</strong> is the rule, in states that have it, that a company owned by people without a medical license can&#39;t provide medical care or employ the clinicians who do. <strong>A management services organization (MSO)</strong> is a company that runs the business side of a practice, such as staff, space, marketing and billing, under a contract with the medical practice.<!-- ATTORNEY CHECK: both definitions. --></p>
+<p>In a common setup, a licensed clinician owns the medical practice, and you own the MSO. The practice pays the MSO a management fee. Your share of the profit lands in the MSO, so the MSO&#39;s tax choice, whether PLLC, S corp or C corp, decides how you&#39;re taxed on it. A healthcare attorney should draw up the fee and the contract, because states set limits on both.<!-- ATTORNEY CHECK: the two-company setup and fee limits. --><!-- CPA CHECK: how the MSO's tax choice applies to the owner's profit. --></p>
+<p>For the books of a two-company setup, see <a href="/specialty/medical-spa">bookkeeping for med spas</a>.</p>
+  </div>
+</section>
+
+<section class="lc-sec" id="how-do-state-rules-change-the-answer-for-dental-and-physical-therapy-practices">
+  <div class="wrap article-wrap article-body">
+<h2>How do state rules change the answer for dental and physical therapy practices?</h2>
+<p>Your state&#39;s rules can change both the legal form you can use and the tax you&#39;ll pay each year. Dental boards and physical therapy boards set their own ownership rules, and some states don&#39;t offer a PLLC to every profession.<!-- ATTORNEY CHECK: ownership and PLLC availability vary by state and profession. --><!-- CPA CHECK: state tax on the practice varies; name no state without sign-off. --></p>
+<ul>
+<li><strong>Dental practices:</strong> check which forms your state dental board allows. See <a href="/specialty/dental">bookkeeping for dental practices</a>.</li>
+<li><strong>Physical therapy practices:</strong> check whether your state lets a PT practice form a PLLC. See <a href="/specialty/physical-therapy">bookkeeping for physical therapy practices</a>.</li>
+</ul>
+<p>For the other ways owners lower their tax during the year, read tax planning for medical practice owners.<!-- TODO link held: "For the other ways owners lower their tax during the year, read tax planning for medical practice owners." -> /guides/tax-planning-for-medical-practice-owners/. Note for Reid: add this link only after the tax planning guide is live. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-to-ask-your-cpa-before-you-choose">
+  <div class="wrap article-wrap article-body">
+<h2>What to ask your CPA before you choose</h2>
+<ul>
+<li>What salary could I defend for the work I do, and what would the S corp save me after costs?</li>
+<li>What will my state and city charge an S corp each year?</li>
+<li>Should I file Form 2553 for 2027, and can I still make the March 15 date?</li>
+<li>If I own a med spa, does my setup need an MSO, and who should review the contract?</li>
+</ul>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-lucid-does-for-practice-owners-choosing-a-structure">
+  <div class="wrap article-wrap article-body">
+<h2>What Lucid does for practice owners choosing a structure</h2>
+<p>Lucid (lucid.now) does bookkeeping and taxes for <a href="/medical">medical practices</a> and med spas. For a new practice, Lucid offers clean books, entity setup and a tax plan from day one. Lucid&#39;s experts handle quarterly estimates and &quot;S-corp strategy,&quot; and you get &quot;a dedicated CPA who knows your specialty,&quot; available 24/7. Lucid plans your taxes all year, not just in April.</p>
+<p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  </div>
+</section>
+
+<section class="spec-faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Questions practice owners ask about PLLCs and S corps</h2></div>
+    <div class="lc-faq-intro"><p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p></div>
+    <div class="faq">
+      <details open><summary>Is a PLLC an S corp?</summary><p>No. A PLLC is a legal form your state creates, and an S corp is a way the IRS taxes a business. By default, the IRS taxes a one-owner PLLC like a sole proprietor and a multi-owner PLLC like a partnership. If you file Form 2553 on time, you can have your PLLC taxed as an S corp.<!-- CPA CHECK: default classification and the Form 2553 election. --></p></details>
+      <details><summary>Should my medical practice be an LLC or an S corp?</summary><p>You can be both. In most states, you&#39;d form a PLLC (or a PC), then decide whether to elect S corp tax. If your profit is modest or uneven, the default is usually simpler. If your profit is steadily well above a salary you could defend, ask your CPA to run the numbers both ways, as in Example 1.<!-- CPA CHECK: the general guidance. --><!-- ATTORNEY CHECK: PLLC or PC by state. --></p></details>
+      <details><summary>At what income does an S corp make sense for a practice owner?</summary><p>The IRS sets no income level. You&#39;d compare the payroll tax you&#39;d save on distributions with the yearly cost of payroll, the extra return and state fees. In Example 1, an owner with $150,000 of profit and a $90,000 salary saves about $4,400 after costs.<!-- CPA CHECK: no IRS income level; the Example 1 figure. --></p></details>
+      <details><summary>Can someone without a medical license own a med spa?</summary><p>It depends on your state. Many states don&#39;t let someone without a medical license own the part of a med spa that does medical treatments. Owners in that position often own a management company that runs the business side under contract with a clinician-owned practice. Have a healthcare attorney in your state review the setup before you open.<!-- ATTORNEY CHECK: ownership rules and the management company setup vary by state. --></p></details>
+      <details><summary>What is the 2% rule for S corps?</summary><p>If you own more than 2% of an S corp, the IRS treats the health insurance the practice pays for you as wages on your W-2, usually without Social Security or Medicare tax. You then deduct the premiums on your personal return. A 2% owner also can&#39;t join a small employer health reimbursement arrangement (QSEHRA).<!-- CPA CHECK: the 2% shareholder rules and QSEHRA exclusion. --></p></details>
+      <details><summary>Can I switch my practice to an S corp this year, and what is the deadline?</summary><p>Usually, yes. To be an S corp for all of 2027, you&#39;ll file Form 2553 by March 15, 2027. A new practice has 2 months and 15 days from the day its tax year starts. If you&#39;ve missed the date, the IRS may still accept a late election under Rev. Proc. 2013-30 if you have a reasonable cause.<!-- CPA CHECK: the March 15, 2027 date, the new-practice window and late election relief. --></p></details>
+    </div>
+  </div>
+</section>
+
+<section class="lc-sec" id="sources">
+  <div class="wrap article-wrap article-body">
+<h2>Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/instructions/i2553">Instructions for Form 2553, Election by a Small Business Corporation</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporations">S corporations</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/self-employment-tax-social-security-and-medicare-taxes">Self-employment tax (Social Security and Medicare taxes)</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues">S corporation compensation and medical insurance issues</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc">Limited liability company (LLC)</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1120s">Instructions for Form 1120-S</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1120">Instructions for Form 1120</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i8995">Instructions for Form 8995, Qualified Business Income Deduction</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15">Publication 15, Employer&#39;s Tax Guide</a></li>
+</ul>
+  </div>
+</section>
+
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+      <a href="/book?cta=TalkToExpert" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
