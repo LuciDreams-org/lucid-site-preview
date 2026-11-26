@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Tax Planning for Medical Practice Owners | Lucid</title>
+<meta name="description" content="Tax planning for medical practice, dental and med spa owners: equipment, retirement plans, tax credits, state tax and year-end timing, with two examples." />
+<link rel="canonical" href="https://www.lucid.now/guides/tax-planning-for-medical-practice-owners/" />
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any" />
+<meta name="theme-color" content="#7C3AED" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Tax Planning for Medical Practice Owners | Lucid" />
+<meta property="og:description" content="Tax planning for medical practice, dental and med spa owners: equipment, retirement plans, tax credits, state tax and year-end timing, with two examples." />
+<meta property="og:url" content="https://www.lucid.now/guides/tax-planning-for-medical-practice-owners/" />
+<meta property="og:image" content="https://www.lucid.now/assets/img/hero-woman.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin />
+<link rel="stylesheet" href="/styles.css?v=202611041654" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"Tax planning for medical practice owners","description":"Tax planning for medical practice, dental and med spa owners: equipment, retirement plans, tax credits, state tax and year-end timing, with two examples.","url":"https://www.lucid.now/guides/tax-planning-for-medical-practice-owners/","datePublished":"2026-11-26","dateModified":"2026-11-26","author":{"@id":"https://www.lucid.now/#organization"},"publisher":{"@id":"https://www.lucid.now/#organization"},"mainEntityOfPage":"https://www.lucid.now/guides/tax-planning-for-medical-practice-owners/"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What can a medical practice owner write off?","acceptedAnswer":{"@type":"Answer","text":"You can write off the ordinary costs of running the practice: staff pay, rent, equipment, supplies, malpractice insurance, licenses, continuing education and software. You'll also deduct your own retirement contributions and, if you buy your own coverage, your health insurance. You can't deduct your personal medical bills as a practice expense."}},{"@type":"Question","name":"Can I write off a laser or other medical equipment in the year I buy it?","acceptedAnswer":{"@type":"Answer","text":"Usually, yes, if it's ready to use that year. For 2026, Section 179 covers up to $2,560,000 of equipment, and bonus depreciation covers most equipment at 100%. If the laser arrives in December but isn't installed and ready for patients until January, you'll deduct it in the new year. Your state may not follow the federal rule."}},{"@type":"Question","name":"What retirement plan saves the most tax for a practice owner?","acceptedAnswer":{"@type":"Answer","text":"For a solo owner, a Solo 401(k) often lets you put away the most, up to $72,000 for 2026 before catch-up amounts. With staff, a safe harbor 401(k) works but means contributing for your team too. Owners close to retirement with high profit may save more with a cash balance plan."}},{"@type":"Question","name":"Are injectables and skincare a med spa buys deductible right away?","acceptedAnswer":{"@type":"Answer","text":"Usually not. Injectables and retail skincare are inventory, so you deduct them as cost of goods sold when you use them in a treatment or sell them. Product still on the shelf at December 31 carries into next year. Some small businesses can use simpler inventory rules, so ask your CPA which method you're on."}},{"@type":"Question","name":"What tax credits can a medical practice claim?","acceptedAnswer":{"@type":"Answer","text":"If you have 100 or fewer employees and start a retirement plan, you may claim up to $5,000 a year for three years toward the setup costs. The Work Opportunity Tax Credit covers staff who started by December 31, 2025, unless Congress renews it. Your CPA can check which others fit, including state credits."}},{"@type":"Question","name":"How much does tax planning for a medical practice cost?","acceptedAnswer":{"@type":"Answer","text":"The cost depends on who does it, how many owners and locations you have, and whether the price includes your returns. Ask any provider what's included: year-round planning or a single meeting, the business return, your personal return, and the quarterly estimates. Lucid lists its prices at lucid.now/pricing."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.lucid.now/guides/"},{"@type":"ListItem","position":3,"name":"Tax planning for medical practice owners","item":"https://www.lucid.now/guides/tax-planning-for-medical-practice-owners/"}]}]}
+</script>
+<style>
+.spec-pains{padding:56px 0;}
+.spec-pains .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:26px auto 0;}
+.spec-pains .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.spec-pains .scard h3{font-size:1.04rem;margin:0 0 8px;}
+.spec-pains .scard p{margin:0 0 10px;color:var(--muted);font-size:.93rem;line-height:1.55;}
+.spec-pains .scard p.how{margin:auto 0 0;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-soft);}
+.spec-pains .scard p.how strong{color:var(--brand);}
+.spec-after{padding:40px 0;}
+.spec-after .after-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:26px auto 0;}
+.spec-after .scard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.spec-after .scard h3{font-size:1.02rem;margin:0 0 6px;}
+.spec-after .scard p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;}
+.spec-faq{padding:56px 0;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+@media (max-width:1024px){.spec-pains .pain-grid{grid-template-columns:1fr 1fr;}.spec-after .after-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:640px){.spec-pains .pain-grid,.spec-after .after-grid{grid-template-columns:1fr;}.spec-pains,.spec-faq{padding:40px 0;}}
+</style>
+<style id="lc-page">
+.lc-sec{padding:6px 0 0;}
+.lc-sec .article-wrap{margin:0 auto;}
+.lc-sec .article-body h2{margin-top:34px;scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.lc-intro{padding-top:22px;}
+.lc-intro .article-body > :first-child,.lc-intro.article-body > :first-child{margin-top:0;}
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li,.spec-sub,.spec-faq summary,.spec-faq details p{text-wrap:pretty;}
+.article-body a.btn,.article-body a.btn:hover{text-decoration:none;}
+.article-body a.btn-primary,.article-body a.btn-primary:hover{color:var(--cta-ink);}
+.article-body a.btn-ghost{color:var(--brand-ink);}
+.article-body .article-cta{margin:32px 0;}
+.article-body .article-cta p:last-of-type{margin-bottom:18px;}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-soon{color:var(--muted);font-style:italic;}
+.spec-hero .lc-price{margin:-8px auto 20px;font-size:.98rem;}
+.spec-hero .lc-price a{color:var(--brand-ink);text-decoration:underline;}
+.spec-hero .lc-byline{color:var(--muted);font-size:.92rem;margin:16px auto 0;max-width:58ch;}
+.spec-hero .lc-byline a{color:inherit;}
+.spec-faq{padding:56px 0;}
+.spec-faq .lc-faq-intro{max-width:780px;margin:18px auto 0;color:var(--muted);font-size:.95rem;}
+.spec-faq .faq{max-width:780px;margin:26px auto 0;}
+.spec-faq .faq details{border-bottom:1px solid var(--line);padding:20px 0;}
+.spec-faq .faq summary{font-weight:700;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:1.05rem;}
+.spec-faq .faq summary::-webkit-details-marker{display:none;}
+.spec-faq .faq summary::after{content:"+";font-size:1.5rem;color:var(--brand);font-weight:400;flex:none;}
+.spec-faq .faq details[open] summary::after{content:"-";}
+.spec-faq .faq details p{margin:14px 0 0;color:var(--muted);}
+.spec-faq .faq details a{color:var(--brand-ink);text-decoration:underline;}
+@media (max-width:640px){
+.lc-sec .article-body h2{font-size:1.4rem;}
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+.spec-faq{padding:40px 0;}
+}
+.lc-cite{font-size:.9em;}
+.article-body .article-cta a.btn{color:var(--cta-ink);text-decoration:none}
+.lc-sec .article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px)}
+</style>
+</head>
+<body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/platforms">Platforms</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#testimonials">Reviews</a>
+      <a href="/security">Security</a>
+      <div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">▾</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">🩺</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">🦴</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">🧴</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">🦷</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">🏥</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">👁️</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">💆</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">🧠</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">🏃</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">🥗</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">🗣️</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+    </nav>
+    <div class="nav-cta">
+      <a href="/pricing" class="btn btn-ghost">Talk to an Expert</a>
+      <a href="/pricing" class="btn btn-primary">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="spec-hero">
+  <div class="wrap">
+    <a class="spec-eyebrow" href="/guides/">Guides</a>
+    <h1>Tax planning for medical<span class="grad"> practice owners</span></h1>
+    <p class="spec-sub">Tax planning for a practice owner means making a few decisions during the year that lower what the practice owes: when you buy equipment, which retirement plan you open, how the IRS taxes your practice, and which state tax and credit rules you use. Some, like buying equipment, only count for this year if you act by December 31.<!-- CPA CHECK: which ways have a December 31 deadline. --></p>
+    <div class="spec-hero-cta">
+      <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a> <a href="/pricing" class="btn btn-ghost">See your price</a>
+    </div>
+    <p class="cta-note"><span class="ri">✓ Free 30-min consult</span> <span class="ri">✓ Month-to-month, cancel anytime</span></p>
+    <p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed November 26, 2026</p>
+    <!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No page goes live without this line. -->
+  </div>
+</section>
+
+<section class="lc-sec lc-intro">
+  <div class="wrap article-wrap article-body">
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<p>This guide covers the taxes your practice pays as a business. It doesn&#39;t cover deducting your own medical bills or treatments.</p>
+  </div>
+</section>
+
+<section class="lc-sec" id="key-points">
+  <div class="wrap article-wrap article-body">
+<h2>Key points</h2>
+<ul>
+<li>For 2026, you can generally deduct up to $2,560,000 of equipment in the year it&#39;s ready to use, under Section 179.</li>
+<li>If you work alone, a Solo 401(k) lets you put away up to $72,000 for 2026, counting your own deferral and the practice&#39;s contribution.</li>
+<li>In many states, your PLLC or S corp can pay state income tax itself, so you get a federal deduction beyond the personal cap.</li>
+</ul>
+<!-- CPA CHECK: each key point, against the sections and sources below. -->
+  </div>
+</section>
+
+<section class="lc-sec" id="what-are-the-10-ways-practice-owners-lower-their-tax">
+  <div class="wrap article-wrap article-body">
+<h2>What are the 10 ways practice owners lower their tax?</h2>
+<p>Most practice owners use only a few of the 10 ways in the table below. A solo owner with no staff will lean on retirement plans and equipment; a practice with staff and partners has more to gain from the S corp election and the state tax program.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th align="right">#</th>
+<th>Way</th>
+<th>Who it suits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td><a href="#way-1">Deduct equipment the year it&#39;s ready to use</a></td>
+<td>Any practice buying devices, chairs, lasers or imaging</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td><a href="#way-2">Put more into a retirement plan</a></td>
+<td>Owners with steady profit, with or without staff</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td><a href="#way-3">Elect S corp tax treatment</a></td>
+<td>Owners whose profit is well above a fair salary</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td><a href="#way-4">Pay state tax through the practice (PTET)</a></td>
+<td>PLLCs with more than one owner and S corps in states that offer it</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td><a href="#way-5">Claim the QBI deduction while you still qualify</a></td>
+<td>Owners near or under the 2026 income limits</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td><a href="#way-6">Claim the credits you qualify for</a></td>
+<td>Practices that started a retirement plan or hired in 2025</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td><a href="#way-7">Deduct health insurance and fund an HSA</a></td>
+<td>Owners who buy their own coverage</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td><a href="#way-8">Deduct a home office</a></td>
+<td>Owners who do admin work at home</td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td><a href="#way-9">Track every professional cost</a></td>
+<td>Every owner</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td><a href="#way-10">Time purchases, bonuses and payments</a></td>
+<td>Practices on the cash method</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: "who it suits" for each row. -->
+  </div>
+</section>
+
+<section class="lc-sec" id="what-do-the-tax-planning-terms-in-this-guide-mean">
+  <div class="wrap article-wrap article-body">
+<h2>What do the tax planning terms in this guide mean?</h2>
+<p><strong>Section 179</strong> is the rule that lets you deduct the full cost of equipment in the year it&#39;s ready to use, instead of over several years. <strong>Bonus depreciation</strong> is a second rule that does the same for most equipment, with no dollar cap. <strong>PTET</strong>, the pass-through entity tax, is a state program where your PLLC or S corp pays the state income tax on its profit. <strong>The QBI deduction</strong> is a federal deduction of up to 20% of the profit from a business you own. <strong>Cost of goods sold</strong> is what you paid for the product you sold or used, and you deduct it when you sell or use it.<!-- CPA CHECK: each definition. --></p>
+  </div>
+</section>
+
+<section class="lc-sec" id="how-does-each-of-the-10-ways-work">
+  <div class="wrap article-wrap article-body">
+<h2>How does each of the 10 ways work?</h2>
+<p>You&#39;ll find each way&#39;s rule, its 2026 limit where one applies, and an IRS source below. You&#39;ll get the most from the ways when you and your CPA decide before December 31, because you can&#39;t buy equipment for this year after December 31, and some retirement plan choices have year-end deadlines.<!-- CPA CHECK: year-end deadlines for plan setup and Solo 401(k) deferral elections. --></p>
+<h3 id="way-1">1. Deduct equipment the year it&#39;s ready to use</h3>
+<p>You can generally deduct the full cost of equipment in the year it&#39;s installed and ready to use. For 2026, Section 179 covers up to $2,560,000, and the amount you can take shrinks once you buy more than $4,090,000.<!-- CPA CHECK: 2026 Section 179 limit and phase-out, Rev. Proc. 2025-32. --></p>
+<p>Bonus depreciation is back at 100% for equipment bought after January 19, 2025, and the 2025 tax law made it permanent (<a href="https://www.irs.gov/publications/p946">IRS, Publication 946</a>).<!-- CPA CHECK: 100% bonus depreciation, permanent, property acquired after January 19, 2025. --> Many states don&#39;t follow bonus depreciation, so your state deduction may differ.<!-- CPA CHECK: state conformity, no state named. --> Ask your CPA whether deducting it all now or spreading it out suits you better, since selling the equipment later can bring part of the deduction back as income.<!-- CPA CHECK: depreciation recapture on sale. --></p>
+<p>Dental practice owners buying chairs or imaging can read <a href="/specialty/dental">bookkeeping for dental practices</a>.</p>
+<h3 id="way-2">2. Put more into a retirement plan</h3>
+<p>A retirement plan is often the biggest deduction an owner controls. For 2026, you can defer up to $24,500 into a 401(k), and the total from you and the practice can reach $72,000, plus catch-up amounts if you&#39;re 50 or older.<!-- CPA CHECK: 2026 401(k) deferral, total limit and catch-up amounts, [IRS 401(k) limits](https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-401k-and-profit-sharing-plan-contribution-limits). --> <span class="lc-cite">(<a href="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-401k-and-profit-sharing-plan-contribution-limits">IRS 401(k) limits</a>)</span></p>
+<ul>
+<li><strong>No staff:</strong> a Solo 401(k) or a <a href="https://www.irs.gov/retirement-plans/plan-sponsor/simplified-employee-pension-plan-sep">SEP IRA</a>.</li>
+<li><strong>With staff:</strong> a safe harbor 401(k), which means you&#39;ll also contribute for your staff.</li>
+<li><strong>High earners close to retirement:</strong> ask about a cash balance plan, which needs an actuary.</li>
+</ul>
+<!-- CPA CHECK: plan types, SEP contribution limit as a share of pay, safe harbor employer contribution, cash balance plan description. -->
+
+<h3 id="way-3">3. Elect S corp tax treatment</h3>
+<p>If your profit is well above a fair salary for your role, the IRS can tax your PLLC as an S corp, and you&#39;ll pay Social Security and Medicare tax on your salary, not on all of the profit. You&#39;ll take on payroll and a separate business return.<!-- CPA CHECK: S corp payroll tax treatment. --> See <a href="/blog/medical-s-corps-set-reasonable-owner-salaries/">setting a reasonable owner salary in a medical S corp</a>.<!-- TODO: also link "choosing between a PLLC and an S corp" to /guides/pllc-vs-s-corp-medical-practice/ once that guide is live. --></p>
+<h3 id="way-4">4. Pay state tax through the practice (PTET)</h3>
+<p>If your state offers a PTET, your PLLC or S corp can pay the state income tax on its profit and deduct it on the federal return. That gets you around the personal cap on state and local tax, which is $40,400 for 2026 and shrinks once your income passes $505,000.<!-- CPA CHECK: 2026 SALT cap and phase-down, IRC section 164(b)(7) as amended by [Pub. L. 119-21 sec. 70120](https://www.congress.gov/bill/119th-congress/house-bill/1/text) (swap in the 2026 Schedule A instructions once IRS posts them); entity-level deduction under [IRS Notice 2020-75](https://www.irs.gov/pub/irs-drop/n-20-75.pdf); which entities can elect; name no state without sign-off. --> <span class="lc-cite">(<a href="https://www.congress.gov/bill/119th-congress/house-bill/1/text">Pub. L. 119-21 sec. 70120</a>; <a href="https://www.irs.gov/pub/irs-drop/n-20-75.pdf">IRS Notice 2020-75</a>)</span></p>
+<h3 id="way-5">5. Claim the QBI deduction while you still qualify</h3>
+<p>Medicine is a &quot;specified service&quot; under the QBI rules, so you lose the deduction as your income rises. For 2026, the phase-out starts at $201,750 of taxable income for a single filer and $403,500 for a joint return.<!-- CPA CHECK: 2026 thresholds, [Rev. Proc. 2025-32](https://www.irs.gov/pub/irs-drop/rp-25-32.pdf) sec. 4.26; specified service treatment, [Instructions for Form 8995-A](https://www.irs.gov/instructions/i8995a). --> <span class="lc-cite">(<a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">Rev. Proc. 2025-32</a>; <a href="https://www.irs.gov/instructions/i8995a">Instructions for Form 8995-A</a>)</span> If you&#39;re near the line, a retirement contribution can bring you back under it. As an S corp owner, your salary doesn&#39;t count toward QBI.<!-- CPA CHECK: retirement contributions lower taxable income for the threshold; S corp wages excluded from QBI, [IRS, Qualified business income deduction](https://www.irs.gov/newsroom/qualified-business-income-deduction). --> <span class="lc-cite">(<a href="https://www.irs.gov/newsroom/qualified-business-income-deduction">IRS, Qualified business income deduction</a>)</span></p>
+<h3 id="way-6">6. Claim the credits you qualify for</h3>
+<p>A credit cuts your tax bill dollar for dollar, so it&#39;s worth more than a deduction of the same size. If you start a retirement plan and have 100 or fewer employees, you may claim up to $5,000 a year for three years toward the setup costs (<a href="https://www.irs.gov/retirement-plans/retirement-plans-startup-costs-tax-credit">IRS, retirement plan startup costs credit</a>).<!-- CPA CHECK: start-up credit amount, years and employee limit; the added credit for employer contributions and automatic enrollment. --></p>
+<p>The Work Opportunity Tax Credit covers staff who started work by December 31, 2025, and Congress hadn&#39;t renewed it as of November 2026 (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/work-opportunity-tax-credit">IRS, Work Opportunity Tax Credit</a>).<!-- CPA CHECK: WOTC status on the publish date. --> Ask your CPA which other credits fit your practice.</p>
+<h3 id="way-7">7. Deduct health insurance and fund an HSA</h3>
+<p>If you own the practice and buy your own health insurance, you can usually deduct the premiums on your personal return (<a href="https://www.irs.gov/forms-pubs/about-form-7206">Form 7206</a>). If you own more than 2% of an S corp, the S corp adds the premiums to your W-2 first, then you take the deduction. With a high-deductible plan, you can put up to $4,400 (self-only) or $8,750 (family) into an HSA for 2026 (<a href="https://www.irs.gov/publications/p969">Publication 969</a>).<!-- CPA CHECK: self-employed health insurance deduction, the 2% shareholder rule, 2026 HSA limits. --></p>
+<h3 id="way-8">8. Deduct a home office</h3>
+<p>If you do the practice&#39;s admin at home, in a space you use only for that, you may deduct a home office (<a href="https://www.irs.gov/publications/p587">Publication 587</a>). The rules for an owner who also has a clinic are strict. See <a href="/blog/simplified-home-office-deduction-physician-examples/">the simplified home office deduction, with examples</a>.<!-- CPA CHECK: regular and exclusive use; principal place of business for an owner with a clinic; S corp owners and an accountable plan. --></p>
+<h3 id="way-9">9. Track every professional cost</h3>
+<p>You can deduct the ordinary costs of running a practice, and owners lose money when nobody records them (<a href="https://www.irs.gov/publications/p334">Publication 334</a>). The common ones:</p>
+<ul>
+<li>State license and DEA registration fees</li>
+<li>Continuing medical education, courses and travel to them</li>
+<li>Malpractice insurance</li>
+<li>Board certification and professional dues</li>
+<li>Practice software and subscriptions</li>
+</ul>
+<!-- CPA CHECK: deductibility of each item for a practice owner; travel rules for continuing education. -->
+
+<h3 id="way-10">10. Time purchases, bonuses and payments</h3>
+<p>If your practice uses the cash method, you deduct an expense in the year you pay it (<a href="https://www.irs.gov/publications/p538">Publication 538</a>). Buying equipment counts only once it&#39;s installed and ready to use by December 31. You&#39;ll also want your last estimated payment set before year end, so your plan and your payments match.<!-- CPA CHECK: cash method timing, placed in service by December 31, timing of staff bonuses. --><!-- TODO: link "2027 tax deadlines for medical practices" to /guides/medical-practice-tax-deadlines-2027/ once that guide is live. --> For payment amounts, see <a href="/blog/estimated-tax-safe-harbors-medical-practice-owners/">estimated tax safe harbors for medical practice owners</a>.</p>
+  </div>
+</section>
+
+<section class="lc-sec" id="how-much-could-these-ways-save-two-examples">
+  <div class="wrap article-wrap article-body">
+<h2>How much could these ways save? Two examples</h2>
+<p>How much you save depends on your income, your state and how the IRS taxes your practice. In the first example below, a solo owner lowers federal income tax by about $29,575 with two of the ways.<!-- CPA CHECK: the $29,575 figure, Example 1. --> These examples use round numbers to show the arithmetic. They&#39;re illustrations, not typical results.</p>
+<p><strong>Example 1: a solo owner&#39;s year-end plan.</strong> A physical therapy practice owner runs a single-owner PLLC with no staff, files as a single taxpayer and expects $400,000 of profit in 2026. In November, the owner buys and installs a $60,000 piece of equipment and defers $24,500 into a Solo 401(k). The example assumes a 35% federal income tax rate on the last dollars of income.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Way</th>
+<th align="right">Amount deducted</th>
+<th align="right">Federal income tax lower by (35%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Equipment, Section 179</td>
+<td align="right">$60,000</td>
+<td align="right">$21,000</td>
+</tr>
+<tr>
+<td>2. Solo 401(k) deferral</td>
+<td align="right">$24,500</td>
+<td align="right">$8,575</td>
+</tr>
+<tr>
+<td>Total</td>
+<td align="right">$84,500</td>
+<td align="right">$29,575</td>
+</tr>
+</tbody></table></div>
+<p>The 401(k) amount is taxed when you take it out in retirement.</p>
+<!-- CPA CHECK: every figure in Example 1; the assumed 35% rate, single filer, 2026 brackets in Rev. Proc. 2025-32 (taxable income about $367,100 before and $283,400 after, both in the 35% band and above the QBI phase-out); the 401(k) deferral is taxed when withdrawn; the equipment deduction also lowers self-employment tax; no QBI deduction before or after at this income (specified service, above the phase-out); state tax not shown. -->
+<p>See <a href="/specialty/physical-therapy">bookkeeping for physical therapy practices</a>.</p>
+
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><strong>Example 2: a med spa&#39;s product at year end.</strong> A med spa buys $80,000 of injectables and retail skincare in 2026. By December 31, the med spa has used or sold $62,000 of it, at cost, and $18,000 is still on the shelf.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th></th>
+<th align="right">Amount</th>
+<th>When you deduct it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Product used or sold in 2026</td>
+<td align="right">$62,000</td>
+<td>2026, as cost of goods sold</td>
+</tr>
+<tr>
+<td>Product still on the shelf</td>
+<td align="right">$18,000</td>
+<td>2027, when you use or sell it</td>
+</tr>
+<tr>
+<td>Total bought</td>
+<td align="right">$80,000</td>
+<td></td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: every figure in Example 2; inventory treatment for injectables used in treatments; the small business inventory options under the gross receipts test and the 2026 threshold. -->
+  </div>
+</section>
+
+<section class="lc-sec" id="tax-planning-for-med-spa-owners">
+  <div class="wrap article-wrap article-body">
+<h2>Tax planning for med spa owners</h2>
+<p>Med spa owners have the same 10 ways as any practice, plus three issues of their own: product, providers and ownership. You&#39;ll want all three recorded correctly in your books before you plan.</p>
+<ul>
+<li><strong>Product:</strong> you deduct injectables and retail skincare when you use or sell them, not when you buy them (Example 2).<!-- CPA CHECK: inventory timing. --></li>
+<li><strong>Providers:</strong> whether an injector or aesthetician is a contractor or an employee depends on the IRS rules on control, not on the contract you sign (<a href="https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee">IRS, independent contractor or employee</a>).<!-- CPA CHECK: worker classification, general statement only. --></li>
+<li><strong>Ownership:</strong> if you aren&#39;t a licensed provider, your state may require a provider to own the medical side, with your company managing the business.<!-- CPA CHECK: and healthcare attorney: ownership rules by state, no state named. --></li>
+</ul>
+<p>See <a href="/specialty/medical-spa">bookkeeping for med spas</a>.</p>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-to-ask-your-cpa-before-december-31">
+  <div class="wrap article-wrap article-body">
+<h2>What to ask your CPA before December 31</h2>
+<ul>
+<li>Which of the 10 ways fit my practice this year?</li>
+<li>Which retirement plan fits my staff and my income?</li>
+<li>Does my state offer a PTET, and can my practice elect it?</li>
+<li>Are my contract providers set up correctly?</li>
+</ul>
+  </div>
+</section>
+
+<section class="lc-sec" id="what-lucid-does-for-your-tax-planning">
+  <div class="wrap article-wrap article-body">
+<h2>What Lucid does for your tax planning</h2>
+<p>Lucid (lucid.now) does bookkeeping, taxes, tax credits and CFO services for medical practices. Lucid&#39;s experts &quot;handle quarterly estimates, S-corp strategy, and specialty deductions most CPAs miss,&quot; and you get a dedicated CPA who knows your specialty, available 24/7. If you&#39;re just opening, Lucid offers &quot;Clean books, entity setup, and a tax plan from day one.&quot; Lucid also works with practices that have more than one location.</p>
+<!-- NEEDS LUCID: Lucid's /medical page says "Tax filings, plus R&D and hiring tax credits most CPAs miss." Before the page quotes it, Lucid confirms R&D credit work applies to medical practices (DECISIONS 2026-09-24 hold). -->
+
+<p>Read <a href="/medical">how Lucid works with medical practices</a>.</p>
+  </div>
+</section>
+
+<section class="spec-faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head center"><span class="eyebrow teal">Questions, answered</span><h2>Questions practice owners ask about tax planning</h2></div>
+    <div class="lc-faq-intro"><p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p></div>
+    <div class="faq">
+      <details open><summary>What can a medical practice owner write off?</summary><p>You can write off the ordinary costs of running the practice: staff pay, rent, equipment, supplies, malpractice insurance, licenses, continuing education and software. You&#39;ll also deduct your own retirement contributions and, if you buy your own coverage, your health insurance. You can&#39;t deduct your personal medical bills as a practice expense.<!-- CPA CHECK: business expense list, personal medical expenses excluded. --></p></details>
+      <details><summary>Can I write off a laser or other medical equipment in the year I buy it?</summary><p>Usually, yes, if it&#39;s ready to use that year. For 2026, Section 179 covers up to $2,560,000 of equipment, and bonus depreciation covers most equipment at 100%. If the laser arrives in December but isn&#39;t installed and ready for patients until January, you&#39;ll deduct it in the new year. Your state may not follow the federal rule.<!-- CPA CHECK: 2026 Section 179 limit, 100% bonus depreciation, placed in service rule, state conformity. --></p></details>
+      <details><summary>What retirement plan saves the most tax for a practice owner?</summary><p>For a solo owner, a Solo 401(k) often lets you put away the most, up to $72,000 for 2026 before catch-up amounts. With staff, a safe harbor 401(k) works but means contributing for your team too. Owners close to retirement with high profit may save more with a cash balance plan.<!-- CPA CHECK: 2026 limits, plan comparison. --></p></details>
+      <details><summary>Are injectables and skincare a med spa buys deductible right away?</summary><p>Usually not. Injectables and retail skincare are inventory, so you deduct them as cost of goods sold when you use them in a treatment or sell them. Product still on the shelf at December 31 carries into next year. Some small businesses can use simpler inventory rules, so ask your CPA which method you&#39;re on.<!-- CPA CHECK: inventory treatment and small business options. --></p></details>
+      <details><summary>What tax credits can a medical practice claim?</summary><p>If you have 100 or fewer employees and start a retirement plan, you may claim up to $5,000 a year for three years toward the setup costs. The Work Opportunity Tax Credit covers staff who started by December 31, 2025, unless Congress renews it. Your CPA can check which others fit, including state credits.<!-- CPA CHECK: start-up credit, WOTC status on the publish date. --></p></details>
+      <details><summary>How much does tax planning for a medical practice cost?</summary><p>The cost depends on who does it, how many owners and locations you have, and whether the price includes your returns. Ask any provider what&#39;s included: year-round planning or a single meeting, the business return, your personal return, and the quarterly estimates. Lucid lists its prices at lucid.now/pricing.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="lc-sec" id="sources">
+  <div class="wrap article-wrap article-body">
+<h2>Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">Revenue Procedure 2025-32, 2026 inflation adjustments</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p946">Publication 946, How to Depreciate Property</a></li>
+<li>IRS, <a href="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-401k-and-profit-sharing-plan-contribution-limits">401(k) and profit-sharing plan contribution limits</a></li>
+<li>IRS, <a href="https://www.irs.gov/retirement-plans/plan-sponsor/simplified-employee-pension-plan-sep">Simplified Employee Pension plan (SEP)</a></li>
+<li>IRS, <a href="https://www.irs.gov/pub/irs-drop/n-20-75.pdf">Notice 2020-75, state and local taxes paid by partnerships and S corporations</a></li>
+<li>IRS, <a href="https://www.irs.gov/newsroom/qualified-business-income-deduction">Qualified business income deduction</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i8995a">Instructions for Form 8995-A, Deduction for Qualified Business Income</a></li>
+<li>U.S. Congress, <a href="https://www.congress.gov/bill/119th-congress/house-bill/1/text">Public Law 119-21, section 70120 (state and local tax cap, IRC section 164(b)(7))</a></li>
+<li>IRS, <a href="https://www.irs.gov/retirement-plans/retirement-plans-startup-costs-tax-credit">Retirement plans startup costs tax credit</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/work-opportunity-tax-credit">Work Opportunity Tax Credit</a></li>
+<li>IRS, <a href="https://www.irs.gov/forms-pubs/about-form-7206">About Form 7206, Self-Employed Health Insurance Deduction</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p969">Publication 969, Health Savings Accounts</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p587">Publication 587, Business Use of Your Home</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p334">Publication 334, Tax Guide for Small Business</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p538">Publication 538, Accounting Periods and Methods</a></li>
+<li>IRS, <a href="https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee">Independent contractor (self-employed) or employee?</a></li>
+</ul>
+  </div>
+</section>
+
+<section class="spec-cta">
+  <div class="wrap">
+    <h2>Focus on <span class="grad">patients</span>, not paperwork.</h2>
+    <p>See exactly what Lucid costs for a practice like yours - in seconds.</p>
+    <div class="spec-hero-cta">
+      <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+      <a href="/book?cta=TalkToExpert" class="btn btn-ghost">Talk to an Expert</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div>
+        <p style="max-width:280px;">One solution for all your practice finances. Bookkeeping, taxes, tax credits, and CFO services - powered by real-time AI and backed by a team of experts.</p>
+      </div>
+      <div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li><li><a href="/platforms">All platforms</a></li></ul></div><div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+      <div><h3>Services</h3><ul><li><a href="/#services">Bookkeeping</a></li><li><a href="/#services">Taxes</a></li><li><a href="/#services">CFO Services</a></li><li><a href="/#services">Tax Credits</a></li></ul></div>
+      <div><h3>Company</h3><ul><li><a href="/#faq">FAQ</a></li><li><a href="/security">Security</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/blog">Blog</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2023 Lucid. All rights reserved. · <a href="/termsofservice">Terms</a> · <a href="/sla">SLA</a> · <a href="/privacy-policy">Privacy</a> · <a href="/data-processing-addendum">DPA</a> · <a href="/blog">Blog</a></span>
+      <span>Enterprise-grade security · SOC 2 &amp; HIPAA aligned</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js?v=202611041654" defer></script>
+</body>
+</html>
