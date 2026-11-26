@@ -1,0 +1,769 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Why Is My Practice Profitable but Short on Cash? | Lucid</title>
+<meta name="description" content="Your practice can be profitable but short on cash because of receivables, prepaid bills, loan principal and draws. See days in AR and a 13-week forecast."/>
+<link rel="canonical" href="https://www.lucid.now/blog/practice-profitable-but-no-cash/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Why Is My Practice Profitable but Short on Cash? | Lucid"/>
+<meta property="og:description" content="Your practice can be profitable but short on cash because of receivables, prepaid bills, loan principal and draws. See days in AR and a 13-week forecast."/>
+<meta property="og:url" content="https://www.lucid.now/blog/practice-profitable-but-no-cash/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Why Is My Practice Profitable but Short on Cash? | Lucid"/>
+<meta name="twitter:description" content="Your practice can be profitable but short on cash because of receivables, prepaid bills, loan principal and draws. See days in AR and a 13-week forecast."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"Why is my practice profitable but short on cash?","description":"Your practice can be profitable but short on cash because of receivables, prepaid bills, loan principal and draws. See days in AR and a 13-week forecast.","url":"https://www.lucid.now/blog/practice-profitable-but-no-cash/","datePublished":"2026-12-03","dateModified":"2026-12-03","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/practice-profitable-but-no-cash/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is my practice profitable but I have no money?","acceptedAnswer":{"@type":"Answer","text":"You measure profit and cash at different moments. You count profit when you earn it, but cash only arrives when insurance and patients pay, and it leaves for things your P&L doesn't show as expenses, like loan principal and owner draws. Look at your balance sheet: if receivables, prepaid bills or supplies on hand went up this month, that's where you'll find your cash."}},{"@type":"Question","name":"What are days in accounts receivable, and what is a good number for a practice?","acceptedAnswer":{"@type":"Answer","text":"Days in accounts receivable is how many days of charges you're still waiting to collect. There's no single good number, because it depends on your payers and specialty, so watch your own trend. If it climbs for two or three months in a row, you or your biller are falling behind on claims or patient balances. If you compare against a published benchmark, use the formula its publisher uses."}},{"@type":"Question","name":"How long do insurance companies take to pay a practice?","acceptedAnswer":{"@type":"Answer","text":"Medicare can't pay a clean electronic claim before the 14th day after receiving it. It must pay it within 30 days, and it owes interest if it pays later. Commercial insurers follow your contract and your state's prompt pay rules, if your state has them. Patients often take longer than either."}},{"@type":"Question","name":"How much cash should a medical practice keep in reserve?","acceptedAnswer":{"@type":"Answer","text":"There isn't an official number. Build a 13-week forecast, find your lowest week, and keep enough to cover that week plus one full payroll. Some owners also keep enough for a large annual bill, such as an insurance premium, so a slow payer never puts payroll at risk."}},{"@type":"Question","name":"Does loan principal show on my P&L?","acceptedAnswer":{"@type":"Answer","text":"No. You record only the interest on the loan as an expense. Paying principal lowers the balance you owe, so you'll find it on your balance sheet and your cash flow statement. For tax, you generally deduct the interest, not the principal."}},{"@type":"Question","name":"How do I make a 13-week cash forecast?","acceptedAnswer":{"@type":"Answer","text":"Use a spreadsheet with one row per week. Start with today's bank balance, add expected collections, subtract payroll, rent, loan payments, draws and large bills, and carry the ending balance forward. Each week, replace the estimate with what happened and add a new week at the end, so you always see 13 weeks ahead."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"Why is my practice profitable but short on cash?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">Why is my practice profitable but short on cash?</h1>
+<div class="article-meta"><time datetime="2026-12-03">December 3, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 3, 2026</p>
+<div class="article-body">
+<p>Your practice can show a profit and still run short because profit isn&#39;t cash. Profit counts what you&#39;ve earned. Your bank balance counts what you&#39;ve collected and haven&#39;t spent. You&#39;ll usually find the gap in seven places: unpaid insurance and patient balances, prepaid bills, supplies on the shelf, equipment, loan principal, owner draws and tax payments.</p>
+<p>None of them is a bookkeeping error.</p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>Medicare can&#39;t pay a clean electronic claim until the 14th day after it receives it, so a practice that bills insurance is always waiting on some visits.</li>
+<li>When you pay loan principal or take an owner draw, you take cash out of the bank, but you won&#39;t see either one as an expense on your P&amp;L.</li>
+<li>Days in accounts receivable equals your receivables balance divided by your average charges per day. At $6,000 a day, each extra day means $6,000 you haven&#39;t collected yet.</li>
+</ul>
+<h2 id="where-does-a-practices-profit-go-if-it-isnt-in-the-bank">Where does a practice&#39;s profit go if it isn&#39;t in the bank?</h2>
+<p>You&#39;ll find most of the gap between profit and cash in the seven places below. Your bookkeeper records each one on your balance sheet or cash flow statement, not on your P&amp;L, so owners who read only the P&amp;L miss them.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Where the money is</th>
+<th>Why it isn&#39;t on your P&amp;L as cash out</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Receivables</strong><br>Billed visits not yet paid</td>
+<td>On accrual books, you count revenue the day you see the patient, not the day you&#39;re paid</td>
+</tr>
+<tr>
+<td><strong>Prepaid expenses</strong><br>An insurance premium paid months ahead</td>
+<td>You spread the cost over the months it covers</td>
+</tr>
+<tr>
+<td><strong>Supplies on the shelf</strong><br>Braces, tape, injectables, retail product</td>
+<td>You count the cost when you use or sell it</td>
+</tr>
+<tr>
+<td><strong>Equipment</strong><br>A machine paid in cash</td>
+<td>You spread the cost over the years you&#39;ll use it</td>
+</tr>
+<tr>
+<td><strong>Loan principal</strong><br>The part of each payment that pays down the loan</td>
+<td>You record only the interest as an expense</td>
+</tr>
+<tr>
+<td><strong>Owner draws</strong><br>Money you move to your own account</td>
+<td>A draw pays you as owner; it isn&#39;t a practice cost</td>
+</tr>
+<tr>
+<td><strong>Tax payments</strong><br>Quarterly estimated tax paid from the practice account</td>
+<td>In a PLLC taxed as a sole proprietorship or partnership, or in an S corp, the income tax is yours, not the practice&#39;s<!-- CPA CHECK: owner-level income tax in a PLLC taxed as a sole proprietorship or partnership, or in an S corp, is not a practice expense; estimated tax duty, [IRS Publication 505](https://www.irs.gov/publications/p505) --></td>
+</tr>
+</tbody></table></div>
+<p>Tax rules depend on your state and your numbers, so ask your CPA before you act on the tax line in this table.</p>
+<h2 id="what-do-the-cash-flow-terms-in-this-post-mean">What do the cash flow terms in this post mean?</h2>
+<p><strong>Accounts receivable</strong> is the money patients and insurance companies owe your practice for visits you&#39;ve already billed. <strong>Accounts receivable turnover</strong> is how many times a year you collect your average receivables balance. <strong>A prepaid expense</strong> is a bill you&#39;ve paid for a period that hasn&#39;t happened yet, such as next quarter&#39;s insurance. <strong>An owner&#39;s draw</strong> is money an owner takes out of the practice that isn&#39;t salary. <strong>A 13-week cash forecast</strong> is a week-by-week plan of the cash you expect in and out over the next three months.</p>
+<p>Not sure which method your books use? Read <a href="/guides/cash-vs-accrual-accounting-for-medical-practices/">cash or accrual accounting for medical practices</a>. The examples below use accrual books, because you only record receivables on that method.</p>
+<h2 id="how-do-i-trace-a-profitable-month-that-left-little-cash">How do I trace a profitable month that left little cash?</h2>
+<p>Start with your profit for the month, then take out each of the seven places, one line at a time, until you reach the change in your bank balance.</p>
+<p><strong>Example 1: a month with $40,000 of profit and $6,000 more in the bank.</strong> A physical therapy practice with three therapists keeps its books on the accrual method. In March, it shows $40,000 of profit, but its bank balance rises by only $6,000.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Amount</th>
+<th>What happened</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Profit for March</td>
+<td align="right">$40,000</td>
+<td>From the March P&amp;L</td>
+</tr>
+<tr>
+<td>Receivables grew</td>
+<td align="right">-$11,000</td>
+<td>The practice billed $11,000 more than it collected</td>
+</tr>
+<tr>
+<td>Insurance premium paid ahead</td>
+<td align="right">-$4,000</td>
+<td>The owner paid $6,000; March&#39;s share is $2,000</td>
+</tr>
+<tr>
+<td>Supplies still on the shelf</td>
+<td align="right">-$3,000</td>
+<td>The practice bought supplies it will use in April</td>
+</tr>
+<tr>
+<td>Loan principal</td>
+<td align="right">-$6,000</td>
+<td>The part of the payment that lowered the loan</td>
+</tr>
+<tr>
+<td>Owner draw</td>
+<td align="right">-$10,000</td>
+<td>The owner moved $10,000 to a personal account</td>
+</tr>
+<tr>
+<td>Cash the bank gained</td>
+<td align="right">$6,000</td>
+<td>$40,000 minus $34,000</td>
+</tr>
+</tbody></table></div>
+<p>On the cash method, you won&#39;t have a receivables line, but the loan, the draw and any equipment still leave a gap. To see what each line on the statement means, read how to read your practice&#39;s P&amp;L.<!-- TODO link held: "To see what each line on the statement means, read how to read your practice's P&L." -> /blog/how-to-read-a-medical-practice-pl/. Note for Reid: link that anchor to /blog/how-to-read-a-medical-practice-pl/ only once post 1 is live on main; otherwise drop the sentence. --></p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="how-long-do-insurance-companies-take-to-pay-a-practice">How long do insurance companies take to pay a practice?</h2>
+<p>Medicare can&#39;t pay a clean electronic claim until the 14th day after receiving it, and must pay or deny it within 30 days (<a href="https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/clm104c01.pdf">CMS, Medicare Claims Processing Manual, chapter 1, sections 80.2.1.1 and 80.2.1.2</a>). Commercial insurers pay on your contract terms and your state&#39;s prompt pay rules.</p>
+<p><strong>A clean claim</strong> is a claim with no errors or missing details, so the payer can process it without asking you for more. When a payer sends a claim back for a fix, the wait starts over once you resend it. So when one payer slows down, you can run short for weeks with no change in profit.</p>
+<p>Patients usually take longer to pay their deductible or coinsurance once you bill them. To see which part of an unpaid balance you&#39;ll never collect, read <a href="/blog/contractual-adjustments-vs-patient-bad-debt/">how a contractual adjustment differs from patient bad debt</a>.</p>
+<h2 id="how-do-i-figure-days-in-accounts-receivable">How do I figure days in accounts receivable?</h2>
+<p>Divide your receivables balance by your average charges per day. To get charges per day, add up your net charges for the last three months and divide by the number of days in them. Use the same method every month.</p>
+<p>Net charges are what you billed after contractual adjustments, the amounts you write off under payer contracts. If you use gross charges instead, you&#39;ll get a number that looks better than it is.</p>
+<p><strong>Example 2: days in AR for a primary care practice.</strong> At March 31, a primary care practice has $210,000 in receivables. Its net charges for January through March were $540,000, over 90 days.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th align="right">Figure</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Net charges, January to March</td>
+<td align="right">$540,000</td>
+</tr>
+<tr>
+<td>Average charges per day ($540,000 ÷ 90)</td>
+<td align="right">$6,000</td>
+</tr>
+<tr>
+<td>Receivables at March 31</td>
+<td align="right">$210,000</td>
+</tr>
+<tr>
+<td>Days in AR ($210,000 ÷ $6,000)</td>
+<td align="right">35 days</td>
+</tr>
+<tr>
+<td>Days in AR if receivables grow to $252,000</td>
+<td align="right">42 days</td>
+</tr>
+<tr>
+<td>Cash not yet collected because of the 7 extra days</td>
+<td align="right">$42,000</td>
+</tr>
+</tbody></table></div>
+<p>You can get the same answer from accounts receivable turnover. If the practice bills $2,190,000 a year ($6,000 a day) and its receivables average $210,000, it turns its receivables about 10.4 times a year, and 365 ÷ 10.4 is about 35 days.</p>
+<p>For the month-end steps that keep this number honest, read <a href="/blog/medical-receivables-aging-month-end-checklist/">aging your receivables at month end</a>.</p>
+<h2 id="how-do-i-build-a-13-week-cash-forecast">How do I build a 13-week cash forecast?</h2>
+<p>List the cash you expect to collect and pay out each week for the next 13 weeks, and carry each week&#39;s ending balance into the next. Each week, replace your estimates with what actually came in and went out.</p>
+<ol>
+<li>Start with today&#39;s bank balance.</li>
+<li>For cash in, use recent weekly collections, lowered for slow payers.</li>
+<li>For cash out, put each payment in the week you&#39;ll make it.</li>
+<li>Find the lowest week and decide now what you&#39;ll do.</li>
+</ol>
+<p><strong>Example 3: a 13-week forecast for a physical therapy practice.</strong> The practice starts with $30,000. It pays $30,000 of payroll every other week, $8,000 of rent each month, a $6,500 monthly loan payment, $4,000 of bills each week, a $10,000 owner draw every four weeks and a $14,000 premium in week 7. One payer pays late in weeks 5 to 7.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th align="right">Cash in</th>
+<th align="right">Cash out</th>
+<th align="right">Cash at week end</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="right">$29,000</td>
+<td align="right">$42,000 (payroll, rent)</td>
+<td align="right">$17,000</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">$29,000</td>
+<td align="right">$10,500 (loan)</td>
+<td align="right">$35,500</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="right">$28,000</td>
+<td align="right">$34,000 (payroll)</td>
+<td align="right">$29,500</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="right">$29,000</td>
+<td align="right">$14,000 (draw)</td>
+<td align="right">$44,500</td>
+</tr>
+<tr>
+<td>5</td>
+<td align="right">$22,000</td>
+<td align="right">$42,000 (payroll, rent)</td>
+<td align="right">$24,500</td>
+</tr>
+<tr>
+<td>6</td>
+<td align="right">$21,000</td>
+<td align="right">$10,500 (loan)</td>
+<td align="right">$35,000</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td align="right"><strong>$22,000</strong></td>
+<td align="right"><strong>$48,000 (payroll, premium)</strong></td>
+<td align="right"><strong>$9,000</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td align="right">$30,000</td>
+<td align="right">$14,000 (draw)</td>
+<td align="right">$25,000</td>
+</tr>
+<tr>
+<td>9</td>
+<td align="right">$29,000</td>
+<td align="right">$42,000 (payroll, rent)</td>
+<td align="right">$12,000</td>
+</tr>
+<tr>
+<td>10</td>
+<td align="right">$29,000</td>
+<td align="right">$10,500 (loan)</td>
+<td align="right">$30,500</td>
+</tr>
+<tr>
+<td>11</td>
+<td align="right">$28,000</td>
+<td align="right">$34,000 (payroll)</td>
+<td align="right">$24,500</td>
+</tr>
+<tr>
+<td>12</td>
+<td align="right">$29,000</td>
+<td align="right">$14,000 (draw)</td>
+<td align="right">$39,500</td>
+</tr>
+<tr>
+<td>13</td>
+<td align="right">$29,000</td>
+<td align="right">$42,000 (payroll, rent)</td>
+<td align="right">$26,500</td>
+</tr>
+</tbody></table></div>
+<p>Each cash out figure includes the weekly bills. The practice drops to $9,000 in week 7. The owner sees it coming in week 1, with time to skip the week 4 draw, ask to split the premium, or chase the late payer.</p>
+<h2 id="how-do-i-close-the-gap-between-profit-and-cash">How do I close the gap between profit and cash?</h2>
+<p>You can close it by collecting sooner, timing large payments to match what you collect, and setting your owner draw from your forecast instead of the bank balance on the day. Start with whichever one fixes your lowest forecast week.</p>
+<ul>
+<li>Send claims within a day or two of the visit, and fix denials the same week.</li>
+<li>Collect copays and known deductibles at the front desk.</li>
+<li>Pay large premiums in installments where the vendor allows it.</li>
+<li>Keep a reserve that covers your lowest forecast week plus one payroll.</li>
+</ul>
+<h2 id="for-physical-therapy-and-primary-care-practices">For physical therapy and primary care practices</h2>
+<p><strong>Physical therapy practices</strong> see each patient many times over a plan of care, so when one payer pays slowly, you wait on dozens of small payments at once. See <a href="/specialty/physical-therapy">bookkeeping for physical therapists</a>.</p>
+<p><strong>Primary care practices</strong> bill many payers and collect many small patient balances, which grow early in the year when deductibles reset. See <a href="/specialty/primary-care">primary care practice accounting</a>.</p>
+<h2 id="what-to-ask-your-bookkeeper-or-cpa">What to ask your bookkeeper or CPA</h2>
+<ul>
+<li>Are my books on the cash or accrual method, and does my P&amp;L match that?</li>
+<li>What were my days in AR for each of the last six months?</li>
+<li>How much of my receivables is more than 90 days old?</li>
+<li>Can you build and update a 13-week cash forecast for me?</li>
+</ul>
+<h2 id="what-lucid-does-for-your-cash-flow">What Lucid does for your cash flow</h2>
+<p>Lucid (lucid.now) gives medical practices &quot;Real time bookkeeping with a dedicated CPA and account manager.&quot; For practices waiting on insurance, &quot;Lucid reconciles deposits to the bank and forecasts cash so payroll weeks at risk show early.&quot; Lucid&#39;s CFO planning covers &quot;cash forecast, budget versus actuals, hiring scenarios.&quot; Your biller keeps the claims. Read <a href="/medical">how Lucid works with medical practices</a>.</p>
+<h2 id="faq">Questions practice owners ask about cash flow</h2>
+<h3 id="why-is-my-practice-profitable-but-i-have-no-money" data-faq-q>Why is my practice profitable but I have no money?</h3>
+<p>You measure profit and cash at different moments. You count profit when you earn it, but cash only arrives when insurance and patients pay, and it leaves for things your P&amp;L doesn&#39;t show as expenses, like loan principal and owner draws. Look at your balance sheet: if receivables, prepaid bills or supplies on hand went up this month, that&#39;s where you&#39;ll find your cash.</p>
+<h3 id="what-are-days-in-accounts-receivable-and-what-is-a-good-number-for-a-practice" data-faq-q>What are days in accounts receivable, and what is a good number for a practice?</h3>
+<p>Days in accounts receivable is how many days of charges you&#39;re still waiting to collect. There&#39;s no single good number, because it depends on your payers and specialty, so watch your own trend. If it climbs for two or three months in a row, you or your biller are falling behind on claims or patient balances. If you compare against a published benchmark, use the formula its publisher uses.</p>
+<h3 id="how-long-do-insurance-companies-take-to-pay-a-practice-2" data-faq-q>How long do insurance companies take to pay a practice?</h3>
+<p>Medicare can&#39;t pay a clean electronic claim before the 14th day after receiving it. It must pay it within 30 days, and it owes interest if it pays later. Commercial insurers follow your contract and your state&#39;s prompt pay rules, if your state has them. Patients often take longer than either.</p>
+<h3 id="how-much-cash-should-a-medical-practice-keep-in-reserve" data-faq-q>How much cash should a medical practice keep in reserve?</h3>
+<p>There isn&#39;t an official number. Build a 13-week forecast, find your lowest week, and keep enough to cover that week plus one full payroll. Some owners also keep enough for a large annual bill, such as an insurance premium, so a slow payer never puts payroll at risk.</p>
+<h3 id="does-loan-principal-show-on-my-p-l" data-faq-q>Does loan principal show on my P&amp;L?</h3>
+<p>No. You record only the interest on the loan as an expense. Paying principal lowers the balance you owe, so you&#39;ll find it on your balance sheet and your cash flow statement. For tax, you generally deduct the interest, not the principal.<!-- CPA CHECK: business loan interest deductible, principal not, [IRS Publication 334](https://www.irs.gov/publications/p334). --></p>
+<h3 id="how-do-i-make-a-13-week-cash-forecast" data-faq-q>How do I make a 13-week cash forecast?</h3>
+<p>Use a spreadsheet with one row per week. Start with today&#39;s bank balance, add expected collections, subtract payroll, rent, loan payments, draws and large bills, and carry the ending balance forward. Each week, replace the estimate with what happened and add a new week at the end, so you always see 13 weeks ahead.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>CMS, <a href="https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/clm104c01.pdf">Medicare Claims Processing Manual, chapter 1, sections 80.2.1.1 (payment ceiling), 80.2.1.2 (payment floor) and 80.2.2 (interest on late payment)</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p538">Publication 538, Accounting Periods and Methods</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p505">Publication 505, Tax Withholding and Estimated Tax</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p334">Publication 334, Tax Guide for Small Business</a></li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
