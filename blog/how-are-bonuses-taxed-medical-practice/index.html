@@ -1,0 +1,752 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How Are Bonuses Taxed? A Guide for Practice Owners | Lucid</title>
+<meta name="description" content="How year-end staff bonuses are taxed: the 22% flat withholding rate, the aggregate method, Social Security and Medicare, gift cards, and a $5,000 example."/>
+<link rel="canonical" href="https://www.lucid.now/blog/how-are-bonuses-taxed-medical-practice/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How Are Bonuses Taxed? A Guide for Practice Owners | Lucid"/>
+<meta property="og:description" content="How year-end staff bonuses are taxed: the 22% flat withholding rate, the aggregate method, Social Security and Medicare, gift cards, and a $5,000 example."/>
+<meta property="og:url" content="https://www.lucid.now/blog/how-are-bonuses-taxed-medical-practice/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How Are Bonuses Taxed? A Guide for Practice Owners | Lucid"/>
+<meta name="twitter:description" content="How year-end staff bonuses are taxed: the 22% flat withholding rate, the aggregate method, Social Security and Medicare, gift cards, and a $5,000 example."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","headline":"How are year-end bonuses for practice staff taxed?","description":"How year-end staff bonuses are taxed: the 22% flat withholding rate, the aggregate method, Social Security and Medicare, gift cards, and a $5,000 example.","url":"https://www.lucid.now/blog/how-are-bonuses-taxed-medical-practice/","datePublished":"2026-12-02","dateModified":"2026-12-02","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/how-are-bonuses-taxed-medical-practice/"},"image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why are bonuses withheld at 22%?","acceptedAnswer":{"@type":"Answer","text":"The IRS lets employers withhold a flat 22% of federal income tax from bonuses and other supplemental wages paid separately from regular pay. It's a withholding shortcut, not a tax rate. Your employee's real rate depends on their total income, so they'll get the difference back, or owe it, when they file."}},{"@type":"Question","name":"How much of a $1,000 bonus will my employee take home?","acceptedAnswer":{"@type":"Answer","text":"On its own check at the flat 22%, your employee keeps $703.50 of a $1,000 bonus before state tax: $220 goes to federal income tax, $62 to Social Security and $14.50 to Medicare. Your practice adds $76.50 for its share, so the bonus costs you $1,076.50."}},{"@type":"Question","name":"Are gift cards to employees taxable?","acceptedAnswer":{"@type":"Answer","text":"Yes. A gift card is taxable wages at any amount, even $25, because the IRS treats it like cash. Run it through payroll in the pay period you hand it out and include it on the W-2. A turkey or a small holiday gift that isn't cash or a card usually isn't taxable."}},{"@type":"Question","name":"Can I gross up a bonus so staff get the full amount?","acceptedAnswer":{"@type":"Answer","text":"Yes. You pay a larger bonus so the employee nets the amount you chose. The tax you cover is wages too, so you divide the take-home amount by what's left after all the withholding rates, not just add the tax back once."}},{"@type":"Question","name":"Can my practice deduct a bonus paid after December 31?","acceptedAnswer":{"@type":"Answer","text":"Only if your practice uses the accrual method, fixed the bonus before year end and pays it by March 15. With the cash method, you deduct it in the year you pay it. An S corp can't deduct an owner's accrued bonus before the owner is paid. Your accounting method is on your last business tax return."}},{"@type":"Question","name":"Should owners take a year-end bonus too?","acceptedAnswer":{"@type":"Answer","text":"If your practice is taxed as an S corp and your salary is low for your work, a payroll bonus can bring it to a reasonable level, though you'll pay Social Security and Medicare on it. If the IRS taxes your practice as a sole proprietorship or partnership, you can't pay yourself a W-2 bonus; you take a draw instead."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"How are year-end bonuses for practice staff taxed?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+@media (max-width:480px){.article-body .lc-table th,.article-body .lc-table td{padding:7px 6px;font-size:.86rem}}
+@media (max-width:640px){.article-body table.stack thead{display:none}.article-body table.stack tr{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}.article-body table.stack td{border:0;padding:4px 12px}.article-body table.stack td:first-child{grid-column:1/-1;font-weight:700;padding-top:12px}.article-body table.stack td:nth-child(n+2)::before{content:attr(data-label);display:block;font-size:.8rem;color:var(--ink-soft)}.article-body table.stack td:last-child{padding-bottom:12px}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How are year-end bonuses for practice staff taxed?</h1>
+<div class="article-meta"><time datetime="2026-12-02">December 2, 2026</time> &middot; 10 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 2, 2026</p>
+<!-- NEEDS LUCID: Reviewed by [name], CPA, [date]. No post goes live without this line. -->
+<div class="article-body">
+<p>A staff bonus is taxed as wages. You withhold federal income tax at a flat 22%, or add the bonus to a regular paycheck and withhold on the total. You and the employee each pay 7.65% for Social Security and Medicare. State tax comes on top, and gift cards count as wages too.<!-- CPA CHECK: the 22% flat rate, the aggregate method, the 7.65% employee and employer rates, gift cards as wages, against IRS Publications 15 and 15-B for 2026; state bonus withholding varies by state, name no state without sign-off. --></p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free 30-minute call and see what Lucid would cost for your practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>If you pay a bonus on its own check, you can withhold federal income tax at a flat 22%.</li>
+<li>A $5,000 bonus costs your practice $5,382.50 once you add your 7.65% share of Social Security and Medicare.</li>
+<li>A gift card is taxable wages at any amount; a small non-cash holiday gift usually isn&#39;t.</li>
+</ul>
+<!-- CPA CHECK: each key point, against the sections below and their sources. -->
+<h2 id="what-do-the-terms-on-a-bonus-paycheck-mean">What do the terms on a bonus paycheck mean?</h2>
+<p><strong>Supplemental wages</strong> are pay on top of regular wages, such as a bonus, commission or award. <strong>The flat rate method</strong> is withholding federal income tax from supplemental wages at a single 22% rate. <strong>The aggregate method</strong> is adding a bonus to a regular paycheck and withholding as if the total were one normal paycheck. <strong>FICA</strong> is the Social Security and Medicare tax you and each employee pay on wages. <strong>A gross-up</strong> is a larger bonus you pay so the employee takes home a set amount after tax. <strong>A de minimis benefit</strong> is a gift so small and rare that the IRS doesn&#39;t count it as wages.<!-- CPA CHECK: each definition, against IRS Publications 15 and 15-B. --></p>
+<h2 id="how-do-you-withhold-federal-tax-on-a-staff-bonus">How do you withhold federal tax on a staff bonus?</h2>
+<p>You have two choices. If you pay the bonus separately from regular wages, you can withhold a flat 22% of it. Or you can add it to a regular paycheck and withhold on the total. Either way, you also withhold Social Security and Medicare and pay your matching share.<!-- CPA CHECK: the two methods and FICA on supplemental wages, IRS Publication 15, section 7. --></p>
+<p>You can use the flat 22% only if you withheld income tax from that employee&#39;s regular wages this year or last year. Once a person&#39;s supplemental wages from you pass $1 million in a year, you withhold 37% on the amount over $1 million, whatever their Form W-4 says.<!-- CPA CHECK: the conditions for the flat rate method and the mandatory 37% rate over $1 million, [IRS Publication 15](https://www.irs.gov/publications/p15), section 7. --></p>
+<p>Congress kept these rates in the 2025 tax law, so they apply to 2026 bonuses.<!-- CPA CHECK: Publication 15 (2026), "What's New": the supplemental rate remains 22% (37% over $1 million) because P.L. 119-21 permanently extended the individual rates. --></p>
+<p>When staff say a bonus was &quot;taxed at 40%,&quot; they&#39;re adding 22% federal withholding, 7.65% for Social Security and Medicare, and state tax.<!-- CPA CHECK: withholding is not the employee's final tax; the combined percentage example. --></p>
+<h2 id="how-is-each-kind-of-bonus-taxed">How is each kind of bonus taxed?</h2>
+<p>Cash bonuses and gift cards are wages at any amount, so you run them through payroll and report them on the employee&#39;s W-2. A small non-cash holiday gift, such as a ham or a fruit basket, usually isn&#39;t wages. If you cover the employee&#39;s tax, the tax you cover is wages too.</p>
+<div class="lc-table"><table class="stack">
+<thead>
+<tr>
+<th>Bonus type</th>
+<th>Is it taxable wages?</th>
+<th>How you report it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Bonus type">Cash, check or direct deposit</td>
+<td data-label="Is it taxable wages?">Yes: income tax withholding, Social Security, Medicare and federal unemployment tax</td>
+<td data-label="How you report it">On the W-2, with regular pay</td>
+</tr>
+<tr>
+<td data-label="Bonus type">Gift card or gift certificate</td>
+<td data-label="Is it taxable wages?">Yes, at any amount</td>
+<td data-label="How you report it">On the W-2; run its value through payroll</td>
+</tr>
+<tr>
+<td data-label="Bonus type">Small non-cash holiday gift</td>
+<td data-label="Is it taxable wages?">Usually not, as a de minimis benefit</td>
+<td data-label="How you report it">Not on the W-2</td>
+</tr>
+<tr>
+<td data-label="Bonus type">Gross-up (you cover the employee&#39;s tax)</td>
+<td data-label="Is it taxable wages?">Yes, including the tax you cover</td>
+<td data-label="How you report it">On the W-2, at the grossed-up amount</td>
+</tr>
+</tbody></table></div>
+<p>The IRS says cash equivalents such as gift cards, &quot;no matter how little, are never excludable as a de minimis benefit&quot; (<a href="https://www.irs.gov/publications/p15b">IRS Publication 15-B</a>).<!-- CPA CHECK: gift cards as wages; holiday gifts other than cash with a low fair market value as de minimis; federal unemployment tax on supplemental wages; employer-paid employee taxes as additional wages, Publication 15, section 7 and "Employee's portion of taxes paid by employer." --></p>
+<h2 id="how-much-does-a-5-000-bonus-cost-you-and-what-does-the-employee-keep">How much does a $5,000 bonus cost you, and what does the employee keep?</h2>
+<p>On a $5,000 bonus, your medical assistant keeps about $3,500 before state tax, and your practice pays about $5,380 in total. You&#39;ll withhold a little more or less by method, but she&#39;ll owe the same tax and you&#39;ll pay the same cost.</p>
+<p><strong>Example 1: a $5,000 year-end bonus to a medical assistant.</strong> She earns $1,800 every two weeks ($46,800 a year), files as single, and has a 2020 or later Form W-4 with nothing else entered. You pay it in December 2026, on its own check or added to her regular paycheck.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Flat 22%</th>
+<th align="right">Aggregate method</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bonus</td>
+<td align="right">$5,000.00</td>
+<td align="right">$5,000.00</td>
+</tr>
+<tr>
+<td>Federal income tax withheld</td>
+<td align="right">$1,100.00</td>
+<td align="right">$1,066.54</td>
+</tr>
+<tr>
+<td>Her Social Security, 6.2%</td>
+<td align="right">$310.00</td>
+<td align="right">$310.00</td>
+</tr>
+<tr>
+<td>Her Medicare, 1.45%</td>
+<td align="right">$72.50</td>
+<td align="right">$72.50</td>
+</tr>
+<tr>
+<td>She takes home, before state tax</td>
+<td align="right">$3,517.50</td>
+<td align="right">$3,550.96</td>
+</tr>
+<tr>
+<td>Your Social Security and Medicare, 7.65%</td>
+<td align="right">$382.50</td>
+<td align="right">$382.50</td>
+</tr>
+<tr>
+<td>Your total cost</td>
+<td align="right">$5,382.50</td>
+<td align="right">$5,382.50</td>
+</tr>
+</tbody></table></div>
+<p>For the aggregate column, you figure withholding on a $6,800 paycheck ($1,198.69) and subtract the $132.15 you&#39;d withhold on her regular check.<!-- CPA CHECK: the withholding amounts, using the 2026 Percentage Method Tables for Automated Payroll Systems in [IRS Publication 15-T](https://www.irs.gov/publications/p15t), Worksheet 1A, single, standard withholding. --></p>
+<p>Her actual federal tax on the bonus is about $600. With $51,800 in 2026 wages and the $16,100 standard deduction, she&#39;s in the 12% bracket, so she&#39;d get about $500 back when she files.<!-- CPA CHECK: the 2026 single standard deduction of $16,100 and the 12% bracket up to $50,400 of taxable income, IRS 2026 inflation adjustments; assumes no other income. --> By December you&#39;ve likely paid federal unemployment tax on her first $7,000, the yearly limit, so you won&#39;t owe it on the bonus.<!-- CPA CHECK: the $7,000 FUTA wage base for 2026; state unemployment wage bases differ. --></p>
+<p><strong>Example 2: a gross-up so the employee takes home $500.</strong> You want a front desk employee to take home exactly $500, paid on its own check at the flat 22%, in a state with no income tax. You divide $500 by what&#39;s left after 22% and 7.65%: $500 ÷ 0.7035 is $710.73, and you round up a cent so they take home the full $500.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Amount</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grossed-up bonus</td>
+<td align="right">$710.74</td>
+</tr>
+<tr>
+<td>Federal income tax withheld, 22%</td>
+<td align="right">$156.36</td>
+</tr>
+<tr>
+<td>Their Social Security, 6.2%</td>
+<td align="right">$44.07</td>
+</tr>
+<tr>
+<td>Their Medicare, 1.45%</td>
+<td align="right">$10.31</td>
+</tr>
+<tr>
+<td>They take home</td>
+<td align="right">$500.00</td>
+</tr>
+<tr>
+<td>Your Social Security and Medicare, 7.65%</td>
+<td align="right">$54.37</td>
+</tr>
+<tr>
+<td>Your total cost</td>
+<td align="right">$765.11</td>
+</tr>
+</tbody></table></div>
+<p>With a state income tax, add its rate to the 29.65% first.<!-- CPA CHECK: the gross-up arithmetic; employer-paid employee taxes as additional wages, IRS Publication 15. --></p>
+<h2 id="can-you-deduct-a-bonus-you-pay-in-january-on-this-years-return">Can you deduct a bonus you pay in January on this year&#39;s return?</h2>
+<p>It depends on your accounting method. With the cash method, you deduct a bonus in the year you pay it, so a bonus you pay in January 2027 goes on your 2027 return. With the accrual method, you can often deduct it for 2026 if you pay it by March 15, 2027.<!-- CPA CHECK: cash method deducts expenses in the year paid, [IRS Publication 538](https://www.irs.gov/publications/p538); accrual method deduction of a 2026 bonus paid within 2½ months of year end, [Treas. Reg. 1.404(b)-1T, Q&A-2](https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/section-1.404(b)-1T). --></p>
+<p>For the accrual rule, you must fix the bonus and its amount by December 31, for example in a written plan. You can&#39;t use it for a bonus to yourself or another S corp owner; you deduct that only in the year the owner is paid.<!-- CPA CHECK: the all-events test, and the related-person rule for S corp shareholders, Publication 538 "Related Persons" and section 267. --></p>
+<p>For other staff costs you can deduct, see <a href="/guides/tax-deductions-for-medical-practice-owners/#staff-and-people-costs">tax deductions for medical practice owners</a>.</p>
+<h2 id="which-december-and-january-dates-matter-for-bonuses">Which December and January dates matter for bonuses?</h2>
+<p>Pay a bonus by Thursday, December 31, 2026 if you want it on 2026 W-2s and, with the cash method, on your 2026 return. You&#39;ll send W-2s by Monday, February 1, 2027. Banks close on Friday, December 25 and Friday, January 1, so approve bonuses before your payroll provider&#39;s last December cutoff.</p>
+<div class="lc-table lc-dates"><table class="stack">
+<thead>
+<tr>
+<th>Date</th>
+<th>What happens</th>
+<th>Who it applies to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Date">Fri, Dec 25, 2026</td>
+<td data-label="What happens">Bank holiday; banks don&#39;t send direct deposits</td>
+<td data-label="Who it applies to">Every practice with payroll</td>
+</tr>
+<tr>
+<td data-label="Date">Thu, Dec 31, 2026</td>
+<td data-label="What happens">Last day to pay a bonus as 2026 wages</td>
+<td data-label="Who it applies to">Every practice with staff</td>
+</tr>
+<tr>
+<td data-label="Date">Fri, Jan 1, 2027</td>
+<td data-label="What happens">Bank holiday; banks don&#39;t send direct deposits</td>
+<td data-label="Who it applies to">Every practice with payroll</td>
+</tr>
+<tr>
+<td data-label="Date">Mon, Feb 1, 2027</td>
+<td data-label="What happens">W-2s to staff and the Social Security Administration; Form 941 for the last quarter of 2026; Form 940</td>
+<td data-label="Who it applies to">Every practice with staff</td>
+</tr>
+<tr>
+<td data-label="Date">Mon, Mar 15, 2027</td>
+<td data-label="What happens">Last day to pay an accrued 2026 bonus and still deduct it for 2026</td>
+<td data-label="Who it applies to">Accrual-method practices; not owners of an S corp</td>
+</tr>
+</tbody></table></div>
+<!-- CPA CHECK: employees include a bonus in wages in the year received, so the December 31 date; the February 1, 2027 W-2 date, [Instructions for Forms W-2 and W-3](https://www.irs.gov/instructions/iw2w3) (2026); Form 941 and Form 940 dates, IRS Publication 509; the March 15 accrual date; bank holiday dates. -->
+<p>How long you keep these payroll records is covered in <a href="/blog/payroll-tax-records-retention-rules-explained/">payroll tax record retention for medical practices</a>.</p>
+<h2 id="should-you-take-a-year-end-bonus-from-your-own-s-corp">Should you take a year-end bonus from your own S corp?</h2>
+<p>Sometimes. If your practice is taxed as an S corp and you work in it, a bonus through payroll is wages, so you and the practice pay Social Security and Medicare on it. You don&#39;t on a distribution. Owners still choose a bonus to reach a reasonable salary, raise retirement plan contributions, or cover an estimated tax shortfall through withholding.<!-- CPA CHECK: S corp shareholder-employee pay as wages, reasonable compensation, [Instructions for Form 1120-S](https://www.irs.gov/instructions/i1120s); no Social Security or Medicare on distributions. --></p>
+<p><strong>Example 3: an owner&#39;s $40,000 bonus.</strong> You&#39;re the only owner of a practice taxed as an S corp, with a $150,000 salary through payroll in 2026. You&#39;re choosing between a $40,000 bonus on the last December payroll and a $40,000 distribution.</p>
+<div class="lc-table"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Bonus through payroll</th>
+<th align="right">Distribution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Social Security, 6.2% each side, on $34,500</td>
+<td align="right">$4,278</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>Medicare, 1.45% each side, on $40,000</td>
+<td align="right">$1,160</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>Total Social Security and Medicare</td>
+<td align="right">$5,438</td>
+<td align="right">$0</td>
+</tr>
+<tr>
+<td>Federal income tax withheld now, 22%</td>
+<td align="right">$8,800</td>
+<td align="right">$0</td>
+</tr>
+</tbody></table></div>
+<p>You owe income tax on the $40,000 either way. With a bonus, the practice withholds it now; with a distribution, you pay it on your own return, because S corp profit is taxed to you whether or not you take it out.<!-- CPA CHECK: S corp income taxed to shareholders whether or not distributed, Instructions for Form 1120-S. --></p>
+<p>You stop paying Social Security once your 2026 wages reach $184,500, so you pay it on only $34,500 of the bonus. You&#39;d pay the extra 0.9% Medicare tax only on wages over $200,000.<!-- CPA CHECK: the $184,500 Social Security wage base and the 0.9% Additional Medicare Tax withholding over $200,000, IRS Publication 15 (2026). --> The IRS generally treats income tax withheld from wages as paid evenly through the year, so you can use the $8,800 to make up for a short estimated payment earlier in 2026. You can&#39;t do that with a distribution.<!-- CPA CHECK: withholding treated as paid evenly, [Instructions for Form 2210](https://www.irs.gov/instructions/i2210). --></p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free 30-minute call and see what it would cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+
+<p>For how much salary to take, see <a href="/guides/s-corp-salary-for-medical-practice-owners/">S corp salary for medical practice owners</a>.</p>
+<h2 id="what-should-med-spa-and-dental-practice-owners-watch-for">What should med spa and dental practice owners watch for?</h2>
+<p>Med spa and dental practices often tie bonuses to sales or production. For employees, those are wages. You don&#39;t withhold tax from a bonus you pay a contractor, such as a contract injector or hygienist; you add it to their Form 1099-NEC total.<!-- CPA CHECK: commissions and production bonuses as supplemental wages; bonuses to contractors reported on Form 1099-NEC; worker classification. --></p>
+<ul>
+<li><strong>Med spa owners:</strong> run per-treatment and retail bonuses for employed injectors through payroll. See <a href="/specialty/medical-spa">bookkeeping for med spas</a>.</li>
+<li><strong>Dental practice owners:</strong> if staff bonuses are a share of collections, put the formula in writing before December 31. See <a href="/specialty/dental">bookkeeping for dental practices</a>.</li>
+</ul>
+<p>To set amounts by role, start from your <a href="/blog/medical-practices-staff-base-pay-bands/">staff base pay bands</a>.</p>
+<h2 id="what-to-ask-your-cpa-about-year-end-bonuses">What to ask your CPA about year-end bonuses</h2>
+<ul>
+<li>Which withholding method should my payroll use for bonuses, and what does my state require?</li>
+<li>Does my practice use the cash method or the accrual method, and when do I deduct a January bonus?</li>
+<li>Should I take a bonus from my S corp this year, or a distribution?</li>
+<li>Are any of my contract providers really employees for bonus purposes?</li>
+</ul>
+<h2 id="what-lucid-does-for-your-year-end-numbers">What Lucid does for your year-end numbers</h2>
+<p>Lucid (lucid.now) does bookkeeping and taxes for medical practices and med spas. Lucid&#39;s experts handle quarterly estimates and S corp strategy, and you get &quot;a dedicated CPA who knows your specialty.&quot; See <a href="/medical">bookkeeping for medical practices</a>.</p>
+<h2 id="faq">Questions practice owners ask about bonus taxes</h2>
+<p><em>This guide is general information, not tax advice for your practice. Tax rules change and depend on your state and your numbers. Talk to a CPA before you act on it.</em></p>
+<h3 id="why-are-bonuses-withheld-at-22" data-faq-q>Why are bonuses withheld at 22%?</h3>
+<p>The IRS lets employers withhold a flat 22% of federal income tax from bonuses and other supplemental wages paid separately from regular pay. It&#39;s a withholding shortcut, not a tax rate. Your employee&#39;s real rate depends on their total income, so they&#39;ll get the difference back, or owe it, when they file.<!-- CPA CHECK: the 22% optional flat rate, Publication 15, section 7. --></p>
+<h3 id="how-much-of-a-1-000-bonus-will-my-employee-take-home" data-faq-q>How much of a $1,000 bonus will my employee take home?</h3>
+<p>On its own check at the flat 22%, your employee keeps $703.50 of a $1,000 bonus before state tax: $220 goes to federal income tax, $62 to Social Security and $14.50 to Medicare. Your practice adds $76.50 for its share, so the bonus costs you $1,076.50.<!-- CPA CHECK: the $1,000 arithmetic at 22% and 7.65%. --></p>
+<h3 id="are-gift-cards-to-employees-taxable" data-faq-q>Are gift cards to employees taxable?</h3>
+<p>Yes. A gift card is taxable wages at any amount, even $25, because the IRS treats it like cash. Run it through payroll in the pay period you hand it out and include it on the W-2. A turkey or a small holiday gift that isn&#39;t cash or a card usually isn&#39;t taxable.<!-- CPA CHECK: gift cards never de minimis; non-cash holiday gifts of low value as de minimis, Publication 15-B. --></p>
+<h3 id="can-i-gross-up-a-bonus-so-staff-get-the-full-amount" data-faq-q>Can I gross up a bonus so staff get the full amount?</h3>
+<p>Yes. You pay a larger bonus so the employee nets the amount you chose. The tax you cover is wages too, so you divide the take-home amount by what&#39;s left after all the withholding rates, not just add the tax back once.<!-- CPA CHECK: gross-up as additional wages; gross-up method. --></p>
+<h3 id="can-my-practice-deduct-a-bonus-paid-after-december-31" data-faq-q>Can my practice deduct a bonus paid after December 31?</h3>
+<p>Only if your practice uses the accrual method, fixed the bonus before year end and pays it by March 15. With the cash method, you deduct it in the year you pay it. An S corp can&#39;t deduct an owner&#39;s accrued bonus before the owner is paid. Your accounting method is on your last business tax return.<!-- CPA CHECK: 2½-month rule, cash method timing, related-person rule; accounting method shown on the business return. --></p>
+<h3 id="should-owners-take-a-year-end-bonus-too" data-faq-q>Should owners take a year-end bonus too?</h3>
+<p>If your practice is taxed as an S corp and your salary is low for your work, a payroll bonus can bring it to a reasonable level, though you&#39;ll pay Social Security and Medicare on it. If the IRS taxes your practice as a sole proprietorship or partnership, you can&#39;t pay yourself a W-2 bonus; you take a draw instead.<!-- CPA CHECK: reasonable compensation; sole owners and partners can't be W-2 employees of their own unincorporated practice. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>IRS, <a href="https://www.irs.gov/publications/p15">Publication 15 (2026), Employer&#39;s Tax Guide</a> (supplemental wages, section 7; 2026 Social Security and Medicare rates and the $184,500 wage base; FUTA)</li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15t">Publication 15-T (2026), Federal Income Tax Withholding Methods</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p15b">Publication 15-B (2026), Employer&#39;s Tax Guide to Fringe Benefits</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p538">Publication 538, Accounting Periods and Methods</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/iw2w3">Instructions for Forms W-2 and W-3 (2026)</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i1120s">Instructions for Form 1120-S</a></li>
+<li>IRS, <a href="https://www.irs.gov/instructions/i2210">Instructions for Form 2210</a></li>
+<li>IRS, <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill">Tax inflation adjustments for tax year 2026</a></li>
+<li>IRS, <a href="https://www.irs.gov/publications/p509">Publication 509, Tax Calendars</a></li>
+<li>Treasury, <a href="https://www.ecfr.gov/current/title-26/chapter-I/subchapter-A/part-1/section-1.404(b)-1T">Treas. Reg. 1.404(b)-1T, Q&amp;A-2 (eCFR)</a> (bonus paid within 2 1/2 months of year end)</li>
+</ul>
+<p>[Post shell closing box (<code>div.article-cta</code>, &quot;Ready to simplify your practice finances?&quot;), Lucid&#39;s copy unchanged; change its one Get Started href from <code>/pricing</code> to <code>/book?cta=GetStarted</code>.]</p>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
