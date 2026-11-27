@@ -1,0 +1,739 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- TRACKING:HEAD:START -->
+<!-- Nov 11 2026: GA4 + Google Ads fire early. gtag stubs queue immediately; gtag.js loads on browser
+     idle (max 1s) so early bounces are tracked (~0.5s vs ~4s) at a small TBT cost. A/B (PSI, 8 mobile /
+     5 desktop runs): mobile 99 -> 89, desktop 98 -> 98. GTM container loads on first user interaction or load+3s. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-C7R39B4QSW');
+gtag('config', 'AW-17424075651');
+(function(){
+  var loaded=false;
+  function go(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-C7R39B4QSW';document.head.appendChild(s);}
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1000}); else setTimeout(go,300);
+
+  // Early CTA clicks (before the deferred GTM container loads, ~4s): GTM's Button_Link_Click tag cannot
+  // see them, so send the same event + params via gtag. Logic below is a port of the GTM "CTA *" variables
+  // (container v62). Once GTM has loaded this stays silent and GTM's own tag handles clicks (no double count).
+  var CTX={};
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  function vResolvedEl() {
+  var el = CTX.raw;
+  if (!el || el.nodeType !== 1) { return el || null; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function resolve(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  return resolve(el) || el;
+}
+  function vText() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  var text = "";
+  if (el && el.nodeType === 1) {
+    var tg = el.tagName ? el.tagName.toLowerCase() : "";
+    if (tg === "input" || tg === "select") { text = clean(el.value || el.getAttribute("name")); }
+    else { text = clean(el.innerText || el.textContent); }
+  }
+  if (!text) { text = clean(CTX.rawText); }
+  if (text && !/[0-9A-Za-z\u00c0-\uffff]/.test(text.replace(/[\u2190-\u2bff\u25a0-\u27bf\u2600-\u26ff]/g, "")) && el && el.getAttribute) {
+    var lab = clean(el.getAttribute("aria-label") || el.getAttribute("title"));
+    if (lab) { text = lab + " (" + text + ")"; }
+  }
+  if (text) { return cut(text, 100); }
+  el = el || CTX.raw;
+  if (el && el.getAttribute) {
+    var attrs = ["aria-label","alt","title","data-tab","data-action","name"];
+    for (var i = 0; i < attrs.length; i++) { var a = clean(el.getAttribute(attrs[i])); if (a) { return cut(a, 100); } }
+    var img = el.querySelector ? el.querySelector("img[alt],svg title,[aria-label]") : null;
+    if (img) { var t2 = clean(img.getAttribute("alt") || img.getAttribute("aria-label") || img.textContent); if (t2) { return cut(t2, 100); } }
+    if (el.id) { return "#" + clean(el.id); }
+    var parts = [], node = el, depth = 0;
+    while (node && node.nodeType === 1 && depth < 4) {
+      var tag = node.tagName.toLowerCase();
+      var cls = clean(node.getAttribute("class")).split(" ")[0];
+      var idx = 1, sib = node;
+      while (sib.previousElementSibling) { sib = sib.previousElementSibling; idx++; }
+      parts.unshift(tag + (node.id ? "#" + node.id : (cls ? "." + cls : "")) + "[" + idx + "]");
+      if (node.id) { break; }
+      node = node.parentElement; depth++;
+    }
+    if (parts.length) { return cut(parts.join(">"), 100); }
+  }
+  return "unknown_element";
+}
+  function vId() {
+  var el = CTX.el;
+  if (!el) return "";
+  var href = el.getAttribute ? el.getAttribute("href") : (el.href || "");
+  var m = href && href.match(/[?&]cta=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  return el.id ? String(el.id) : "";
+}
+  function vClasses() {
+  var el = CTX.el;
+  var c = (el && el.getAttribute) ? el.getAttribute("class") : "";
+  return c ? String(c).replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") : "";
+}
+  function vUrl() {
+  var el = CTX.el;
+  if (!el || !el.getAttribute) { return ""; }
+  var tg = el.tagName.toLowerCase();
+  if (tg === "a") { return el.href ? String(el.href.baseVal || el.href) : (el.getAttribute("href") || ""); }
+  var f = el.form || (el.closest ? el.closest("form") : null);
+  if (f && (el.type === "submit" || tg === "button")) { return f.action || ""; }
+  return "";
+}
+  function vSection() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1) { return ""; }
+  function lbl(n) {
+    var tg = n.tagName.toLowerCase();
+    if (n.id) { return tg + "#" + n.id; }
+    var al = clean(n.getAttribute("aria-label"));
+    if (al) { return tg + "[" + cut(al, 30) + "]"; }
+    var c = clean(n.getAttribute("class")).split(" ")[0];
+    return tg + (c ? "." + c : "");
+  }
+  var region = "", n = el.parentElement;
+  while (n && n.nodeType === 1 && n.tagName.toLowerCase() !== "body") {
+    var t = n.tagName.toLowerCase();
+    var dp = n.getAttribute("data-panel");
+    if (dp) { region = t + "[panel=" + clean(dp) + "]"; break; }
+    if (t === "header" || t === "footer" || t === "nav" || t === "section" || t === "aside" || t === "main" || t === "form" || t === "dialog" || n.getAttribute("role") === "dialog" || n.id) { region = lbl(n); break; }
+    n = n.parentElement;
+  }
+  var heading = "", a = el, d = 0;
+  while (a && a.nodeType === 1 && d < 6 && !heading) {
+    var hs = a.querySelectorAll ? a.querySelectorAll("h1,h2,h3,h4") : [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var pos = el.compareDocumentPosition(hs[i]);
+      var vis = hs[i].getClientRects ? hs[i].getClientRects().length > 0 : true;
+      if (vis && ((pos & 16) || (pos & 2))) { var ht = clean(hs[i].innerText || hs[i].textContent); if (ht) { heading = ht; break; } }
+    }
+    if (a.tagName && /^(header|footer|nav|section|body)$/i.test(a.tagName)) { break; }
+    a = a.parentElement; d++;
+  }
+  var out = region || "page";
+  if (heading) { out += " > " + heading; }
+  return cut(out, 100);
+}
+  function vPosition() {
+  function clean(s){ return s ? String(s).replace(/[\s\u00a0]+/g," ").replace(/["\\]/g,"'").replace(/^\s+|\s+$/g,"") : ""; }
+  function cut(s,n){ return s.length>n ? s.slice(0,n-3)+"..." : s; }
+  var el = CTX.el;
+  if (!el || el.nodeType !== 1 || !document.querySelectorAll) { return ""; }
+  var me = clean(el.textContent);
+  var all = document.querySelectorAll(el.tagName), same = 0, idx = 0;
+  for (var i = 0; i < all.length; i++) { if (clean(all[i].textContent) === me) { same++; if (all[i] === el) { idx = same; } } }
+  return idx ? (idx + "/" + same) : "";
+}
+  function vType() {
+  var raw = CTX.raw;
+  var el = CTX.el;
+  if (!el || !el.tagName) { return "unknown"; }
+  function mt(n,s){ var f=n.matches||n.msMatchesSelector||n.webkitMatchesSelector; try{ return f?f.call(n,s):false; }catch(e){ return false; } }
+  function _r(el){ var n=el,d=0; while(n&&n.nodeType===1&&d<8){ if(mt(n,"a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],[role=option],input[type=submit],input[type=button],input[type=checkbox],input[type=radio],select,summary,label,[onclick],[data-action]")) return n; n=n.parentElement; d++; } return null; }
+  var tg = el.tagName.toLowerCase();
+  var role = el.getAttribute ? el.getAttribute("role") : "";
+  var interactive = raw && raw.nodeType === 1 ? !!_r(raw) : false;
+  return (interactive ? "" : "non-interactive:") + tg + (role ? "[" + role + "]" : "");
+}
+  document.addEventListener('click',function(e){
+    try{
+      if(gtmLoaded())return;
+      var raw=e.target;
+      CTX={raw:raw,el:null,rawText:(raw&&(raw.innerText||raw.textContent))||''};
+      CTX.el=vResolvedEl();
+      go();
+      gtag('event','Button_Link_Click',{
+        cta_text:vText(),cta_id:vId(),cta_classes:vClasses(),cta_url:vUrl(),page_path:location.pathname,
+        cta_section:vSection(),cta_position:vPosition(),cta_element:vType(),
+        send_to:'G-C7R39B4QSW',transport_type:'beacon'
+      });
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- Google Tag Manager, PostHog, Meta Pixel: all deferred window 'load' + 3s,
+     same pattern already used for Crisp/Reddit/Hotjar in body-tracking.html.
+     Isolation-tested Oct 29 2026: deferring GTM alone to 'load' barely moved
+     the mobile score (TBT ~1900ms->~1740ms); blocking ALL 5 trackers together
+     dropped it to ~175ms TBT / ~95 score, consistently, across 5 runs each.
+     Meta Pixel previously fired immediately, un-deferred at all - the single
+     biggest remaining unforced blocker. Tradeoff, on top of the GTM-only one
+     already accepted: GA4/Ads/Meta/Reddit pixel fires move to window.load+3s,
+     so a visitor who bounces before then isn't tracked on ANY platform, not
+     just GTM's. dataLayer is initialized and gtm.start pushed immediately so
+     early dataLayer.push() calls from elsewhere on the page still queue. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+(function(){
+  var done=false, evs=['scroll','click','touchstart','keydown','mousemove'];
+  function load(){
+    if(done) return; done=true;
+    evs.forEach(function(e){window.removeEventListener(e,load,{passive:true});});
+    (function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5WW4FVXM');
+  }
+  evs.forEach(function(e){window.addEventListener(e,load,{passive:true,once:true});});
+  window.addEventListener('load',function(){setTimeout(load,3000);});
+})();
+</script>
+<!-- End Google Tag Manager -->
+
+<!-- Nov 10 2026: PostHog and Meta Pixel are NO LONGER deferred (3s delay removed) to close
+     the tracking blindspot for visitors who bounce early. Isolation-tested via 10-run mobile
+     Lighthouse: PostHog undelayed = no measurable cost; Meta undelayed = ~+165ms TBT (~4 score
+     points). GTM stays deferred (undeferred GTM = ~+940ms TBT, ~-18 points). -->
+<!-- PostHog -->
+<script defer src="https://ingest.lucid.now/ingest/static/array.js"></script>
+<script>
+  // array.js is `defer`: it only exists after parsing, so init on DOMContentLoaded
+  // (deferred scripts run just before it), not immediately inline.
+  document.addEventListener('DOMContentLoaded', function () {
+      posthog.init('phc_kKt5zMf32qrGUGyWjcwsvBB8esQ8FJn7FPYitpt8bqZe', {
+        api_host: 'https://ingest.lucid.now/ingest',
+        autocapture: true,
+        capture_pageview: true,
+        capture_pageleave: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        custom_campaign_params: ['a_aid', 'chan', 'data1'],
+      });
+  });
+</script>
+
+<!-- Meta Pixel: deployed here directly rather than via GTM (tag 6 there is
+     paused to avoid a duplicate init). GTM's own tag-firing for this pixel
+     was unreliable - fbq never appeared client-side even well past the
+     container's own load time, with no config issue found on the GTM side.
+     Click-level tracking (tag 60, "ButtonClick") stays in GTM as-is, unaffected
+     - only the init/PageView piece moved here. -->
+<script>
+(function () {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1012371517060574');
+    fbq('track', 'PageView');
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1012371517060574&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+<!-- LUCID-CLICK-TRACKER:START v2 (2026-11-18) - logs EVERY button + CTA click to PostHog, GA4 and Meta.
+     Event names: GA4 + PostHog = Button_Link_Click, Meta = ButtonClick (custom event, same as the GTM tag on www).
+     CTA event (every click on a call-to-action, sent to all 3 on both sites): GA4 + PostHog = cta_click, Meta = CTAClick (this pixel's Meta event-validation list silently drops unapproved custom names; CTAClick was approved in Events Manager 2026-11-18, ButtonClick too).
+     GA4 convention = snake_case custom event; Meta custom events = PascalCase (no standard CTA event exists in either);
+     cta_click is also the pre-existing PostHog name on www (script.js), so reports keep working.
+     Params: cta_text, cta_id (?cta= value or element id), cta_classes, cta_url, cta_section, cta_position, cta_element, page_path.
+     Capture phase on document, so it still fires when page code calls stopPropagation()/preventDefault().
+     Config: GA_META_MODE = 'always' (get.lucid.now: GTM click tags do not see clicks there) or 'until-gtm'
+     (www.lucid.now: GTM's own tags send GA4+Meta once the container has loaded; this only covers clicks before that). -->
+<script>
+(function(){
+  if(window.__lucidClickTracker)return; window.__lucidClickTracker=1;
+  var GA_META_MODE='until-gtm', GA4_ID='G-C7R39B4QSW';
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){window.dataLayer.push(arguments);}
+  function gtmLoaded(){return !!(window.google_tag_manager&&window.google_tag_manager['GTM-5WW4FVXM']);}
+  // send immediately via beacon: PostHog's default batch queue is not flushed when the click navigates the page away
+  var PH_OPTS={send_instantly:true,transport:'sendBeacon'};
+  var SEL='a[href],button,[role=button],[role=tab],[role=menuitem],[role=link],input[type=submit],input[type=button],summary,[onclick]';
+  function clean(s){return s?String(s).replace(/[\s ]+/g,' ').replace(/^\s+|\s+$/g,''):'';}
+  function cut(s,n){return s.length>n?s.slice(0,n-3)+'...':s;}
+  function resolve(t){
+    if(!t||t.nodeType!==1)t=t&&t.parentElement; if(!t)return null;
+    var f=t.closest?t.closest(SEL):null; return f;
+  }
+  function textOf(el){
+    var t=clean(el.tagName==='INPUT'?el.value:(el.innerText||el.textContent));
+    if(!t)t=clean(el.getAttribute('aria-label')||el.getAttribute('title')||el.getAttribute('alt'));
+    if(!t){var im=el.querySelector&&el.querySelector('img[alt],svg title,[aria-label]');if(im)t=clean(im.getAttribute('alt')||im.getAttribute('aria-label')||im.textContent);}
+    if(!t&&el.id)t='#'+el.id;
+    return cut(t||'unknown_element',100);
+  }
+  function ctaId(el){
+    var h=el.getAttribute('href')||'',m=h.match(/[?&]cta=([^&#]+)/);
+    if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}
+    return el.id?String(el.id):'';
+  }
+  function sectionOf(el){
+    var n=el.parentElement,region='';
+    while(n&&n.nodeType===1&&n.tagName!=='BODY'){
+      var t=n.tagName.toLowerCase();
+      if(/^(header|footer|nav|section|aside|main|form|dialog)$/.test(t)||n.id){
+        region=t+(n.id?'#'+n.id:(n.getAttribute('class')?'.'+clean(n.getAttribute('class')).split(' ')[0]:''));
+        var h=n.querySelector&&n.querySelector('h1,h2,h3');
+        if(h){var ht=clean(h.innerText||h.textContent);if(ht)region+=' > '+ht;}
+        break;
+      }
+      n=n.parentElement;
+    }
+    return cut(region||'page',100);
+  }
+  function positionOf(el,text){
+    try{
+      var all=document.querySelectorAll(el.tagName),same=0,idx=0;
+      for(var i=0;i<all.length;i++){var tt=clean(all[i].innerText||all[i].value||all[i].textContent);if(tt===clean(el.innerText||el.value||el.textContent)){same++;if(all[i]===el)idx=same;}}
+      return idx?idx+'/'+same:'';
+    }catch(e){return '';}
+  }
+  function urlOf(el){
+    if(el.tagName==='A')return String(el.href||el.getAttribute('href')||'');
+    var f=el.form||(el.closest?el.closest('form'):null);
+    return f?String(f.action||''):'';
+  }
+  function elType(el){return el.tagName.toLowerCase()+(el.getAttribute('role')?'['+el.getAttribute('role')+']':'');}
+  var CTA_TEXT=/^[^a-z0-9]*(get started|book a|book now|talk to|get a quote|get my free|free estimate|schedule|request a demo|book a demo|sign up|start free|contact us|log in)/i;
+  function isCta(el,p){
+    var h=el.getAttribute('href')||'', c=' '+(el.getAttribute('class')||'')+' ';
+    if(el.__ctaData)return true;
+    if(/[?&]cta=/.test(h))return true;
+    if(/\s(btn-primary|btn-cta|sticky-cta|cta|cta-btn)\s/i.test(c))return true;
+    if(/\/book(\b|\/|\?)|contact\.lucid\.now|calendly|\/zc\/|get-started|signup|sign-up/i.test(h))return true;
+    if(el.tagName!=='SUMMARY'&&CTA_TEXT.test(p.cta_text)&&p.cta_text.length<45)return true;
+    return false;
+  }
+  function whenReady(test,fn){
+    if(test()){fn();return;}
+    var n=0,iv=setInterval(function(){n++;if(test()){clearInterval(iv);fn();}else if(n>100){clearInterval(iv);}},100);
+  }
+  document.addEventListener('click',function(e){
+    try{
+      var el=resolve(e.target); if(!el)return;
+      var p={
+        cta_text:textOf(el),cta_id:ctaId(el),cta_classes:cut(clean(el.getAttribute('class')),100),
+        cta_url:cut(urlOf(el),100),page_path:location.pathname,cta_section:sectionOf(el),
+        cta_position:positionOf(el),cta_element:elType(el)
+      };
+      var cta=isCta(el,p);
+      // PostHog: always
+      whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+        window.posthog.capture('Button_Link_Click',Object.assign({page_host:location.hostname},p),PH_OPTS);
+      });
+      // GA4 + Meta
+      var direct=(GA_META_MODE==='always')||!gtmLoaded();
+      if(direct){
+        // www already has an early gtag click handler in head-tracking (pre-GTM clicks), so GA4 is only sent here in 'always' mode
+        if(GA_META_MODE==='always')gtag('event','Button_Link_Click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},p));
+        whenReady(function(){return typeof window.fbq==='function';},function(){
+          window.fbq('trackCustom','ButtonClick',{cta_text:p.cta_text,cta_id:p.cta_id,cta_classes:p.cta_classes,cta_url:p.cta_url,page_path:p.page_path,cta_section:p.cta_section,cta_position:p.cta_position,cta_element:p.cta_element});
+        });
+      }
+      // CTA event: GA4 + PostHog cta_click, Meta CTAClicked. SYNCHRONOUS (a deferred call is lost when the click navigates away).
+      // Pages can expose window.__lucidCtaExtraFor(el) -> richer params (www script.js: unique cta_id, cta_action...).
+      var extra=null; try{ extra=window.__lucidCtaExtraFor?window.__lucidCtaExtraFor(el):null; }catch(x){}
+      if(cta||extra){
+        var q=Object.assign({},p,extra||{});
+        // each platform in its own try/catch so one failing SDK never blocks the others
+        try{ whenReady(function(){return typeof window.fbq==='function';},function(){
+          try{window.fbq('trackCustom','CTAClick',q);}catch(x){}
+        }); }catch(x){}
+        try{ gtag('event','cta_click',Object.assign({send_to:GA4_ID,transport_type:'beacon'},q)); }catch(x){}
+        try{ whenReady(function(){return window.posthog&&typeof window.posthog.capture==='function';},function(){
+          try{window.posthog.capture('cta_click',Object.assign({page_host:location.hostname},q),PH_OPTS);}catch(x){}
+        }); }catch(x){}
+      }
+    }catch(err){}
+  },true);
+})();
+</script>
+<!-- LUCID-CLICK-TRACKER:END -->
+<!-- TRACKING:HEAD:END -->
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>How to Figure Med Spa Profit Margin by Treatment | Lucid</title>
+<meta name="description" content="Work out your med spa's profit margin on each treatment: product cost with waste, injector pay, card fees and room time, with Botox and laser examples."/>
+<link rel="canonical" href="https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/"/>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/><meta name="theme-color" content="#7C3AED"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How to Figure Med Spa Profit Margin by Treatment | Lucid"/>
+<meta property="og:description" content="Work out your med spa's profit margin on each treatment: product cost with waste, injector pay, card fees and room time, with Botox and laser examples."/>
+<meta property="og:url" content="https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Figure Med Spa Profit Margin by Treatment | Lucid"/>
+<meta name="twitter:description" content="Work out your med spa's profit margin on each treatment: product cost with waste, injector pay, card fees and room time, with Botox and laser examples."/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css?v=202611061309"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.lucid.now/#organization","name":"Lucid","url":"https://www.lucid.now/"},{"@type":"Article","@id":"https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/#article","headline":"How do I work out my med spa's profit margin on each treatment?","description":"Work out your med spa's profit margin on each treatment: product cost with waste, injector pay, card fees and room time, with Botox and laser examples.","url":"https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/"},"datePublished":"2026-12-07","dateModified":"2026-12-07","author":{"@type":"Organization","name":"Lucid"},"publisher":{"@type":"Organization","name":"Lucid","logo":{"@type":"ImageObject","url":"https://www.lucid.now/assets/lucid-logo.webp"}},"inLanguage":"en-US","image":"https://www.lucid.now/assets/img/hero-woman.webp"},{"@type":"FAQPage","@id":"https://www.lucid.now/blog/med-spa-profit-margin-by-treatment/#faq","mainEntity":[{"@type":"Question","name":"What is a good profit margin for a med spa?","acceptedAnswer":{"@type":"Answer","text":"A good margin is one where you earn more per room hour on every treatment than you spend on overhead per booked hour, and you still have a profit at the end of the month after you pay yourself. No single number fits every med spa, because prices, pay plans and rent differ so much."}},{"@type":"Question","name":"How do I calculate cost per unit of Botox or filler?","acceptedAnswer":{"@type":"Answer","text":"Divide what you spent on product last month by the units you billed, not the units you bought. The gap is what you lost to expired vials, cancellations and leftovers. For filler, divide your syringe spend by the filler visits you billed. Rerun it every month, because it changes with your schedule."}},{"@type":"Question","name":"Should injector pay count as cost of goods sold?","acceptedAnswer":{"@type":"Answer","text":"In your monthly reports, put commission and per-treatment pay with the treatment costs, because you pay them only when the treatment happens. Salaried staff you'd pay anyway go in overhead. Your CPA decides how these costs appear on your tax return, which can differ from your monthly reports."}},{"@type":"Question","name":"How much does a med spa owner make?","acceptedAnswer":{"@type":"Answer","text":"What you make is the profit left after overhead, plus any pay you take for treating clients yourself. In Example 2, the owner made $8,725 in a month after $41,000 of overhead. If you inject, you also keep the commission you'd otherwise pay an injector, so add both when you compare your pay with a salary."}},{"@type":"Question","name":"Is a 70% profit margin good for a med spa?","acceptedAnswer":{"@type":"Answer","text":"Not on its own, because a 70% margin on one treatment can still leave you a small profit for the month. In Example 2, you keep 72% of each $250 laser visit, but only if you book 90 treatments a month. On neurotoxin, you keep 25.7% after you pay the injector. After $41,000 of overhead, you end the month at a 6.3% net profit margin."}},{"@type":"Question","name":"Is a membership more profitable than single visits?","acceptedAnswer":{"@type":"Answer","text":"You usually earn less per visit on a membership because members pay a lower price, but you can earn more over a year if members keep your rooms booked. Compare the member price per unit with your product cost per unit first. Count credits members haven't used as money you owe until they book."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lucid.now/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://www.lucid.now/blog"},{"@type":"ListItem","position":3,"name":"How do I work out my med spa's profit margin on each treatment?"}]}]}</script>
+</head><body>
+<!-- TRACKING:BODY:START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WW4FVXM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    // Crisp
+    window.$crisp=[];window.CRISP_WEBSITE_ID="38f82b20-8859-4291-a129-60259a446c68";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+
+    // Reddit Pixel
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_hiuafry2d2pw');rdt('track','PageVisit');
+
+    // Hotjar
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5131770,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }, 3000);
+});
+</script>
+
+<!-- Crisp lead tracking: fire a dedup'd "lead" event on chat open/message -->
+<script>
+(function() {
+  'use strict';
+  var STORAGE_KEY = 'crispLeadFired';
+  function trackEvent(name, data) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, data));
+    if (window.posthog && window.posthog.capture) window.posthog.capture(name, data);
+  }
+  function trackLeadOnce() {
+    if (sessionStorage.getItem(STORAGE_KEY)) return;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    trackEvent('crisp_lead', { source: 'crisp_chat' });
+  }
+  function waitForCrisp() {
+    if (window.$crisp && window.$crisp.push) {
+      window.$crisp.push(['on', 'session:loaded', function() {
+        window.$crisp.push(['on', 'chat:opened', trackLeadOnce]);
+        window.$crisp.push(['on', 'message:send', trackLeadOnce]);
+      }]);
+    } else {
+      setTimeout(waitForCrisp, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForCrisp);
+  } else {
+    waitForCrisp();
+  }
+})();
+</script>
+<!-- TRACKING:BODY:END -->
+<a class="skip-link" href="#main">Skip to content</a><header class="nav"><div class="wrap nav-inner">
+<a href="/" class="brand" aria-label="Lucid home"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></a>
+<nav class="nav-links" id="navLinks" aria-label="Primary">
+<a href="/#services">Services</a><a href="/platforms">Platforms</a><a href="/pricing">Pricing</a><a href="/#testimonials">Reviews</a><a href="/security">Security</a>
+<div class="nav-dd"><button type="button" class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Specialties <span class="dd-caret" aria-hidden="true">&#9662;</span></button><div class="nav-dd-menu"><div class="nav-dd-inner"><div class="nav-dd-head">Built for your specialty</div><div class="nav-dd-grid" role="menu"><a class="dd-block" role="menuitem" href="/specialty/primary-care"><span class="dd-ico" aria-hidden="true">&#129658;</span><span class="dd-txt"><b>Primary Care</b><small>Family medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/orthopedics"><span class="dd-ico" aria-hidden="true">&#129666;</span><span class="dd-txt"><b>Orthopedics</b><small>Sports medicine</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dermatology"><span class="dd-ico" aria-hidden="true">&#129524;</span><span class="dd-txt"><b>Dermatology</b><small>Skin &amp; aesthetics</small></span></a><a class="dd-block" role="menuitem" href="/specialty/dental"><span class="dd-ico" aria-hidden="true">&#129463;</span><span class="dd-txt"><b>Dental</b><small>Dentistry &amp; oral health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-group"><span class="dd-ico" aria-hidden="true">&#127973;</span><span class="dd-txt"><b>Medical Group</b><small>Multi-location</small></span></a><a class="dd-block" role="menuitem" href="/specialty/ophthalmology"><span class="dd-ico" aria-hidden="true">&#128065;</span><span class="dd-txt"><b>Ophthalmology</b><small>Eye care</small></span></a><a class="dd-block" role="menuitem" href="/specialty/medical-spa"><span class="dd-ico" aria-hidden="true">&#128134;</span><span class="dd-txt"><b>Medical Spa</b><small>Aesthetics &amp; injectables</small></span></a><a class="dd-block" role="menuitem" href="/specialty/behavioral-health"><span class="dd-ico" aria-hidden="true">&#129504;</span><span class="dd-txt"><b>Behavioral Health</b><small>Mental health</small></span></a><a class="dd-block" role="menuitem" href="/specialty/physical-therapy"><span class="dd-ico" aria-hidden="true">&#127939;</span><span class="dd-txt"><b>Physical Therapy</b><small>Rehab &amp; recovery</small></span></a><a class="dd-block" role="menuitem" href="/specialty/nutrition-dietitian"><span class="dd-ico" aria-hidden="true">&#129361;</span><span class="dd-txt"><b>Nutrition</b><small>Dietitian</small></span></a><a class="dd-block" role="menuitem" href="/specialty/speech-therapy"><span class="dd-ico" aria-hidden="true">&#128483;</span><span class="dd-txt"><b>Speech Therapy</b><small>Language therapy</small></span></a></div><a class="dd-foot" href="/pricing"><span>Don't see your specialty? We support many more</span><b>Talk to an expert &rarr;</b></a></div></div></div>
+</nav>
+<div class="nav-cta"><a href="/pricing" class="btn btn-ghost">Talk to an Expert</a><a href="/pricing" class="btn btn-primary">Get Started</a>
+<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button></div>
+</div></header>
+<main id="main"><article class="article"><div class="wrap article-wrap">
+<style id="lc-page">
+.article-body{overflow-wrap:break-word;}
+.article-body p,.article-body li{text-wrap:pretty;}
+.article-body h2,.article-body h3{scroll-margin-top:calc(var(--nav-h,64px) + 12px);}
+.article-wrap > .lc-byline{color:var(--muted);font-size:.92rem;margin:-14px 0 26px;}
+.article-wrap > .lc-byline a{color:inherit;}
+.article-body .article-cta{margin:32px 0;}
+.article-cta a.btn,.article-cta a.btn:hover{text-decoration:none;}
+.article-cta a.btn-primary,.article-cta a.btn-primary:hover{color:var(--cta-ink);}
+.article-cta a.btn-ghost{color:var(--brand-ink);}
+.lc-btn{margin:8px 0 22px;display:flex;gap:12px;flex-wrap:wrap;}
+.lc-table{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;}
+.lc-table table{margin:0;}
+.lc-table th,.lc-table td{vertical-align:top;}
+.article-body .lc-table [align="right"]{text-align:right;}
+.article-body .lc-table [align="center"]{text-align:center;}
+.article-body p.lc-does{background:var(--bg-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;color:var(--ink);}
+.lc-cite{font-size:.9em;}
+.lc-nb{white-space:nowrap;}
+@media (max-width:640px){
+.article-body .lc-table table{font-size:.86rem;}
+.article-body .lc-table th,.article-body .lc-table td{padding:8px 9px;}
+}
+.article-cta a.btn{white-space:nowrap;}
+@media (max-width:400px){
+.article-wrap .article-title{text-wrap:pretty;font-size:1.75rem;}
+.article-body .lc-table table.lc-stack thead{display:none;}
+.article-body .lc-table table.lc-stack,.article-body .lc-table table.lc-stack tbody,.article-body .lc-table table.lc-stack tr,.article-body .lc-table table.lc-stack td{display:block;width:auto;}
+.article-body .lc-table table.lc-stack tr{border-bottom:1px solid var(--line);padding:10px 0;}
+.article-body .lc-table table.lc-stack tr:has(>td[rowspan]){border-bottom:0;padding-bottom:0;}
+.article-body .lc-table table.lc-stack td,.article-body .lc-table table.lc-stack td[align]{border:0;padding:3px 4px;text-align:left;white-space:normal;font-size:inherit;}
+.article-body table.lc-stack td:first-child:not(:has(strong)){font-weight:700;}
+.article-body table.lc-stack tr:has(>td[rowspan])+tr>td:first-child{font-weight:inherit;}
+.article-body table.lc-stack td[data-label]:not([data-label=""])::before{content:attr(data-label);display:block;font-size:.8rem;font-weight:600;color:var(--muted);text-wrap:balance;}
+.article-body table.lc-2col th:first-child,.article-body table.lc-2col td:first-child{min-width:var(--lc-c1);}
+.article-body .lc-table table.lc-stack td.lc-empty{display:none;}
+}
+@media (max-width:370px){.article-wrap .article-title{font-size:1.625rem;}}
+</style>
+<a class="article-back" href="/blog">&larr; All articles</a>
+<span class="article-eyebrow">Finance</span>
+<h1 class="article-title">How do I work out my med spa's profit margin on each&nbsp;treatment?</h1>
+<div class="article-meta"><time datetime="2026-12-07">December 7, 2026</time> &middot; 9 min read</div>
+<p class="lc-byline">By <a href="/">Lucid</a> · Last reviewed December 7,&nbsp;2026</p>
+<div class="article-body">
+<p>No single number fits every med spa, because prices, pay plans and rent differ. To find your profit margin on one treatment, subtract the product you used and wasted, the provider&#39;s pay, the card fee and supplies from the price, and divide what&#39;s left by the price. Then check it covers your rent and staff for the room&nbsp;time.</p>
+<section id="cta-answer" class="article-cta">
+  <p>Book a free <span class="lc-nb">30-minute</span> call and see what Lucid would cost for your&nbsp;practice.</p>
+  <p><strong>Bookkeeping from $130 a month.</strong> <a href="/pricing">See the full price list</a></p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="key-points">Key&nbsp;points</h2>
+<ul>
+<li>In Example 1, a $420 neurotoxin visit leaves you $108 after product, waste, injector pay, card fee and supplies: a 25.7%&nbsp;margin.</li>
+<li>If you lose 5 units from every <span class="lc-nb">100-unit</span> vial, each unit costs you about 5% more than the invoice&nbsp;says.</li>
+<li>In Example 2, you earn $359 per room hour on laser and $216 on neurotoxin, but you make the most from neurotoxin over the month because you book far more of&nbsp;it.</li>
+<li>You make money on a treatment only if you earn more per room hour on it than you spend on overhead per booked hour ($183 in the&nbsp;example).</li>
+</ul>
+<h2 id="what-is-a-treatments-profit-margin">What is a treatment&#39;s profit&nbsp;margin?</h2>
+<p>A treatment&#39;s profit margin is the share of its price you keep after paying the costs that come with that one appointment. You figure it per visit, then add up the visits to see whether you covered your overhead for the&nbsp;month.</p>
+<ul>
+<li><strong>Gross profit margin</strong> is your revenue minus your cost of goods sold, divided by&nbsp;revenue.</li>
+<li><strong>Cost of goods sold</strong> is the cost of the product you used in treatments or sold over the&nbsp;counter.</li>
+<li><strong>Contribution margin</strong> is the price of a treatment minus every cost that comes with it, including provider commission and card&nbsp;fees.</li>
+<li><strong>Overhead</strong> is what you spend every month whatever you book: rent, front desk pay, software, insurance and&nbsp;marketing.</li>
+<li><strong>Net profit margin</strong> is what&#39;s left after overhead, divided by the month&#39;s&nbsp;revenue.</li>
+<li><strong>A room hour</strong> is one hour of one treatment room booked with a&nbsp;client.</li>
+</ul>
+<h2 id="which-costs-belong-to-the-treatment-and-which-are-overhead">Which costs belong to the treatment, and which are&nbsp;overhead?</h2>
+<p>A cost belongs to the treatment if it goes up when you book one more visit and goes away when a client cancels. Product, waste, commission, card fees and supplies do. Rent, salaried staff and your medical director&#39;s monthly fee don&#39;t, so they go in&nbsp;overhead.</p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Cost</th>
+<th>Treatment or&nbsp;overhead</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Cost">Neurotoxin, filler, laser tips, facial&nbsp;serums</td>
+<td data-label="Treatment or overhead">Treatment (cost of goods&nbsp;sold)</td>
+</tr>
+<tr>
+<td data-label="Cost">Units lost when a mixed vial&nbsp;expires</td>
+<td data-label="Treatment or overhead">Treatment (cost of goods&nbsp;sold)</td>
+</tr>
+<tr>
+<td data-label="Cost">Injector commission or <span class="lc-nb">per-treatment</span>&nbsp;pay</td>
+<td data-label="Treatment or overhead">Treatment</td>
+</tr>
+<tr>
+<td data-label="Cost">Card fees, needles, gauze, numbing&nbsp;cream</td>
+<td data-label="Treatment or overhead">Treatment</td>
+</tr>
+<tr>
+<td data-label="Cost">Laser lease or loan&nbsp;payment</td>
+<td data-label="Treatment or overhead">Overhead, or spread over&nbsp;treatments</td>
+</tr>
+<tr>
+<td data-label="Cost">Rent, front desk pay, software,&nbsp;marketing</td>
+<td data-label="Treatment or overhead">Overhead</td>
+</tr>
+<tr>
+<td data-label="Cost">Medical director&#39;s monthly&nbsp;fee</td>
+<td data-label="Treatment or overhead">Overhead</td>
+</tr>
+</tbody></table></div>
+<p>If you book every product order as one expense the day you pay it, you can&#39;t see any of this by treatment. To set up product cost accounts by service line, see the <a href="/guides/chart-of-accounts-medical-practice/">chart of accounts guide for medical&nbsp;practices</a>.</p>
+<h2 id="how-do-i-figure-the-real-cost-of-a-unit-of-botox-or-a-syringe-of-filler">How do I figure the real cost of a unit of Botox or a syringe of&nbsp;filler?</h2>
+<p>Divide what you paid for a vial by the units you actually billed from it, not the units printed on the box. For example, a vial that costs $570 for 100 units costs $5.70 a unit on paper. If you bill 95 units and lose 5, each billed unit really costs you&nbsp;$6.00.</p>
+<p>You lose units when a client cancels after you&#39;ve mixed a vial, when units are left at the end of the day, and in the small amount left in each syringe. The labels for <a href="https://www.rxabbvie.com/pdf/botox-cosmetic_pi.pdf">Botox Cosmetic</a>, <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=71313a04-1349-4c26-b840-a39e4a3ddaed">Dysport</a> and <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3f35d6e0-3450-4abc-a0da-cc7b277e7c6e">Xeomin</a> say to use a mixed vial within 24 hours, and the <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3aaa6e14-a3f7-4fb2-b9f9-d3a9c3ae1f74">Daxxify</a> label allows 72 hours. So how much you lose depends on the brand and on how full your schedule is that&nbsp;day.</p>
+<p>To find your own number, divide last month&#39;s product spend from your invoices by the units you billed in your point of sale reports. Each label also says its units can&#39;t be compared with another brand&#39;s units, so compare brands on cost per treatment, not cost per unit. For filler, count each syringe you open against that visit, even if you used only part of&nbsp;it.</p>
+<h2 id="example-1-what-does-one-neurotoxin-appointment-earn">Example 1: what does one neurotoxin appointment&nbsp;earn?</h2>
+<p>In this example, you keep $108 of a $420 neurotoxin visit after every cost that comes with it, a 25.7% contribution&nbsp;margin.</p>
+<p><strong>Example numbers, not market prices.</strong> You charge $15 a unit and the client gets 28 units. You pay $570 for a <span class="lc-nb">100-unit</span> vial and bill 95 units from it, so each billed unit costs $6.00. The injector earns 30% of the price, your card fee is 3%, and supplies cost&nbsp;$5.40.</p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Line</th>
+<th align="right">Amount</th>
+<th>How you figure&nbsp;it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Line">Price</td>
+<td align="right" data-label="Amount">$420.00</td>
+<td data-label="How you figure it">28 units at&nbsp;$15</td>
+</tr>
+<tr>
+<td data-label="Line">Product, with&nbsp;waste</td>
+<td align="right" data-label="Amount">$168.00</td>
+<td data-label="How you figure it">28 units at&nbsp;$6.00</td>
+</tr>
+<tr>
+<td data-label="Line">Injector&nbsp;commission</td>
+<td align="right" data-label="Amount">$126.00</td>
+<td data-label="How you figure it">30% of&nbsp;$420</td>
+</tr>
+<tr>
+<td data-label="Line">Card&nbsp;fee</td>
+<td align="right" data-label="Amount">$12.60</td>
+<td data-label="How you figure it">3% of&nbsp;$420</td>
+</tr>
+<tr>
+<td data-label="Line">Supplies</td>
+<td align="right" data-label="Amount">$5.40</td>
+<td data-label="How you figure it">Needles, gauze, numbing&nbsp;cream</td>
+</tr>
+<tr>
+<td data-label="Line">Contribution&nbsp;margin</td>
+<td align="right" data-label="Amount">$108.00</td>
+<td data-label="How you figure it">$420 minus $312 in&nbsp;costs</td>
+</tr>
+<tr>
+<td data-label="Line">Margin as a share of&nbsp;price</td>
+<td align="right" data-label="Amount">25.7%</td>
+<td data-label="How you figure it">$108 divided by&nbsp;$420</td>
+</tr>
+<tr>
+<td data-label="Line">Per room&nbsp;hour</td>
+<td align="right" data-label="Amount">$216.00</td>
+<td data-label="How you figure it">$108 for 30&nbsp;minutes</td>
+</tr>
+</tbody></table></div>
+<p>At the invoice price of $5.70 a unit, you&#39;d have put the margin at $116.40, which is $8.40 a visit you never&nbsp;earned.</p>
+<h2 id="example-2-which-treatments-bring-in-most-of-your-profit">Example 2: which treatments bring in most of your&nbsp;profit?</h2>
+<p>In this example, you earn the most per room hour on laser hair removal, but you make the most over the month on neurotoxin because you book 160 of those visits. You earn the least on facials, $109 a room hour, which is less than the $183 an hour you spend on&nbsp;overhead.</p>
+<p><strong>Example numbers, not market prices.</strong> Neurotoxin is Example 1, and every treatment has the 3% card fee. Filler is one $300 syringe sold at $750, with a 30% commission and $7.50 of supplies. For laser, you pay $8 for tips and gel, $25 to the laser tech, and $2,700 a month for the lease and service plan, or $30 a treatment over 90 treatments. For facials, you use $35 of product and pay the esthetician&nbsp;$50.</p>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Treatment</th>
+<th align="right">Price</th>
+<th align="right">Costs per&nbsp;visit</th>
+<th align="right">Contribution per&nbsp;visit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Treatment">Neurotoxin, 28&nbsp;units</td>
+<td align="right" data-label="Price">$420</td>
+<td align="right" data-label="Costs per visit">$312</td>
+<td align="right" data-label="Contribution per visit">$108</td>
+</tr>
+<tr>
+<td data-label="Treatment">Filler, 1&nbsp;syringe</td>
+<td align="right" data-label="Price">$750</td>
+<td align="right" data-label="Costs per visit">$555</td>
+<td align="right" data-label="Contribution per visit">$195</td>
+</tr>
+<tr>
+<td data-label="Treatment">Laser hair&nbsp;removal</td>
+<td align="right" data-label="Price">$250</td>
+<td align="right" data-label="Costs per visit">$70.50</td>
+<td align="right" data-label="Contribution per visit">$179.50</td>
+</tr>
+<tr>
+<td data-label="Treatment">Facial</td>
+<td align="right" data-label="Price">$200</td>
+<td align="right" data-label="Costs per visit">$91</td>
+<td align="right" data-label="Contribution per visit">$109</td>
+</tr>
+</tbody></table></div>
+<div class="lc-table"><table class="lc-stack">
+<thead>
+<tr>
+<th>Treatment</th>
+<th align="right">Room&nbsp;time</th>
+<th align="right">Per room&nbsp;hour</th>
+<th align="right">Contribution a&nbsp;month</th>
+</tr>
+</thead>
+<tbody><tr>
+<td data-label="Treatment">Neurotoxin, 160&nbsp;visits</td>
+<td align="right" data-label="Room time">30&nbsp;min</td>
+<td align="right" data-label="Per room hour">$216</td>
+<td align="right" data-label="Contribution a month">$17,280</td>
+</tr>
+<tr>
+<td data-label="Treatment">Filler, 50&nbsp;visits</td>
+<td align="right" data-label="Room time">45&nbsp;min</td>
+<td align="right" data-label="Per room hour">$260</td>
+<td align="right" data-label="Contribution a month">$9,750</td>
+</tr>
+<tr>
+<td data-label="Treatment">Laser hair removal, 90&nbsp;visits</td>
+<td align="right" data-label="Room time">30&nbsp;min</td>
+<td align="right" data-label="Per room hour">$359</td>
+<td align="right" data-label="Contribution a month">$16,155</td>
+</tr>
+<tr>
+<td data-label="Treatment">Facial, 60&nbsp;visits</td>
+<td align="right" data-label="Room time">60&nbsp;min</td>
+<td align="right" data-label="Per room hour">$109</td>
+<td align="right" data-label="Contribution a month">$6,540</td>
+</tr>
+<tr>
+<td data-label="Treatment">Total</td>
+<td align="right" data-label="Room time" class="lc-empty"></td>
+<td align="right" data-label="Per room hour" class="lc-empty"></td>
+<td align="right" data-label="Contribution a month">$49,725</td>
+</tr>
+</tbody></table></div>
+<p>With $41,000 of other overhead, you make $8,725 for the month on $139,200 of revenue, a 6.3% net profit margin. The laser&#39;s 72% margin per visit ($179.50 of $250) holds only if you book 90 treatments. At 40 a month, the lease costs you $67.50 a treatment and you keep $142 a&nbsp;visit.</p>
+<section id="cta-example" class="article-cta">
+  <p>If you'd rather have Lucid handle this for your practice, book a free <span class="lc-nb">30-minute</span> call and see what it would&nbsp;cost.</p>
+  <a href="/book?cta=GetStarted" class="btn btn-primary">Get Started</a>
+</section>
+<h2 id="why-can-a-busy-month-still-lose-money-when-injectors-earn-commission">Why can a busy month still lose money when injectors earn&nbsp;commission?</h2>
+<p>You can lose money in a busy month if you discount the price while your product cost stays the same. A 30% commission falls with the price, but the $6.00 you paid for each unit doesn&#39;t, so when you discount, you cut your margin far more than the&nbsp;price.</p>
+<p>Take Example 1 during a promotion at $11 a unit. You charge $308 for the same 28 units. Product still costs $168, commission is $92.40, the card fee is $9.24 and supplies are $5.40. You keep $32.96, a 10.7% margin, or about $66 per room hour. That&#39;s well under the $183 an hour you spend on overhead, so you lose money on every promotional visit once you count rent and&nbsp;staff.</p>
+<p>Before you run a promotion, work out the lowest price per unit that still covers the room time. In Example 1, that&#39;s about $14.10 a&nbsp;unit.</p>
+<h2 id="how-do-i-price-a-treatment-so-it-covers-rent-and-the-room">How do I price a treatment so it covers rent and the&nbsp;room?</h2>
+<p>Divide your monthly overhead by the room hours you actually book, then make sure you earn more than that per room hour on each treatment. In Example 2, $41,000 of overhead over 224 booked hours comes to $183 an hour, so you lose money on a facial at $109 an&nbsp;hour.</p>
+<p>The 224 hours come from 2 rooms, each open 160 hours a month and booked 70% of the time. If you book 50% of the time, the same overhead comes to $256 an&nbsp;hour.</p>
+<p>If you earn less than that on a treatment, you can raise the price, shorten the room time or cut the product or pay cost per&nbsp;visit.</p>
+<p>To find and cut the overhead side, see the <a href="/guides/overhead-percentage-medical-practice/">guide to overhead as a percentage of&nbsp;revenue</a>.</p>
+<h2 id="what-to-ask-your-cpa-or-bookkeeper">What to ask your CPA or&nbsp;bookkeeper</h2>
+<ul>
+<li>Can you report my product cost by service line instead of one supplies&nbsp;line?</li>
+<li>Do you count units lost from each vial in product&nbsp;cost?</li>
+<li>Can you show provider commissions with the treatment costs in my monthly&nbsp;reports?</li>
+<li>Which of these costs go on the cost of goods sold line of my tax&nbsp;return?</li>
+</ul>
+<h2 id="what-lucid-does-for-med-spa-margins">What Lucid does for med spa&nbsp;margins</h2>
+<p>Lucid (lucid.now) does <a href="/specialty/medical-spa">bookkeeping for med spas</a>, with product cost reported by service line, including injectables. You see profit by provider, room and service, and by location. You get a dedicated CPA and account manager, with 24/7 support in a shared Slack channel. For other specialties, see <a href="/medical">bookkeeping for medical&nbsp;practices</a>.</p>
+<h2 id="faq">Questions med spa owners ask about profit&nbsp;margin</h2>
+<h3 id="what-is-a-good-profit-margin-for-a-med-spa" data-faq-q>What is a good profit margin for a med&nbsp;spa?</h3>
+<p>A good margin is one where you earn more per room hour on every treatment than you spend on overhead per booked hour, and you still have a profit at the end of the month after you pay yourself. No single number fits every med spa, because prices, pay plans and rent differ so&nbsp;much.</p>
+<h3 id="how-do-i-calculate-cost-per-unit-of-botox-or-filler" data-faq-q>How do I calculate cost per unit of Botox or&nbsp;filler?</h3>
+<p>Divide what you spent on product last month by the units you billed, not the units you bought. The gap is what you lost to expired vials, cancellations and leftovers. For filler, divide your syringe spend by the filler visits you billed. Rerun it every month, because it changes with your&nbsp;schedule.</p>
+<h3 id="should-injector-pay-count-as-cost-of-goods-sold" data-faq-q>Should injector pay count as cost of goods&nbsp;sold?</h3>
+<p>In your monthly reports, put commission and <span class="lc-nb">per-treatment</span> pay with the treatment costs, because you pay them only when the treatment happens. Salaried staff you&#39;d pay anyway go in overhead. Your CPA decides how these costs appear on your tax return, which can differ from your monthly&nbsp;reports.</p>
+<h3 id="how-much-does-a-med-spa-owner-make" data-faq-q>How much does a med spa owner&nbsp;make?</h3>
+<p>What you make is the profit left after overhead, plus any pay you take for treating clients yourself. In Example 2, the owner made $8,725 in a month after $41,000 of overhead. If you inject, you also keep the commission you&#39;d otherwise pay an injector, so add both when you compare your pay with a&nbsp;salary.</p>
+<h3 id="is-a-70-profit-margin-good-for-a-med-spa" data-faq-q>Is a 70% profit margin good for a med&nbsp;spa?</h3>
+<p>Not on its own, because a 70% margin on one treatment can still leave you a small profit for the month. In Example 2, you keep 72% of each $250 laser visit, but only if you book 90 treatments a month. On neurotoxin, you keep 25.7% after you pay the injector. After $41,000 of overhead, you end the month at a 6.3% net profit&nbsp;margin.</p>
+<h3 id="is-a-membership-more-profitable-than-single-visits" data-faq-q>Is a membership more profitable than single&nbsp;visits?</h3>
+<p>You usually earn less per visit on a membership because members pay a lower price, but you can earn more over a year if members keep your rooms booked. Compare the member price per unit with your product cost per unit first. Count credits members haven&#39;t used as money you owe until they&nbsp;book.</p>
+<h2 id="related-guides-for-med-spa-owners">Related guides for med spa&nbsp;owners</h2>
+<p>Run a plastic surgery practice with an aesthetics side? See <a href="/specialty/plastic-surgery/">bookkeeping for plastic surgery practices</a>. Comparing bookkeepers? Read <a href="/guides/best-bookkeeping-for-med-spas/">the best bookkeeping for med spas</a>. Selling packages? See how to account for med spa packages and memberships.<!-- TODO link held: "Selling packages? See how to account for med spa packages and memberships." -> /blog/med-spa-packages-memberships-gift-cards-accounting/. Note for Reid: post 7, link only once it's live. --> New to monthly reports? Start with how to read a P&amp;L for your medical&nbsp;practice.<!-- TODO link held: "New to monthly reports? Start with how to read a P&L for your medical practice." -> /blog/how-to-read-a-medical-practice-pl/. Note for Reid: post 1, link only once it's live. --></p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li>AbbVie, <a href="https://www.rxabbvie.com/pdf/botox-cosmetic_pi.pdf">BOTOX Cosmetic prescribing information</a>, revised October 2024 (sections 2.3 and&nbsp;5.1).</li>
+<li>DailyMed, U.S. National Library of Medicine, <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=71313a04-1349-4c26-b840-a39e4a3ddaed">Dysport&nbsp;label</a>.</li>
+<li>DailyMed, <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3f35d6e0-3450-4abc-a0da-cc7b277e7c6e">Xeomin&nbsp;label</a>.</li>
+<li>DailyMed, <a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3aaa6e14-a3f7-4fb2-b9f9-d3a9c3ae1f74">Daxxify&nbsp;label</a>.</li>
+</ul>
+</div>
+<section id="cta-end" class="article-cta"><h3>Ready to simplify your practice finances?</h3><p>AI-powered bookkeeping, taxes, and CFO services built for medical &amp; private practices.</p><a href="/book?cta=GetStarted" class="btn btn-primary btn-lg">Get Started</a></section>
+</div></article></main>
+<footer><div class="wrap"><div class="foot-grid">
+<div><div class="brand"><img class="brand-logo" src="/assets/lucid-logo.webp?v=2" alt="Lucid" width="97" height="30" /></div><p style="max-width:280px;">One solution for all your practice finances - powered by real-time AI, backed by experts.</p></div>
+<div><h3>Platforms</h3><ul><li><a href="/platform-cashflow">Cashflow Reporting &amp; Forecasting</a></li><li><a href="/platform-categorization">Categorization</a></li><li><a href="/platform-reconciliation">Reconciliation</a></li></ul></div>
+<div><h3>Specialties</h3><ul><li><a href="/specialty/primary-care">Primary Care / Family Medicine</a></li><li><a href="/specialty/orthopedics">Orthopedics / Sports Medicine</a></li><li><a href="/specialty/dermatology">Dermatology</a></li><li><a href="/specialty/medical-group">Medical Group / Several Locations</a></li><li><a href="/specialty/ophthalmology">Ophthalmology / Eye Care</a></li><li><a href="/specialty/medical-spa">Medical Spa / Aesthetics</a></li><li><a href="/specialty/dental">Dental</a></li><li><a href="/specialty/physical-therapy">Physical Therapy</a></li><li><a href="/specialty/behavioral-health">Behavioral Health</a></li><li><a href="/specialty/nutrition-dietitian">Nutrition / Dietitian</a></li><li><a href="/specialty/speech-therapy">Speech Therapy</a></li><li><a href="/specialty/psychology/">Psychology</a></li><li><a href="/specialty/psychiatry/">Psychiatry</a></li><li><a href="/specialty/aba-therapy/">ABA Therapy</a></li><li><a href="/specialty/plastic-surgery/">Plastic Surgery</a></li><li><a href="/specialty/pediatrics/">Pediatrics</a></li><li><a href="/specialty/nurse-practitioner/">Nurse Practitioner</a></li><li><a href="/#industries">All specialties</a></li></ul></div>
+<div><h3>Resources</h3><ul><li><a href="/termsofservice">Terms of Service</a></li><li><a href="/sla">Service Level Agreement</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/data-processing-addendum">Data Processing Addendum</a></li><li><a href="/blog">Blog</a></li><li><a href="/guides/">Guides</a></li></ul></div>
+<div><h3>Company</h3><ul><li><a href="/pricing">Pricing</a></li></ul></div>
+</div><div class="foot-bottom"><span>&copy; 2023 Lucid. All rights reserved.</span><span>SOC 2 &amp; HIPAA aligned</span></div></div></footer>
+<script src="/script.js?v=202611061309" defer></script></body></html>
